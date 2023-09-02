@@ -44,18 +44,5 @@ namespace NetPrintsEditor
             StartupArguments = e.Args;
             base.OnStartup(e);
         }
-
-        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            // TODO : https://stackoverflow.com/questions/16245732/nullreferenceexception-from-presentationframework-dll
-            if (e.Exception.Source?.ToString() == "PresentationFramework")
-            {
-                e.Handled = true;
-                return;
-            }
-
-            e.Handled = true;
-            Shutdown();
-        }
     }
 }

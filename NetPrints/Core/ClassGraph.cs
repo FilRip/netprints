@@ -136,5 +136,10 @@ namespace NetPrints.Core
         {
             _ = new ClassReturnNode(this);
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

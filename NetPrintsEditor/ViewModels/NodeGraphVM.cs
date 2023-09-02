@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 
 using Microsoft.Toolkit.Mvvm.ComponentModel;
@@ -22,14 +21,26 @@ namespace NetPrintsEditor.ViewModels
         public IEnumerable<SearchableComboBoxItem> Suggestions
         {
             get => SuggestionViewModel.Items;
-            private set => SuggestionViewModel.Items = value;
+            private set
+            {
+                SuggestionViewModel.Items = value;
+                OnPropertyChanged(nameof(Suggestions));
+            }
         }
 
+        private NodePin m_nodePin;
         /// <summary>
         /// Pin that was dragged to generate suggestions.
         /// Null if that suggestions were not created for a pin.
         /// </summary>
-        public NodePin SuggestionPin { get; set; }
+        public NodePin SuggestionPin
+        {
+            get { return m_nodePin; }
+            set
+            {
+                SetProperty(ref m_nodePin, value);
+            }
+        }
 
         private readonly Dictionary<Type, List<object>> builtInNodes = new()
         {
@@ -240,7 +251,7 @@ namespace NetPrintsEditor.ViewModels
             else
             {
                 AddSuggestionsWithCategory("NetPrints", GetBuiltInNodes(Graph));
-
+                
                 if (Graph is ExecutionGraph)
                 {
                     // Get properties and methods of base class.
@@ -258,12 +269,12 @@ namespace NetPrintsEditor.ViewModels
                                 .WithVisibleFrom(Graph.Class.Type)
                                 .WithStatic(false)));
                     }
-
+                    
                     AddSuggestionsWithCategory("Static Methods", App.ReflectionProvider.GetMethods(
                         new ReflectionProviderMethodQuery()
                             .WithStatic(true)
                             .WithVisibleFrom(Graph.Class.Type)));
-
+                    
                     AddSuggestionsWithCategory("Static Variables", App.ReflectionProvider.GetVariables(
                         new ReflectionProviderVariableQuery()
                             .WithStatic(true)
@@ -294,7 +305,7 @@ namespace NetPrintsEditor.ViewModels
                         }
                     }
 
-                    selectedNodes = value;
+                    SetProperty(ref selectedNodes, value);
 
                     // Select new nodes
                     if (selectedNodes != null)
@@ -318,13 +329,25 @@ namespace NetPrintsEditor.ViewModels
                 if (graph is MethodGraph methodGraph && methodGraph.Name != value)
                 {
                     methodGraph.Name = value;
+                    OnPropertyChanged(nameof(Name));
                 }
             }
         }
 
         public bool IsConstructor => graph is ConstructorGraph;
 
-        public ObservableViewModelCollection<NodeVM, Node> Nodes { get; set; }
+        private ObservableViewModelCollection<NodeVM, Node> m_nodes;
+        public ObservableViewModelCollection<NodeVM, Node> Nodes
+        {
+            get
+            {
+                return m_nodes;
+            }
+            set
+            {
+                SetProperty(ref m_nodes, value);
+            }
+        }
 
         public IEnumerable<BaseType> ArgumentTypes =>
             graph is ExecutionGraph execGraph ? execGraph.ArgumentTypes : null;
@@ -335,7 +358,18 @@ namespace NetPrintsEditor.ViewModels
         public IEnumerable<BaseType> ReturnTypes =>
             graph is MethodGraph methodGraph ? methodGraph.ReturnTypes : null;
 
-        public ClassEditorVM Class { get; set; }
+        private ClassEditorVM m_class;
+        public ClassEditorVM Class
+        {
+            get
+            {
+                return m_class;
+            }
+            set
+            {
+                SetProperty(ref m_class, value);
+            }
+        }
 
         public MethodModifiers Modifiers
         {
@@ -345,6 +379,7 @@ namespace NetPrintsEditor.ViewModels
                 if (graph is MethodGraph methodGraph && methodGraph.Modifiers != value)
                 {
                     methodGraph.Modifiers = value;
+                    OnPropertyChanged(nameof(Modifiers));
                 }
             }
         }
@@ -357,6 +392,7 @@ namespace NetPrintsEditor.ViewModels
                 if (graph is ExecutionGraph execGraph && execGraph.Visibility != value)
                 {
                     execGraph.Visibility = value;
+                    OnPropertyChanged(nameof(Visibility));
                 }
             }
         }
@@ -428,11 +464,12 @@ namespace NetPrintsEditor.ViewModels
         }
 
         #region Node dragging
+        private double m_nodeDragScale = 1;
         public double NodeDragScale
         {
-            get;
-            set;
-        } = 1;
+            get { return m_nodeDragScale; }
+            set { SetProperty(ref m_nodeDragScale, value); }
+        }
 
         private double nodeDragAccumX;
         private double nodeDragAccumY;

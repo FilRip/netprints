@@ -202,7 +202,9 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
 
         protected void ValidateAllProperties()
         {
+#pragma warning disable CS8603
             EntityValidatorMap.GetValue(GetType(), (Type t) => GetValidationAction(t))(this);
+#pragma warning restore CS8603
 
             static Action<object>? GetValidationAction(Type type)
             {

@@ -70,7 +70,7 @@ namespace NetPrintsEditor.Commands
 
         public delegate Tuple<ICommand, object> MakeUndoCommandDelegate(object parameters);
 
-        public static Dictionary<ICommand, MakeUndoCommandDelegate> MakeUndoCommand = new()
+        public static readonly Dictionary<ICommand, MakeUndoCommandDelegate> MakeUndoCommand = new()
         {
             { RemoveMethod, (p) => new Tuple<ICommand, object>(DoNothing, p) },
             { AddVariable, (p) => new Tuple<ICommand, object>(RemoveVariable, p) },

@@ -14,7 +14,9 @@ namespace NetPrintsEditor.Reflection
 {
     public static class ISymbolExtensions
     {
+#pragma warning disable RS1024
         private static readonly Dictionary<ITypeSymbol, List<ISymbol>> allMembersCache = new();
+#pragma warning restore RS1024
 
         /// <summary>
         /// Gets all members of a symbol including inherited ones, but not overriden ones.
@@ -27,7 +29,9 @@ namespace NetPrintsEditor.Reflection
             }
 
             List<ISymbol> members = new();
+#pragma warning disable RS1024
             HashSet<IMethodSymbol> overridenMethods = new();
+#pragma warning restore RS1024
 
             var startSymbol = symbol;
 

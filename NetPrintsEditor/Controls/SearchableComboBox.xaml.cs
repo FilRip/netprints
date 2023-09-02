@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Automation.Peers;
@@ -104,15 +105,53 @@ namespace NetPrintsEditor.Controls
             searchText.Focus();
         }
 
-        private FrameworkElementAutomationPeer m_myAutomationInstance;
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            // TODO : https://stackoverflow.com/questions/16245732/nullreferenceexception-from-presentationframework-dll
-            if (m_myAutomationInstance == null)
-            {
-                m_myAutomationInstance = new FrameworkElementAutomationPeer(this);
-            }
-            return m_myAutomationInstance;
+            return new SearchableCustomAutomation(searchList);
+        }
+    }
+
+    internal class SearchableCustomAutomation : ItemsControlAutomationPeer
+    {
+        internal SearchableCustomAutomation(ItemsControl owner) : base(owner)
+        {
+        }
+
+        protected override ItemAutomationPeer CreateItemAutomationPeer(object item)
+        {
+            return new SearchableComboBoxItemAutomationPeer(item, this);
+        }
+
+        /*protected override string GetNameCore()
+        {
+            return "";
+        }*/
+
+        protected override List<AutomationPeer> GetChildrenCore()
+        {
+            return new List<AutomationPeer>();
+        }
+    }
+
+    internal class SearchableComboBoxItemAutomationPeer : ItemAutomationPeer
+    {
+        internal SearchableComboBoxItemAutomationPeer(object item, ItemsControlAutomationPeer owner) : base(item, owner)
+        {
+        }
+
+        protected override AutomationControlType GetAutomationControlTypeCore()
+        {
+            return AutomationControlType.Text;
+        }
+
+        /*protected override string GetNameCore()
+        {
+            return (Item == null ? Item.ToString() : "");
+        }*/
+
+        protected override string GetClassNameCore()
+        {
+            return "MyItemAutomationPeer";
         }
     }
 }
