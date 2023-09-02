@@ -221,7 +221,7 @@ namespace NetPrintsEditor.Controls
             if (Graph != null)
             {
                 Graph.SuggestionPin = null;
-                var mousePos = Mouse.GetPosition(drawCanvas);
+                Point mousePos = Mouse.GetPosition(drawCanvas);
                 Graph.UpdateSuggestions(mousePos.X, mousePos.Y);
             }
         }

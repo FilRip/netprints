@@ -8,6 +8,17 @@
     <StartupObject>NetPrintsEditor.App</StartupObject>
     <ApplicationIcon>NetPrintsLogo.ico</ApplicationIcon>
     <LangVersion>preview</LangVersion>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <NoWarn></NoWarn>
+    <WarningsAsErrors />
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningsAsErrors />
+    <NoWarn />
   </PropertyGroup>
   <ItemGroup>
     <None Remove="ClassEditorWindow.xaml" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -101,6 +102,17 @@ namespace NetPrintsEditor.Controls
             // Clear search box and focus it
             searchText.Clear();
             searchText.Focus();
+        }
+
+        private FrameworkElementAutomationPeer m_myAutomationInstance;
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            // TODO : https://stackoverflow.com/questions/16245732/nullreferenceexception-from-presentationframework-dll
+            if (m_myAutomationInstance == null)
+            {
+                m_myAutomationInstance = new FrameworkElementAutomationPeer(this);
+            }
+            return m_myAutomationInstance;
         }
     }
 }
