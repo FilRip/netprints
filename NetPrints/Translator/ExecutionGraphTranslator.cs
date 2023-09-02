@@ -403,6 +403,13 @@ namespace NetPrints.Translator
                     nodeAlreadyTreated.Add(noeud);
                     if (move)
                         break;
+                    else if (posDebut > posSuite)
+                    {
+                        listAllNodes.MoveRange(posDebut, taille + 1, posSuite);
+                        listCloseBracket.Add(posSuite + taille);
+                        move = true;
+                        break;
+                    }
                 }
             }
 
