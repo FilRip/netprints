@@ -193,7 +193,7 @@ namespace NetPrintsEditor.Reflection
             sources = sources.Concat(sourcePaths.Select(path => File.ReadAllText(path))).Distinct();
             List<SyntaxTree> syntaxTrees = sources.Select(source => ParseSyntaxTree(source)).ToList();
 
-            compilation = CSharpCompilation.Create("C", syntaxTrees, assemblyReferences, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+            compilation = CSharpCompilation.Create("C", syntaxTrees, assemblyReferences, compilationOptions);
 
             // Try to compile, on success create a new compilation that references the created assembly instead of the sources.
             // The compilation will fail eg. if the sources have references to the not-yet-compiled assembly.
@@ -202,7 +202,7 @@ namespace NetPrintsEditor.Reflection
             if (compilationResults.Success)
             {
                 assemblyReferences = assemblyReferences.Concat(new[] { MetadataReference.CreateFromStream(stream) }).ToList();
-                compilation = CSharpCompilation.Create("C", references: assemblyReferences);
+                compilation = CSharpCompilation.Create("C", references: assemblyReferences, options: compilationOptions);
             }
 
             extensionMethods = new List<IMethodSymbol>(GetValidTypes().SelectMany(t => t.GetMethods().Where(m => m.IsExtensionMethod)));

@@ -385,7 +385,7 @@ namespace NetPrints.Translator
                     if (execNodes.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
                         builder.AppendLine("}");
 
-                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node))
+                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node && ifelse.TruePin.OutgoingPin != null))
                     {
                         builder.AppendLine("}");
                         builder.AppendLine("else");
@@ -982,6 +982,7 @@ namespace NetPrints.Translator
 
             if (node.TruePin.OutgoingPin == null)
             {
+                builder.AppendLine("{");
                 builder.AppendLine("}");
             }
 
@@ -991,7 +992,7 @@ namespace NetPrints.Translator
             }
             builder.AppendLine("{");
 
-            if (node.FalsePin.OutgoingPin == null)
+            if (node.TruePin.OutgoingPin == null && node.FalsePin.OutgoingPin == null)
             {
                 builder.AppendLine("}");
             }
