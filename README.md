@@ -1,6 +1,6 @@
 ![](https://raw.githubusercontent.com/RobinKa/RobinKa.github.io/master/NetPrintsBanner.png)
 
-Version pour Net Framework 5.0 (sauf VSIX pour l'instant) par FilRip.
+Version Net Framework 5.0 (except VSIX for the moment). And without use of Goto/Label.
 
 ### Master [![Build Status](https://travis-ci.org/RobinKa/netprints.svg?branch=master)](https://travis-ci.org/RobinKa/netprints) Latest [![Build Status](https://travis-ci.org/RobinKa/netprints.svg)](https://travis-ci.org/RobinKa/netprints)
 

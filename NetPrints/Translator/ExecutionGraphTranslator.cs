@@ -343,13 +343,14 @@ namespace NetPrints.Translator
 
             List<Node> listeNoeuds = execNodes.ToList();
             List<int> listeFermerAccolade = new();
-            List<IfElseNode> ifElseDejaTraite = new();
+            List<Node> nodeAlreadyTreated = new();
 
             bool move = true;
+            // Move else block just after the if block and so, before next code after the end if/else
             while (move)
             {
                 move = false;
-                List<IfElseNode> listeIf = execNodes.OfType<IfElseNode>().Where(item => !ifElseDejaTraite.Contains(item) && item.FalsePin.OutgoingPin != null && item.TruePin.OutgoingPin != null).ToList();
+                List<IfElseNode> listeIf = listeNoeuds.OfType<IfElseNode>().Where(item => !nodeAlreadyTreated.Contains(item) && item.FalsePin.OutgoingPin != null && item.TruePin.OutgoingPin != null).ToList();
                 foreach (IfElseNode ifElse in listeIf)
                 {
                     int posDebutElse = listeNoeuds.IndexOf(ifElse.FalsePin.OutgoingPin.Node);
@@ -370,22 +371,57 @@ namespace NetPrints.Translator
                         noeudCourant = noeudCourant.OutputExecPins?[0].OutgoingPin?.Node;
                         posLastParent = posNoeudCourant;
                     }
-                    ifElseDejaTraite.Add(ifElse);
+                    nodeAlreadyTreated.Add(ifElse);
                     if (move)
                         break;
                 }
             }
 
-            bool ifelseOpen = false;
+            move = true;
+            nodeAlreadyTreated.Clear();
+            // Move the catch block after the try, instead of put it somewhere and use goto
+            while (move)
+            {
+                move = false;
+                List<CallMethodNode> listeCallMethod = listeNoeuds.OfType<CallMethodNode>().Where(item => !nodeAlreadyTreated.Contains(item) && item.HandlesExceptions).ToList();
+                foreach (CallMethodNode noeud in listeCallMethod)
+                {
+                    Node noeudCourant = noeud.CatchPin.OutgoingPin.Node;
+                    int posDebut = listeNoeuds.IndexOf(noeudCourant);
+                    int posNoeudCourant;
+                    int taille = 0;
+                    int posSuite = listeNoeuds.IndexOf(noeud.OutputExecPins[0].OutgoingPin.Node);
+                    while (noeudCourant != null && noeudCourant.OutputExecPins?.Count > 0 && noeudCourant.OutputExecPins[0].OutgoingPin?.Node != null)
+                    {
+                        posNoeudCourant = listeNoeuds.IndexOf(noeudCourant);
+                        if (posNoeudCourant <= posSuite)
+                        {
+                            List<Node> listeNoeudsCatch = listeNoeuds.GetRange(posDebut, taille);
+                            listeNoeuds.RemoveRange(posDebut, taille);
+                            listeNoeuds.InsertRange(posSuite, listeNoeudsCatch);
+                            listeFermerAccolade.Add(posSuite + taille - 1);
+                            move = true;
+                            break;
+                        }
+                        noeudCourant = noeudCourant.OutputExecPins?[0].OutgoingPin?.Node;
+                        taille++;
+                    }
+                    nodeAlreadyTreated.Add(noeud);
+                    if (move)
+                        break;
+                }
+            }
+
+            bool ifelseOpen = false, catchOpen = false;
             // Translate every exec node
             foreach (Node node in listeNoeuds)
             {
                 if (!(node is MethodEntryNode))
                 {
-                    if (execNodes.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
+                    if (listeNoeuds.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
                         builder.AppendLine("}");
 
-                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node && ifelse.TruePin.OutgoingPin != null))
+                    if (listeNoeuds.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node && ifelse.TruePin.OutgoingPin != null))
                     {
                         builder.AppendLine("}");
                         builder.AppendLine("else");
@@ -397,6 +433,8 @@ namespace NetPrints.Translator
                     {
                         if (node is IfElseNode)
                             ifelseOpen = true;
+                        else if (node is CallMethodNode noeudCall && noeudCall.HandlesExceptions)
+                            catchOpen = true;
                         if (node is not ReturnNode || listeNoeuds.IndexOf(node) != listeNoeuds.Count - 1 || ((MethodGraph)graph).ReturnTypes.Any())
                             TranslateNode(node, pinIndex);
                     }
@@ -406,10 +444,15 @@ namespace NetPrints.Translator
                         builder.AppendLine("}");
                         ifelseOpen = false;
                     }
+                    if (catchOpen && listeFermerAccolade.Contains(listeNoeuds.IndexOf(node)))
+                    {
+                        builder.AppendLine("}");
+                        ifelseOpen = false;
+                    }
                 }
             }
 
-            if (ifelseOpen)
+            if (ifelseOpen || catchOpen)
                 builder.AppendLine("}");
 
             // Write the jump stack if it was ever used
@@ -715,12 +758,12 @@ namespace NetPrints.Translator
                     builder.AppendLine($"{returnName} = default({returnValuePin.PinType.Value.FullCodeName});");
                 }
 
-                if (!node.IsPure)
+                /*if (!node.IsPure)
                 {
                     WriteGotoOutputPinIfNecessary(node.CatchPin, node.InputExecPins[0]);
                 }
 
-                builder.AppendLine("}");
+                builder.AppendLine("}");*/
             }
         }
 
