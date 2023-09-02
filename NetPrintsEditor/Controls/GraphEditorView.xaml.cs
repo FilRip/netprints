@@ -133,7 +133,7 @@ namespace NetPrintsEditor.Controls
                 {
                     Graph.SuggestionPin = ((NodePinVM)e.Data.GetData(typeof(NodePinVM))).Pin;
 
-                    Point mousePos = Mouse.GetPosition(drawCanvas);
+                    Point mousePos = e.GetPosition((FrameworkElement)e.OriginalSource);
                     Graph.UpdateSuggestions(mousePos.X, mousePos.Y);
 
                     // Open the context menu
