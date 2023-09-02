@@ -346,12 +346,21 @@ namespace NetPrints.Translator
             {
                 if (!(node is MethodEntryNode))
                 {
+                    if (execNodes.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
+                        builder.AppendLine("}");
+                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin.OutgoingPin.Node == node))
+                    {
+                        builder.AppendLine("else");
+                        builder.AppendLine("{");
+                    }
                     for (int pinIndex = 0; pinIndex < node.InputExecPins.Count; pinIndex++)
                     {
                         builder.AppendLine($"State{nodeStateIds[node][pinIndex]}:");
                         TranslateNode(node, pinIndex);
                         builder.AppendLine();
                     }
+                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.TruePin.OutgoingPin.Node == node || ifelse.FalsePin.OutgoingPin.Node == node))
+                        builder.AppendLine("}");
                 }
             }
 
@@ -635,10 +644,10 @@ namespace NetPrints.Translator
             }
 
             // Go to the next state
-            if (!node.IsPure)
+            /*if (!node.IsPure)
             {
                 WriteGotoOutputPinIfNecessary(node.OutputExecPins[0], node.InputExecPins[0]);
-            }
+            }*/
 
             // Catch exceptions if catch pin is connected
             if (node.HandlesExceptions)
@@ -920,32 +929,22 @@ namespace NetPrints.Translator
             string conditionVar = GetPinIncomingValue(node.ConditionPin);
 
             builder.AppendLine($"if ({conditionVar})");
+
+            if (node.TruePin.OutgoingPin == null)
+            {
+                builder.AppendLine("}");
+            }
+
+            if (node.TruePin.OutgoingPin == null)
+            {
+                builder.AppendLine("else");
+            }
             builder.AppendLine("{");
 
-            if (node.TruePin.OutgoingPin != null)
+            if (node.FalsePin.OutgoingPin == null)
             {
-                WriteGotoOutputPinIfNecessary(node.TruePin, node.InputExecPins[0]);
+                builder.AppendLine("}");
             }
-            else
-            {
-                builder.AppendLine("return;");
-            }
-
-            builder.AppendLine("}");
-
-            builder.AppendLine("else");
-            builder.AppendLine("{");
-
-            if (node.FalsePin.OutgoingPin != null)
-            {
-                WriteGotoOutputPinIfNecessary(node.FalsePin, node.InputExecPins[0]);
-            }
-            else
-            {
-                builder.AppendLine("return;");
-            }
-
-            builder.AppendLine("}");
         }
 
         public void TranslateStartForLoopNode(ForLoopNode node)
@@ -954,19 +953,15 @@ namespace NetPrints.Translator
             // the correct order
             TranslateDependentPureNodes(node);
 
-            builder.AppendLine($"{GetOrCreatePinName(node.IndexPin)} = {GetPinIncomingValue(node.InitialIndexPin)};");
-            builder.AppendLine($"if ({GetOrCreatePinName(node.IndexPin)} < {GetPinIncomingValue(node.MaxIndexPin)})");
+            builder.AppendLine($"for ({GetOrCreatePinName(node.IndexPin)} = {GetPinIncomingValue(node.InitialIndexPin)}; {GetOrCreatePinName(node.IndexPin)} <= {GetPinIncomingValue(node.MaxIndexPin)}; {GetOrCreatePinName(node.IndexPin)}++)");
             builder.AppendLine("{");
-            WritePushJumpStack(node.ContinuePin);
-            WriteGotoOutputPinIfNecessary(node.LoopPin, node.ExecutionPin);
-            builder.AppendLine("}");
         }
 
         public void TranslateContinueForLoopNode(ForLoopNode node)
         {
             // Translate all the pure nodes this node depends on in
             // the correct order
-            TranslateDependentPureNodes(node);
+            /*TranslateDependentPureNodes(node);
 
             builder.AppendLine($"{GetOrCreatePinName(node.IndexPin)}++;");
             builder.AppendLine($"if ({GetOrCreatePinName(node.IndexPin)} < {GetPinIncomingValue(node.MaxIndexPin)})");
@@ -975,7 +970,7 @@ namespace NetPrints.Translator
             WriteGotoOutputPinIfNecessary(node.LoopPin, node.ContinuePin);
             builder.AppendLine("}");
 
-            WriteGotoOutputPinIfNecessary(node.CompletedPin, node.ContinuePin);
+            WriteGotoOutputPinIfNecessary(node.CompletedPin, node.ContinuePin);*/
         }
 
         public void PureTranslateVariableGetterNode(VariableGetterNode node)
