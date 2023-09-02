@@ -157,8 +157,8 @@ namespace NetPrints.Graph
             get => (OutputDataPins.Where(p => p.Name != ExceptionPinName)).ToList();
         }
 
-        public CallMethodNode(NodeGraph graph, MethodSpecifier methodSpecifier/*,
-            IList<BaseType> genericArgumentTypes = null*/)
+        public CallMethodNode(NodeGraph graph, MethodSpecifier methodSpecifier,
+            IList<BaseType> genericArgumentTypes = null)
             : base(graph)
         {
             MethodSpecifier = methodSpecifier;
