@@ -82,7 +82,7 @@ namespace NetPrintsEditor.Commands
                     if (p is ChangeNodeOverloadParameters overloadParams)
                     {
                         // Restore the old overload
-                        var undoParams = new ChangeNodeOverloadParameters(overloadParams.Node, overloadParams.Node.CurrentOverload);
+                        ChangeNodeOverloadParameters undoParams = new(overloadParams.Node, overloadParams.Node.CurrentOverload);
                         return new Tuple<ICommand, object>(ChangeNodeOverload, undoParams);
                     }
 

@@ -98,7 +98,7 @@ namespace NetPrintsEditor.ViewModels
 
         public void AddGetter()
         {
-            var method = new MethodGraph($"get_{Name}")
+            MethodGraph method = new($"get_{Name}")
             {
                 Class = Variable.Class,
                 Visibility = Visibility
@@ -131,7 +131,7 @@ namespace NetPrintsEditor.ViewModels
 
         public void AddSetter()
         {
-            var method = new MethodGraph($"set_{Name}")
+            MethodGraph method = new($"set_{Name}")
             {
                 Class = Variable.Class,
                 Visibility = Visibility

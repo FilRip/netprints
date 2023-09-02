@@ -38,7 +38,7 @@ namespace NetPrintsEditor
             {
                 try
                 {
-                    var assemblyReference = new AssemblyReference(openFileDialog.FileName);
+                    AssemblyReference assemblyReference = new(openFileDialog.FileName);
 
                     if (!ViewModel.Project.References.OfType<AssemblyReference>().Any(r =>
                         string.Equals(Path.GetFullPath(r.AssemblyPath), Path.GetFullPath(assemblyReference.AssemblyPath), StringComparison.OrdinalIgnoreCase)))
@@ -55,12 +55,12 @@ namespace NetPrintsEditor
 
         private void OnAddSourceDirectoryReferenceClicked(object sender, RoutedEventArgs e)
         {
-            var openFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.FolderBrowserDialog openFolderDialog = new();
             if (openFolderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 try
                 {
-                    var sourceDirectoryReference = new SourceDirectoryReference(openFolderDialog.SelectedPath);
+                    SourceDirectoryReference sourceDirectoryReference = new(openFolderDialog.SelectedPath);
 
                     if (!ViewModel.Project.References.OfType<SourceDirectoryReference>().Any(r =>
                         string.Equals(Path.GetFullPath(r.SourceDirectory), Path.GetFullPath(sourceDirectoryReference.SourceDirectory), StringComparison.OrdinalIgnoreCase)))

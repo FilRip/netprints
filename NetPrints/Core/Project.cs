@@ -312,10 +312,10 @@ namespace NetPrints.Core
             IsCompiling = true;
             CompilationMessage = "Compiling...";
 
-            var references = References.ToArray();
+            CompilationReference[] references = References.ToArray();
 
             // Compile in another thread
-            var results = await Task.Run(() =>
+            CodeCompileResults results = await Task.Run(() =>
             {
                 string projectDir = System.IO.Path.GetDirectoryName(Path);
                 string compiledDir = System.IO.Path.Combine(projectDir, $"Compiled_{Name}");
@@ -366,7 +366,7 @@ namespace NetPrints.Core
                     // Write source to file
                     string outputDirectory = System.IO.Path.Combine(directories);
 
-                    System.IO.Directory.CreateDirectory(outputDirectory);
+                    Directory.CreateDirectory(outputDirectory);
 
                     if (CompilationOutput.HasFlag(ProjectCompilationOutput.SourceCode))
                     {
@@ -383,13 +383,13 @@ namespace NetPrints.Core
 
                 // Create compiler on other app domain, compile, unload the app domain
 
-                var codeCompiler = new Compilation.CodeCompiler();
+                CodeCompiler codeCompiler = new();
 
                 bool deleteBinaries = !CompilationOutput.HasFlag(ProjectCompilationOutput.Binaries) && !File.Exists(outputPath);
 
-                var assemblyPaths = references.OfType<AssemblyReference>().Select(a => a.AssemblyPath);
+                List<string> assemblyPaths = references.OfType<AssemblyReference>().Select(a => a.AssemblyPath).ToList();
 
-                var sources = classSources
+                string[] sources = classSources
                     .Concat(references
                         .OfType<SourceDirectoryReference>()
                         .Where(sourceRef => sourceRef.IncludeInCompilation)
@@ -488,10 +488,10 @@ namespace NetPrints.Core
 
         private void FixReferencePaths()
         {
-            var referencesToRemove = new List<CompilationReference>();
+            List<CompilationReference> referencesToRemove = new();
 
             // Fix references
-            foreach (var reference in References)
+            foreach (CompilationReference reference in References)
             {
                 if (reference is AssemblyReference assemblyReference)
                 {

@@ -32,7 +32,7 @@ namespace NetPrints.Graph
 
         private BaseType GetArrayType()
         {
-            var elementType = InputTypePins[0].InferredType?.Value ?? TypeSpecifier.FromType<object>();
+            BaseType elementType = InputTypePins[0].InferredType?.Value ?? TypeSpecifier.FromType<object>();
             return new TypeSpecifier(elementType.Name + "[]", false, false, null);
         }
 

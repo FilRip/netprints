@@ -24,7 +24,7 @@ namespace NetPrints.Graph
 
         public static RerouteNode MakeExecution(NodeGraph graph, int numExecs)
         {
-            var node = new RerouteNode(graph);
+            RerouteNode node = new(graph);
 
             for (int i = 0; i < numExecs; i++)
             {
@@ -42,10 +42,10 @@ namespace NetPrints.Graph
                 throw new ArgumentException("dataTypes was null in RerouteNode.MakeData.");
             }
 
-            var node = new RerouteNode(graph);
+            RerouteNode node = new(graph);
 
             int index = 0;
-            foreach (var dataType in dataTypes)
+            foreach (Tuple<BaseType, BaseType> dataType in dataTypes)
             {
                 node.AddInputDataPin($"Data{index}", dataType.Item1);
                 node.AddOutputDataPin($"Data{index}", dataType.Item2);
@@ -57,7 +57,7 @@ namespace NetPrints.Graph
 
         public static RerouteNode MakeType(NodeGraph graph, int numTypes)
         {
-            var node = new RerouteNode(graph);
+            RerouteNode node = new(graph);
 
             for (int i = 0; i < numTypes; i++)
             {

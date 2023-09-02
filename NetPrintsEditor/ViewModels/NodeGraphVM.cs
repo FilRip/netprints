@@ -89,7 +89,7 @@ namespace NetPrintsEditor.ViewModels
 
         private List<object> GetBuiltInNodes(NodeGraph graph)
         {
-            if (builtInNodes.TryGetValue(graph.GetType(), out var nodes))
+            if (builtInNodes.TryGetValue(graph.GetType(), out List<object> nodes))
             {
                 return nodes;
             }
@@ -137,7 +137,7 @@ namespace NetPrintsEditor.ViewModels
                                 .WithType(pinTypeSpec)));
 
                         // Add methods of the base types that can accept the pin type as argument
-                        foreach (var baseType in Graph.Class.AllBaseTypes)
+                        foreach (TypeSpecifier baseType in Graph.Class.AllBaseTypes)
                         {
                             AddSuggestionsWithCategory("This Methods", App.ReflectionProvider.GetMethods(
                                 new ReflectionProviderMethodQuery()
@@ -160,7 +160,7 @@ namespace NetPrintsEditor.ViewModels
                     if (idp.PinType.Value is TypeSpecifier pinTypeSpec)
                     {
                         // Variables of base classes that inherit from needed type
-                        foreach (var baseType in Graph.Class.AllBaseTypes)
+                        foreach (TypeSpecifier baseType in Graph.Class.AllBaseTypes)
                         {
                             AddSuggestionsWithCategory("This Variables", App.ReflectionProvider.GetVariables(
                                 new ReflectionProviderVariableQuery()
@@ -183,7 +183,7 @@ namespace NetPrintsEditor.ViewModels
 
                     AddSuggestionsWithCategory("NetPrints", GetBuiltInNodes(Graph));
 
-                    foreach (var baseType in Graph.Class.AllBaseTypes)
+                    foreach (TypeSpecifier baseType in Graph.Class.AllBaseTypes)
                     {
                         AddSuggestionsWithCategory("This Methods", App.ReflectionProvider.GetMethods(
                             new ReflectionProviderMethodQuery()
@@ -201,7 +201,7 @@ namespace NetPrintsEditor.ViewModels
                 {
                     AddSuggestionsWithCategory("NetPrints", GetBuiltInNodes(Graph));
 
-                    foreach (var baseType in Graph.Class.AllBaseTypes)
+                    foreach (TypeSpecifier baseType in Graph.Class.AllBaseTypes)
                     {
                         AddSuggestionsWithCategory("This Methods", App.ReflectionProvider.GetMethods(
                         new ReflectionProviderMethodQuery()
@@ -255,7 +255,7 @@ namespace NetPrintsEditor.ViewModels
                 if (Graph is ExecutionGraph)
                 {
                     // Get properties and methods of base class.
-                    foreach (var baseType in Graph.Class.AllBaseTypes)
+                    foreach (TypeSpecifier baseType in Graph.Class.AllBaseTypes)
                     {
                         AddSuggestionsWithCategory("This Variables", App.ReflectionProvider.GetVariables(
                         new ReflectionProviderVariableQuery()
@@ -299,7 +299,7 @@ namespace NetPrintsEditor.ViewModels
                     // Deselect old nodes
                     if (selectedNodes != null)
                     {
-                        foreach (var node in selectedNodes)
+                        foreach (NodeVM node in selectedNodes)
                         {
                             node.IsSelected = false;
                         }
@@ -310,7 +310,7 @@ namespace NetPrintsEditor.ViewModels
                     // Select new nodes
                     if (selectedNodes != null)
                     {
-                        foreach (var node in selectedNodes)
+                        foreach (NodeVM node in selectedNodes)
                         {
                             node.IsSelected = true;
                         }
@@ -488,7 +488,7 @@ namespace NetPrintsEditor.ViewModels
             // Remember the initial positions of the selected nodes
             if (SelectedNodes != null)
             {
-                foreach (var selectedNode in SelectedNodes)
+                foreach (NodeVM selectedNode in SelectedNodes)
                 {
                     nodeStartPositions.Add(selectedNode, (selectedNode.Node.PositionX, selectedNode.Node.PositionY));
                 }
@@ -503,7 +503,7 @@ namespace NetPrintsEditor.ViewModels
             // Snap final position to grid
             if (SelectedNodes != null)
             {
-                foreach (var selectedNode in SelectedNodes)
+                foreach (NodeVM selectedNode in SelectedNodes)
                 {
                     selectedNode.Node.PositionX -= selectedNode.Node.PositionX % GraphEditorView.GridCellSize;
                     selectedNode.Node.PositionY -= selectedNode.Node.PositionY % GraphEditorView.GridCellSize;
@@ -688,7 +688,7 @@ namespace NetPrintsEditor.ViewModels
         {
             if (e.OldItems != null)
             {
-                var removedNodes = e.OldItems.Cast<NodeVM>();
+                List<NodeVM> removedNodes = e.OldItems.Cast<NodeVM>().ToList();
                 removedNodes.ToList().ForEach(n => SetupNodeEvents(n, false));
 
                 removedNodes.ToList().ForEach(n => SetupNodeConnections(n, false));
@@ -696,7 +696,7 @@ namespace NetPrintsEditor.ViewModels
 
             if (e.NewItems != null)
             {
-                var addedNodes = e.NewItems.Cast<NodeVM>();
+                List<NodeVM> addedNodes = e.NewItems.Cast<NodeVM>().ToList();
                 addedNodes.ToList().ForEach(n => SetupNodeEvents(n, true));
 
                 addedNodes.ToList().ForEach(n => SetupNodeConnections(n, true));
@@ -709,7 +709,7 @@ namespace NetPrintsEditor.ViewModels
         {
             if (e.OldItems != null)
             {
-                var removedPins = e.OldItems.Cast<NodePinVM>();
+                List<NodePinVM> removedPins = e.OldItems.Cast<NodePinVM>().ToList();
 
                 // Unsetup initial connections of added pins
                 removedPins.ToList().ForEach(p => SetupPinConnection(p, false));
@@ -720,7 +720,7 @@ namespace NetPrintsEditor.ViewModels
 
             if (e.NewItems != null)
             {
-                var addedPins = e.NewItems.Cast<NodePinVM>();
+                List<NodePinVM> addedPins = e.NewItems.Cast<NodePinVM>().ToList();
 
                 // Setup initial connections of added pins
                 addedPins.ToList().ForEach(p => SetupPinConnection(p, true));

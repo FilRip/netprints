@@ -116,7 +116,7 @@ namespace NetPrints.Core
                 anyTypeChanged = false;
                 pinTypes.Clear();
 
-                foreach (var node in Nodes)
+                foreach (Node node in Nodes)
                 {
                     node.InputTypePins.ToList().ForEach(p => pinTypes.Add(p, p.InferredType?.Value));
 

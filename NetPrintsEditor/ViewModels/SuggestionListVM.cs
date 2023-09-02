@@ -123,8 +123,7 @@ namespace NetPrintsEditor.ViewModels
 
         private void AddNode<T>(params object[] arguments)
         {
-            var msg = new AddNodeMessage
-            (
+            AddNodeMessage msg = new(
                 typeof(T),
                 Graph,
                 PositionX,
@@ -160,10 +159,10 @@ namespace NetPrintsEditor.ViewModels
             }
             else if (selectedValue is MakeDelegateTypeInfo makeDelegateTypeInfo)
             {
-                var methods = App.ReflectionProvider.GetMethods(
+                List<MethodSpecifier> methods = App.ReflectionProvider.GetMethods(
                     new Reflection.ReflectionProviderMethodQuery()
                     .WithType(makeDelegateTypeInfo.Type)
-                    .WithVisibleFrom(makeDelegateTypeInfo.FromType));
+                    .WithVisibleFrom(makeDelegateTypeInfo.FromType)).ToList();
 
                 SelectMethodDialog selectMethodDialog = new()
                 {

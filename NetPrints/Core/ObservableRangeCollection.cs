@@ -24,7 +24,7 @@ namespace NetPrints.Core
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            foreach (var item in collection)
+            foreach (T item in collection)
             {
                 Items.Add(item);
             }
@@ -42,7 +42,7 @@ namespace NetPrints.Core
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            foreach (var item in collection)
+            foreach (T item in collection)
             {
                 Items.Remove(item);
             }
@@ -70,7 +70,7 @@ namespace NetPrints.Core
 
             Items.Clear();
 
-            foreach (var item in collection)
+            foreach (T item in collection)
             {
                 Items.Add(item);
             }

@@ -131,7 +131,7 @@ namespace NetPrintsEditor.Converters
             else
             {
                 // See https://docs.microsoft.com/en-us/dotnet/framework/wpf/app-development/pack-uris-in-wpf for format
-                var fullIconPath = $"pack://application:,,,/{Assembly.GetExecutingAssembly().GetName().Name};component/Resources/{iconPath}";
+                string fullIconPath = $"pack://application:,,,/{Assembly.GetExecutingAssembly().GetName().Name};component/Resources/{iconPath}";
 
                 return new SuggestionListItemBinding(text, fullIconPath);
             }

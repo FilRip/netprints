@@ -13,25 +13,25 @@ namespace NetPrintsEditor.Reflection
             {
                 if (all == null)
                 {
-                    var boolType = TypeSpecifier.FromType<bool>();
-                    var intType = TypeSpecifier.FromType<int>();
+                    TypeSpecifier boolType = TypeSpecifier.FromType<bool>();
+                    TypeSpecifier intType = TypeSpecifier.FromType<int>();
 
                     all = new List<MethodSpecifier>();
 
                     // Numerical
-                    foreach (var defaultNumericType in defaultNumericTypes)
+                    foreach (TypeSpecifier defaultNumericType in defaultNumericTypes)
                     {
-                        foreach (var unaryOpName in defaultNumericUnaryOperatorNames)
+                        foreach (string unaryOpName in defaultNumericUnaryOperatorNames)
                         {
                             AddOperator(unaryOpName, true, defaultNumericType, defaultNumericType);
                         }
 
-                        foreach (var unaryOpName in defaultNumericBinaryOperatorNames)
+                        foreach (string unaryOpName in defaultNumericBinaryOperatorNames)
                         {
                             AddOperator(unaryOpName, false, defaultNumericType, defaultNumericType);
                         }
 
-                        foreach (var unaryOpName in defaultNumericComparisonOperatorNames)
+                        foreach (string unaryOpName in defaultNumericComparisonOperatorNames)
                         {
                             AddOperator(unaryOpName, false, defaultNumericType, boolType);
                         }
@@ -51,7 +51,7 @@ namespace NetPrintsEditor.Reflection
                     AddOperator("op_RightShift", false, intType, intType);
 
                     // String addition
-                    var stringType = TypeSpecifier.FromType<string>();
+                    TypeSpecifier stringType = TypeSpecifier.FromType<string>();
                     AddOperator("op_Addition", false, stringType, stringType);
                 }
 

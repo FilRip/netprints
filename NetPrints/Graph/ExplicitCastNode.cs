@@ -87,19 +87,19 @@ namespace NetPrints.Graph
 
             if (pure)
             {
-                var outExecPins = new NodeOutputExecPin[]
+                NodeOutputExecPin[] outExecPins = new NodeOutputExecPin[]
                 {
                     OutputExecPins.Single(p => p.Name == "Success"),
                     OutputExecPins.Single(p => p.Name == "Failure"),
                 };
 
-                foreach (var execPin in outExecPins)
+                foreach (NodeOutputExecPin execPin in outExecPins)
                 {
                     GraphUtil.DisconnectOutputExecPin(execPin);
                     OutputExecPins.Remove(execPin);
                 }
 
-                var inExecPin = InputExecPins.Single(p => p.Name == "Exec");
+                NodeInputExecPin inExecPin = InputExecPins.Single(p => p.Name == "Exec");
                 GraphUtil.DisconnectInputExecPin(inExecPin);
                 InputExecPins.Remove(inExecPin);
             }

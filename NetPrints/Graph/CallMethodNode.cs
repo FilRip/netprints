@@ -164,7 +164,7 @@ namespace NetPrints.Graph
             MethodSpecifier = methodSpecifier;
 
             // Add type pins for each generic argument of the method type parameters.
-            foreach (var genericArg in MethodSpecifier.GenericArguments.OfType<GenericType>())
+            foreach (GenericType genericArg in MethodSpecifier.GenericArguments.OfType<GenericType>())
             {
                 AddInputTypePin(genericArg.Name);
             }
@@ -176,14 +176,14 @@ namespace NetPrints.Graph
 
             AddExceptionPins();
 
-            foreach (var argument in MethodSpecifier.Parameters)
+            foreach (MethodParameter argument in MethodSpecifier.Parameters)
             {
                 AddInputDataPin(argument.Name, argument.Value);
 
                 // Set default parameter value if set
                 if (argument.HasExplicitDefaultValue)
                 {
-                    var newPin = InputDataPins.Last();
+                    NodeInputDataPin newPin = InputDataPins.Last();
                     newPin.UsesExplicitDefaultValue = true;
                     newPin.ExplicitDefaultValue = argument.ExplicitDefaultValue;
                 }

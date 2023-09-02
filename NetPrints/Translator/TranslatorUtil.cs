@@ -248,7 +248,7 @@ namespace NetPrints.Translator
         /// <returns>Pure nodes the node depends on sorted by depth.</returns>
         public static IEnumerable<Node> GetSortedPureNodes(Node node)
         {
-            var dependentNodes = GetDependentPureNodes(node);
+            List<Node> dependentNodes = GetDependentPureNodes(node).ToList();
             List<Node> remainingNodes = new(dependentNodes);
             List<Node> sortedNodes = new();
 

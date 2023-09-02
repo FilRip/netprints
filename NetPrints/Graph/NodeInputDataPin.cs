@@ -31,7 +31,7 @@ namespace NetPrints.Graph
             {
                 if (incomingPin != value)
                 {
-                    var oldPin = incomingPin;
+                    NodeOutputDataPin oldPin = incomingPin;
 
                     SetProperty(ref incomingPin, value);
 

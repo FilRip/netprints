@@ -130,7 +130,7 @@ namespace NetPrints.Graph
         /// These nodes will usually be executed when one of their output data
         /// pins is used in an execution node.
         /// </summary>
-        [DataMember()]
+        //[DataMember()]
         public bool IsPure
         {
             get
@@ -237,7 +237,7 @@ namespace NetPrints.Graph
         /// <param name="pinName">Name of the pin.</param>
         protected void AddInputTypePin(string pinName)
         {
-            var typePin = new NodeInputTypePin(this, pinName);
+            NodeInputTypePin typePin = new(this, pinName);
             typePin.IncomingPinChanged += OnIncomingTypePinChanged;
             InputTypePins.Add(typePin);
         }
@@ -283,7 +283,7 @@ namespace NetPrints.Graph
         [OnDeserialized()]
         private void OnDeserializing(StreamingContext context)
         {
-            foreach (var inputTypePin in InputTypePins)
+            foreach (NodeInputTypePin inputTypePin in InputTypePins)
             {
                 if (inputTypePin.InferredType != null)
                     inputTypePin.InferredType.OnValueChanged += EventInputTypeChanged;

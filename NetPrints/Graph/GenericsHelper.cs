@@ -31,7 +31,7 @@ namespace NetPrints.Graph
                 // Find types to replace and build dictionary
                 Dictionary<GenericType, BaseType> replacementTypes = new();
 
-                foreach (var inputTypePin in inputTypePins)
+                foreach (NodeInputTypePin inputTypePin in inputTypePins)
                 {
                     if (inputTypePin.InferredType?.Value is BaseType replacementType && !(replacementType is null))
                     {
@@ -45,7 +45,7 @@ namespace NetPrints.Graph
 
                 try
                 {
-                    var constructedType = typeSpecifier.Construct(replacementTypes);
+                    TypeSpecifier constructedType = typeSpecifier.Construct(replacementTypes);
                     return constructedType;
                 }
                 catch

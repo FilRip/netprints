@@ -33,7 +33,7 @@ namespace NetPrintsEditor.ViewModels
                             int paramIndex = callMethodNode.ArgumentPins.IndexOf(inputDataPin);
                             if (paramIndex >= 0)
                             {
-                                var parameter = callMethodNode.MethodSpecifier.Parameters[paramIndex];
+                                MethodParameter parameter = callMethodNode.MethodSpecifier.Parameters[paramIndex];
 
                                 if (parameter.HasExplicitDefaultValue)
                                 {
@@ -364,8 +364,8 @@ namespace NetPrintsEditor.ViewModels
                     return BorderBrush;
                 }
 
-                var brush = (SolidColorBrush)BorderBrush;
-                var color = Color.FromArgb(brush.Color.A, (byte)(brush.Color.R * 0.6), (byte)(brush.Color.G * 0.6), (byte)(brush.Color.B * 0.6));
+                SolidColorBrush brush = (SolidColorBrush)BorderBrush;
+                Color color = Color.FromArgb(brush.Color.A, (byte)(brush.Color.R * 0.6), (byte)(brush.Color.G * 0.6), (byte)(brush.Color.B * 0.6));
                 return new SolidColorBrush(color);
             }
         }

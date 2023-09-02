@@ -62,7 +62,7 @@ namespace NetPrints.Graph
                     // Disconnect all existing connections.
                     // Might want them to stay connected but that requires reflection
                     // to determine if the types are still compatible.
-                    foreach (var _ in ResultPin.OutgoingPins)
+                    foreach (NodeInputDataPin _ in ResultPin.OutgoingPins)
                     {
                         GraphUtil.DisconnectOutputDataPin(ResultPin);
                     }

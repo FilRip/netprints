@@ -28,7 +28,7 @@ namespace NetPrints.Graph
             {
                 if (outgoingPin != value)
                 {
-                    var oldPin = outgoingPin;
+                    NodeInputExecPin oldPin = outgoingPin;
 
                     SetProperty(ref outgoingPin, value);
 

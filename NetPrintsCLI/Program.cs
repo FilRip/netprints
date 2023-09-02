@@ -48,7 +48,7 @@ namespace NetPrintsCLI
             else
             {
                 Console.WriteLine($"Compilation failed with {project.LastCompileErrors.Count} errors:");
-                foreach (var error in project.LastCompileErrors)
+                foreach (string error in project.LastCompileErrors)
                 {
                     Console.WriteLine(error);
                 }

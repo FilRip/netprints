@@ -41,7 +41,7 @@ namespace NetPrints.Graph
 
             // Add type pins for each generic argument of the literal type
             // and monitor them for changes to reconstruct the actual pin types.
-            foreach (var genericArg in literalType.GenericArguments.OfType<GenericType>())
+            foreach (GenericType genericArg in literalType.GenericArguments.OfType<GenericType>())
             {
                 AddInputTypePin(genericArg.Name);
             }

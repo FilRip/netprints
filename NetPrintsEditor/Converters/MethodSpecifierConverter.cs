@@ -27,7 +27,7 @@ namespace NetPrintsEditor.Converters
                 }
 
                 string paramTypeNames = string.Join(", ", methodSpecifier.Parameters);
-                string s = $"{methodSpecifier.DeclaringType} {name} ({paramTypeNames})";
+                string s = $"{methodSpecifier.DeclaringType}.{name} ({paramTypeNames})";
 
                 if (methodSpecifier.ReturnTypes.Count > 0)
                 {

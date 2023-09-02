@@ -169,7 +169,7 @@ namespace NetPrintsEditor.ViewModels
 
         public void CreateConstructor(double gridCellSize)
         {
-            var newConstructor = new ConstructorGraph()
+            ConstructorGraph newConstructor = new()
             {
                 Class = Class,
                 Visibility = MemberVisibility.Public,
@@ -185,7 +185,7 @@ namespace NetPrintsEditor.ViewModels
 
         public void CreateMethod(string name, double gridCellSize)
         {
-            var newMethod = new MethodGraph(name)
+            MethodGraph newMethod = new(name)
             {
                 Class = Class,
             };

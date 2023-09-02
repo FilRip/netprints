@@ -57,7 +57,7 @@ namespace NetPrintsEditor.Controls
 
         private void UpdateItems()
         {
-            var items = ViewModel?.Items;
+            List<SearchableComboBoxItem> items = ViewModel?.Items.ToList();
 
             if (items != null)
             {
@@ -95,7 +95,7 @@ namespace NetPrintsEditor.Controls
             // https://stackoverflow.com/a/7182603/4332314
             if (VisualTreeHelper.GetChild(searchList, 0) is Decorator border)
             {
-                var scrollViewer = border.Child as ScrollViewer;
+                ScrollViewer scrollViewer = border.Child as ScrollViewer;
                 scrollViewer.ScrollToTop();
                 scrollViewer.ScrollToLeftEnd();
             }

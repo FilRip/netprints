@@ -58,7 +58,7 @@ namespace NetPrints.Graph
             ConstructorSpecifier = specifier;
 
             // Add type pins for each generic arguments of the type being constructed.
-            foreach (var genericArg in ConstructorSpecifier.DeclaringType.GenericArguments.OfType<GenericType>())
+            foreach (GenericType genericArg in ConstructorSpecifier.DeclaringType.GenericArguments.OfType<GenericType>())
             {
                 AddInputTypePin(genericArg.Name);
             }

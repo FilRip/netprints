@@ -69,7 +69,7 @@ namespace NetPrints.Graph
             // and monitor them for changes to reconstruct the actual pin types.
             if (Type is TypeSpecifier typeSpecifier)
             {
-                foreach (var genericArg in typeSpecifier.GenericArguments.OfType<GenericType>())
+                foreach (GenericType genericArg in typeSpecifier.GenericArguments.OfType<GenericType>())
                 {
                     AddInputTypePin(genericArg.Name);
                 }

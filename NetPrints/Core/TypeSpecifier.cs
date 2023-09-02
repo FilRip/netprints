@@ -256,7 +256,7 @@ namespace NetPrints.Core
             }
 
             // Replace by dictionary
-            var newGenericArgs = new List<BaseType>(GenericArguments);
+            List<BaseType> newGenericArgs = new(GenericArguments);
             for (int i = 0; i < newGenericArgs.Count; i++)
             {
                 if (newGenericArgs[i] is GenericType oldGenericType

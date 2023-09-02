@@ -24,7 +24,7 @@ namespace NetPrintsEditor.Reflection
 
         public static Func<A, R> Memoize<A, R>(this Func<A, R> f)
         {
-            var d = new Dictionary<A, R>();
+            Dictionary<A, R> d = new();
 
             return a =>
             {

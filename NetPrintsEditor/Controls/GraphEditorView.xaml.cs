@@ -133,7 +133,7 @@ namespace NetPrintsEditor.Controls
                 {
                     Graph.SuggestionPin = ((NodePinVM)e.Data.GetData(typeof(NodePinVM))).Pin;
 
-                    var mousePos = Mouse.GetPosition(drawCanvas);
+                    Point mousePos = Mouse.GetPosition(drawCanvas);
                     Graph.UpdateSuggestions(mousePos.X, mousePos.Y);
 
                     // Open the context menu
@@ -260,13 +260,13 @@ namespace NetPrintsEditor.Controls
         {
             if (Graph != null)
             {
-                var selectedNodes = new List<NodeVM>();
+                List<NodeVM> selectedNodes = new();
 
                 for (int i = 0; i < nodeList.Items.Count; i++)
                 {
                     // Check if the control intersects with the rectangle
 
-                    var nodeControl = (ContentPresenter)nodeList.ItemContainerGenerator.ContainerFromIndex(i);
+                    ContentPresenter nodeControl = (ContentPresenter)nodeList.ItemContainerGenerator.ContainerFromIndex(i);
                     NodeVM node = (NodeVM)nodeControl.Content;
 
                     double nodeX = node.Node.PositionX;
@@ -476,7 +476,7 @@ namespace NetPrintsEditor.Controls
 
         private void CablePath_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var element = sender as FrameworkElement;
+            FrameworkElement element = sender as FrameworkElement;
             if (element?.DataContext is not NodePinVM pin)
             {
                 throw new Exception("Could not find cable's pin.");
@@ -494,7 +494,7 @@ namespace NetPrintsEditor.Controls
 
         private void CablePath_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            var element = sender as FrameworkElement;
+            FrameworkElement element = sender as FrameworkElement;
             if (element?.DataContext is not NodePinVM pin)
             {
                 throw new Exception("Could not find cable's pin.");

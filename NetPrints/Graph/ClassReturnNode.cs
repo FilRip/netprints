@@ -32,7 +32,7 @@ namespace NetPrints.Graph
 
         public void RemoveInterfacePin()
         {
-            var interfacePin = InterfacePins.LastOrDefault();
+            NodeInputTypePin interfacePin = InterfacePins.LastOrDefault();
 
             if (interfacePin != null)
             {

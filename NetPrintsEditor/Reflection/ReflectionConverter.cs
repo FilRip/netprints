@@ -23,7 +23,7 @@ namespace NetPrintsEditor.Reflection
 
         public static MemberVisibility VisibilityFromAccessibility(Microsoft.CodeAnalysis.Accessibility accessibility)
         {
-            if (roslynToNetprintsVisibility.TryGetValue(accessibility, out var visibility))
+            if (roslynToNetprintsVisibility.TryGetValue(accessibility, out MemberVisibility visibility))
             {
                 return visibility;
             }
@@ -132,7 +132,7 @@ namespace NetPrintsEditor.Reflection
         {
             MemberVisibility visibility = VisibilityFromAccessibility(method.DeclaredAccessibility);
 
-            var modifiers = MethodModifiers.None;
+            MethodModifiers modifiers = MethodModifiers.None;
 
             if (method.IsVirtual)
             {
@@ -186,10 +186,10 @@ namespace NetPrintsEditor.Reflection
 
         public static VariableSpecifier VariableSpecifierFromSymbol(IPropertySymbol property)
         {
-            var getterAccessibility = property.GetMethod?.DeclaredAccessibility;
-            var setterAccessibility = property.SetMethod?.DeclaredAccessibility;
+            Microsoft.CodeAnalysis.Accessibility? getterAccessibility = property.GetMethod?.DeclaredAccessibility;
+            Microsoft.CodeAnalysis.Accessibility? setterAccessibility = property.SetMethod?.DeclaredAccessibility;
 
-            var modifiers = new VariableModifiers();
+            VariableModifiers modifiers = new();
 
             if (property.IsStatic)
             {
@@ -214,9 +214,9 @@ namespace NetPrintsEditor.Reflection
 
         public static VariableSpecifier VariableSpecifierFromField(IFieldSymbol field)
         {
-            var visibility = VisibilityFromAccessibility(field.DeclaredAccessibility);
+            MemberVisibility visibility = VisibilityFromAccessibility(field.DeclaredAccessibility);
 
-            var modifiers = new VariableModifiers();
+            VariableModifiers modifiers = new();
 
             if (field.IsStatic)
             {

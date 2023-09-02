@@ -297,7 +297,7 @@ namespace NetPrints.Graph
                 throw new ArgumentException("Pin or its connected pin were null");
             }
 
-            var rerouteNode = RerouteNode.MakeData(pin.Node.Graph, new Tuple<BaseType, BaseType>[]
+            RerouteNode rerouteNode = RerouteNode.MakeData(pin.Node.Graph, new Tuple<BaseType, BaseType>[]
             {
                 new Tuple<BaseType, BaseType>(pin.PinType, pin.IncomingPin.PinType)
             });
@@ -320,7 +320,7 @@ namespace NetPrints.Graph
                 throw new ArgumentException("Pin or its connected pin were null");
             }
 
-            var rerouteNode = RerouteNode.MakeExecution(pin.Node.Graph, 1);
+            RerouteNode rerouteNode = RerouteNode.MakeExecution(pin.Node.Graph, 1);
 
             GraphUtil.ConnectExecPins(rerouteNode.OutputExecPins[0], pin.OutgoingPin);
             GraphUtil.ConnectExecPins(pin, rerouteNode.InputExecPins[0]);
@@ -340,10 +340,10 @@ namespace NetPrints.Graph
                 throw new ArgumentException("Pin or its connected pin were null");
             }
 
-            var rerouteNode = RerouteNode.MakeType(pin.Node.Graph, 1);
+            RerouteNode rerouteNode = RerouteNode.MakeType(pin.Node.Graph, 1);
 
-            GraphUtil.ConnectTypePins(pin.IncomingPin, rerouteNode.InputTypePins[0]);
-            GraphUtil.ConnectTypePins(rerouteNode.OutputTypePins[0], pin);
+            ConnectTypePins(pin.IncomingPin, rerouteNode.InputTypePins[0]);
+            ConnectTypePins(rerouteNode.OutputTypePins[0], pin);
 
             return rerouteNode;
         }
@@ -363,7 +363,7 @@ namespace NetPrints.Graph
             const double offsetX = -308;
             const double offsetY = -112;
 
-            var typeNode = new TypeNode(graph, type)
+            TypeNode typeNode = new(graph, type)
             {
                 PositionX = x,
                 PositionY = y,
@@ -377,7 +377,7 @@ namespace NetPrints.Graph
 
                 foreach (TypeNode genericArgNode in genericArgNodes)
                 {
-                    GraphUtil.ConnectTypePins(genericArgNode.OutputTypePins[0], typeNode.InputTypePins[0]);
+                    ConnectTypePins(genericArgNode.OutputTypePins[0], typeNode.InputTypePins[0]);
                 }
             }
 
@@ -421,10 +421,10 @@ namespace NetPrints.Graph
             newMethod.ReturnNodes.First().PositionY = newMethod.EntryNode.PositionY;
 
             // Connect entry and return node execution pins
-            GraphUtil.ConnectExecPins(newMethod.EntryNode.InitialExecutionPin, newMethod.MainReturnNode.ReturnPin);
+            ConnectExecPins(newMethod.EntryNode.InitialExecutionPin, newMethod.MainReturnNode.ReturnPin);
 
             // Add generic arguments
-            for (var i = 0; i < methodSpecifier.GenericArguments.Count; i++)
+            for (int i = 0; i < methodSpecifier.GenericArguments.Count; i++)
             {
                 newMethod.MethodEntryNode.AddGenericArgument();
             }
@@ -469,38 +469,38 @@ namespace NetPrints.Graph
         {
             if (pin is NodeInputExecPin ixp)
             {
-                GraphUtil.ConnectExecPins(node.OutputExecPins[0], ixp);
+                ConnectExecPins(node.OutputExecPins[0], ixp);
             }
             else if (pin is NodeOutputExecPin oxp)
             {
                 if (node.InputExecPins == null || node.InputExecPins.Count == 0)
                     node.AddInputExecPin(""); // TODO : Afficher suggestions
-                GraphUtil.ConnectExecPins(oxp, node.InputExecPins[0] ?? null);
+                ConnectExecPins(oxp, node.InputExecPins[0] ?? null);
             }
             else if (pin is NodeInputDataPin idp)
             {
-                foreach (var otherOtp in node.OutputDataPins)
+                foreach (NodeOutputDataPin otherOtp in node.OutputDataPins)
                 {
-                    if (GraphUtil.CanConnectNodePins(otherOtp, idp, isSubclassOf, hasImplicitCast))
+                    if (CanConnectNodePins(otherOtp, idp, isSubclassOf, hasImplicitCast))
                     {
-                        GraphUtil.ConnectDataPins(otherOtp, idp);
+                        ConnectDataPins(otherOtp, idp);
 
                         // Connect exec pins if possible.
                         // Also forward the previous connection through the new node.
                         if (pin.Node.InputExecPins.Count > 0 && node.OutputExecPins.Count > 0)
                         {
-                            var oldConnected = pin.Node.InputExecPins[0].IncomingPins.FirstOrDefault();
+                            NodeOutputExecPin oldConnected = pin.Node.InputExecPins[0].IncomingPins.FirstOrDefault();
 
                             if (oldConnected != null)
                             {
-                                GraphUtil.DisconnectOutputExecPin(oldConnected);
+                                DisconnectOutputExecPin(oldConnected);
                             }
 
-                            GraphUtil.ConnectExecPins(node.OutputExecPins[0], pin.Node.InputExecPins[0]);
+                            ConnectExecPins(node.OutputExecPins[0], pin.Node.InputExecPins[0]);
 
                             if (oldConnected != null && node.InputExecPins.Count > 0)
                             {
-                                GraphUtil.ConnectExecPins(oldConnected, node.InputExecPins[0]);
+                                ConnectExecPins(oldConnected, node.InputExecPins[0]);
                             }
                         }
 
@@ -510,23 +510,23 @@ namespace NetPrints.Graph
             }
             else if (pin is NodeOutputDataPin odp)
             {
-                foreach (var otherIdp in node.InputDataPins)
+                foreach (NodeInputDataPin otherIdp in node.InputDataPins)
                 {
-                    if (GraphUtil.CanConnectNodePins(odp, otherIdp, isSubclassOf, hasImplicitCast))
+                    if (CanConnectNodePins(odp, otherIdp, isSubclassOf, hasImplicitCast))
                     {
-                        GraphUtil.ConnectDataPins(odp, otherIdp);
+                        ConnectDataPins(odp, otherIdp);
 
                         // Connect exec pins if possible.
                         // Also forward the previous connection through the new node.
                         if (node.InputExecPins.Count > 0 && pin.Node.OutputExecPins.Count > 0)
                         {
-                            var oldConnected = pin.Node.OutputExecPins[0].OutgoingPin;
+                            NodeInputExecPin oldConnected = pin.Node.OutputExecPins[0].OutgoingPin;
 
-                            GraphUtil.ConnectExecPins(pin.Node.OutputExecPins[0], node.InputExecPins[0]);
+                            ConnectExecPins(pin.Node.OutputExecPins[0], node.InputExecPins[0]);
 
                             if (oldConnected != null && node.OutputExecPins.Count > 0)
                             {
-                                GraphUtil.ConnectExecPins(node.OutputExecPins[0], oldConnected);
+                                ConnectExecPins(node.OutputExecPins[0], oldConnected);
                             }
                         }
 
@@ -538,14 +538,14 @@ namespace NetPrints.Graph
             {
                 if (node.OutputTypePins.Count > 0)
                 {
-                    GraphUtil.ConnectTypePins(node.OutputTypePins[0], itp);
+                    ConnectTypePins(node.OutputTypePins[0], itp);
                 }
             }
             else if (pin is NodeOutputTypePin otp)
             {
                 if (node.InputTypePins.Count > 0)
                 {
-                    GraphUtil.ConnectTypePins(otp, node.InputTypePins[0]);
+                    ConnectTypePins(otp, node.InputTypePins[0]);
                 }
             }
         }

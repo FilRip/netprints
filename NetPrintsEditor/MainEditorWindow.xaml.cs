@@ -149,7 +149,7 @@ namespace NetPrintsEditor
 
         private async Task LoadProject(string path)
         {
-            var overlay = await this.ShowProgressAsync("Loading project", path);
+            ProgressDialogController overlay = await this.ShowProgressAsync("Loading project", path);
             overlay.SetIndeterminate();
 
             try
@@ -161,7 +161,7 @@ namespace NetPrintsEditor
             {
                 await overlay.CloseAsync();
                 Clipboard.SetText(ex.ToString());
-                var result = await this.ShowMessageAsync("Failed to load project", $"Failed to load project at path {path}. The exception has been copied to your clipboard.\n\n{ex}",
+                MessageDialogResult result = await this.ShowMessageAsync("Failed to load project", $"Failed to load project at path {path}. The exception has been copied to your clipboard.\n\n{ex}",
                     MessageDialogStyle.Affirmative, new MetroDialogSettings()).ConfigureAwait(false);
             }
         }
@@ -279,7 +279,7 @@ namespace NetPrintsEditor
 
         private async void OnReferencesButtonClicked(object sender, RoutedEventArgs e)
         {
-            var referenceListWindow = new ReferenceListWindow()
+            ReferenceListWindow referenceListWindow = new()
             {
                 DataContext = new ReferenceListViewModel(ViewModel.Project)
             };

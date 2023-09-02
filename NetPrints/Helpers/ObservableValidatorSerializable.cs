@@ -183,7 +183,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             {
                 return GetAllErrors();
             }
-            if (errors.TryGetValue(propertyName, out var value))
+            if (errors.TryGetValue(propertyName, out List<ValidationResult>? value))
             {
                 return value;
             }
@@ -351,7 +351,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
 
         private void ClearErrorsForProperty(string propertyName)
         {
-            if (errors.TryGetValue(propertyName, out var value) && value.Count != 0)
+            if (errors.TryGetValue(propertyName, out List<ValidationResult>? value) && value.Count != 0)
             {
                 value.Clear();
                 totalErrors--;
@@ -365,7 +365,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
 
         private string GetDisplayNameForProperty(string propertyName)
         {
-            DisplayNamesMap.GetValue(GetType(), (Type t) => GetDisplayNames(t)).TryGetValue(propertyName, out var value);
+            DisplayNamesMap.GetValue(GetType(), (Type t) => GetDisplayNames(t)).TryGetValue(propertyName, out string? value);
             return value ?? propertyName;
             static Dictionary<string, string> GetDisplayNames(Type type)
             {

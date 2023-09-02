@@ -232,7 +232,7 @@ namespace NetPrintsEditor
 
             if (graphEditor?.Graph?.SelectedNodes != null)
             {
-                foreach (var selectedNode in graphEditor.Graph.SelectedNodes)
+                foreach (NodeVM selectedNode in graphEditor.Graph.SelectedNodes)
                 {
                     if (!(selectedNode.Node is MethodEntryNode) && !(selectedNode.Node is ClassReturnNode)
                         && selectedNode.Node != (graphEditor.Graph.Graph as MethodGraph)?.MainReturnNode)
@@ -286,7 +286,7 @@ namespace NetPrintsEditor
         {
             if (e.AddedItems.Count > 0)
             {
-                var methodSpecifier = e.AddedItems[0] as MethodSpecifier;
+                MethodSpecifier methodSpecifier = e.AddedItems[0] as MethodSpecifier;
                 if (methodSpecifier != null)
                 {
                     ViewModel.CreateOverrideMethod(methodSpecifier);

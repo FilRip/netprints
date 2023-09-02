@@ -57,16 +57,16 @@ namespace NetPrintsEditor.ViewModels
         {
             if (Project != null)
             {
-                var references = Project.References;
+                ObservableRangeCollection<CompilationReference> references = Project.References;
 
                 // Add referenced assemblies
-                var assemblyPaths = references.OfType<AssemblyReference>().Select(assemblyRef => assemblyRef.AssemblyPath);
+                System.Collections.Generic.List<string> assemblyPaths = references.OfType<AssemblyReference>().Select(assemblyRef => assemblyRef.AssemblyPath).ToList();
 
                 // Add source files
-                var sourcePaths = references.OfType<SourceDirectoryReference>().SelectMany(directoryRef => directoryRef.SourceFilePaths);
+                System.Collections.Generic.List<string> sourcePaths = references.OfType<SourceDirectoryReference>().SelectMany(directoryRef => directoryRef.SourceFilePaths).ToList();
 
                 // Add our own sources
-                var sources = Project.GenerateClassSources();
+                System.Collections.Generic.List<string> sources = Project.GenerateClassSources().ToList();
 
                 App.ReloadReflectionProvider(assemblyPaths, sourcePaths, sources);
             }

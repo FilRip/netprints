@@ -179,7 +179,7 @@ namespace NetPrints.Translator
         {
             builder.AppendLine("// Variables");
 
-            foreach (var v in variableNames)
+            foreach (KeyValuePair<NodeOutputDataPin, string> v in variableNames)
             {
                 NodeOutputDataPin pin = v.Key;
                 string variableName = v.Value;
@@ -464,7 +464,7 @@ namespace NetPrints.Translator
 
         public void TranslateDependentPureNodes(Node node)
         {
-            var sortedPureNodes = TranslatorUtil.GetSortedPureNodes(node);
+            List<Node> sortedPureNodes = TranslatorUtil.GetSortedPureNodes(node).ToList();
             foreach (Node depNode in sortedPureNodes)
             {
                 TranslateNode(depNode, 0);
@@ -510,13 +510,13 @@ namespace NetPrints.Translator
             {
                 temporaryReturnName = TranslatorUtil.GetTemporaryVariableName(random);
 
-                var returnTypeNames = string.Join(", ", node.ReturnValuePins.Select(pin => pin.PinType.Value.FullCodeName));
+                string returnTypeNames = string.Join(", ", node.ReturnValuePins.Select(pin => pin.PinType.Value.FullCodeName));
 
                 builder.Append($"{typeof(Tuple).FullName}<{returnTypeNames}> {temporaryReturnName} = ");
             }
 
             // Get arguments for method call
-            var argumentNames = GetPinIncomingValues(node.ArgumentPins);
+            List<string> argumentNames = GetPinIncomingValues(node.ArgumentPins).ToList();
 
             // Check whether the method is an operator and we need to translate its name
             // into operator symbols. Otherwise just call the method normally.
@@ -526,7 +526,7 @@ namespace NetPrints.Translator
 
                 if (operatorInfo.Unary)
                 {
-                    if (argumentNames.Count() != 1)
+                    if (argumentNames.Count != 1)
                     {
                         throw new Exception($"Unary operator was found but did not have one argument: {node.MethodName}");
                     }
@@ -542,7 +542,7 @@ namespace NetPrints.Translator
                 }
                 else
                 {
-                    if (argumentNames.Count() != 2)
+                    if (argumentNames.Count != 2)
                     {
                         throw new Exception($"Binary operator was found but did not have two arguments: {node.MethodName}");
                     }
@@ -580,7 +580,7 @@ namespace NetPrints.Translator
 
                 List<string> arguments = new();
 
-                foreach ((var argName, var methodParameter) in argNameArray.Zip(node.MethodSpecifier.Parameters, Tuple.Create))
+                foreach ((string argName, MethodParameter methodParameter) in argNameArray.Zip(node.MethodSpecifier.Parameters, Tuple.Create))
                 {
                     // null means use default value
                     if (!(argName is null))
@@ -621,8 +621,8 @@ namespace NetPrints.Translator
             // Assign the real variables from the temporary tuple
             if (node.ReturnValuePins.Count > 1)
             {
-                var returnNames = GetOrCreatePinNames(node.ReturnValuePins);
-                for (int i = 0; i < returnNames.Count(); i++)
+                List<string> returnNames = GetOrCreatePinNames(node.ReturnValuePins).ToList();
+                for (int i = 0; i < returnNames.Count; i++)
                 {
                     builder.AppendLine($"{returnNames.ElementAt(i)} = {temporaryReturnName}.Item{i + 1};");
                 }
@@ -650,7 +650,7 @@ namespace NetPrints.Translator
                 builder.AppendLine($"{GetOrCreatePinName(node.ExceptionPin)} = {exceptionVarName};");
 
                 // Set all return values to default on exception
-                foreach (var returnValuePin in node.ReturnValuePins)
+                foreach (NodeOutputDataPin returnValuePin in node.ReturnValuePins)
                 {
                     string returnName = GetOrCreatePinName(returnValuePin);
                     builder.AppendLine($"{returnName} = default({returnValuePin.PinType.Value.FullCodeName});");
@@ -679,7 +679,7 @@ namespace NetPrints.Translator
             builder.Append($"{returnName} = new {node.ClassType}");
 
             // Write constructor arguments
-            var argumentNames = GetPinIncomingValues(node.ArgumentPins);
+            List<string> argumentNames = GetPinIncomingValues(node.ArgumentPins).ToList();
             //builder.AppendLine($"({string.Join(", ", argumentNames)});");
 
             string[] argNameArray = argumentNames.ToArray();
@@ -689,7 +689,7 @@ namespace NetPrints.Translator
 
             List<string> arguments = new();
 
-            foreach ((var argName, var constructorParameter) in argNameArray.Zip(node.ConstructorSpecifier.Arguments, Tuple.Create))
+            foreach ((string argName, MethodParameter constructorParameter) in argNameArray.Zip(node.ConstructorSpecifier.Arguments, Tuple.Create))
             {
                 // null means use default value
                 if (!(argName is null))
@@ -903,7 +903,7 @@ namespace NetPrints.Translator
             }
             else
             {
-                var returnValues = node.InputDataPins.Select(pin => GetPinIncomingValue(pin));
+                List<string> returnValues = node.InputDataPins.Select(pin => GetPinIncomingValue(pin)).ToList();
 
                 // Tuple<Types..> (won't be needed in the future)
                 string returnType = typeof(Tuple).FullName + "<" + string.Join(", ", node.InputDataPins.Select(pin => pin.PinType.Value.FullCodeName)) + ">";
@@ -1079,7 +1079,7 @@ namespace NetPrints.Translator
                 builder.AppendLine();
                 builder.AppendLine("{");
 
-                foreach (var inputDataPin in node.InputDataPins)
+                foreach (NodeInputDataPin inputDataPin in node.InputDataPins)
                 {
                     builder.AppendLine($"{GetPinIncomingValue(inputDataPin)},");
                 }
