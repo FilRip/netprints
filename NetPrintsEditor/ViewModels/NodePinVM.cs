@@ -13,7 +13,7 @@ using NetPrints.Translator;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class NodePinVM : ObservableObject
+    public class NodePinVM : ObservableObjectSerializable
     {
         public string ToolTip
         {

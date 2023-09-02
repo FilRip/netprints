@@ -13,7 +13,7 @@ using System.Runtime.CompilerServices;
 
 namespace Microsoft.Toolkit.Mvvm.ComponentModel
 {
-    public abstract class ObservableValidator : ObservableObject, INotifyDataErrorInfo
+    public abstract class ObservableValidatorSerializable : ObservableObjectSerializable, INotifyDataErrorInfo
     {
         private static readonly ConditionalWeakTable<Type, Action<object>> EntityValidatorMap = new();
 
@@ -31,22 +31,22 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
 
         public event EventHandler<DataErrorsChangedEventArgs>? ErrorsChanged;
 
-        protected ObservableValidator()
+        protected ObservableValidatorSerializable()
         {
             validationContext = new ValidationContext(this);
         }
 
-        protected ObservableValidator(IDictionary<object, object?>? items)
+        protected ObservableValidatorSerializable(IDictionary<object, object?>? items)
         {
             validationContext = new ValidationContext(this, items);
         }
 
-        protected ObservableValidator(IServiceProvider? serviceProvider, IDictionary<object, object?>? items)
+        protected ObservableValidatorSerializable(IServiceProvider? serviceProvider, IDictionary<object, object?>? items)
         {
             validationContext = new ValidationContext(this, serviceProvider, items);
         }
 
-        protected ObservableValidator(ValidationContext validationContext)
+        protected ObservableValidatorSerializable(ValidationContext validationContext)
         {
             this.validationContext = validationContext;
         }
@@ -237,7 +237,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
                 }
                 ParameterExpression parameterExpression = Expression.Parameter(typeof(object));
                 UnaryExpression inst0 = Expression.Convert(parameterExpression, type);
-                MethodInfo? validateMethod = typeof(ObservableValidator).GetMethod("ValidateProperty", BindingFlags.Instance | BindingFlags.NonPublic);
+                MethodInfo? validateMethod = typeof(ObservableValidatorSerializable).GetMethod("ValidateProperty", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (validateMethod != null)
                 {
                     return Expression.Lambda<Action<object>>(Expression.Block(array.Select(((string Name, MethodInfo GetMethod) property) => Expression.Call(inst0, validateMethod, new Expression[2]

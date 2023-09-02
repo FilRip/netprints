@@ -6,7 +6,7 @@ using NetPrints.Core;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class MainEditorVM : ObservableObject
+    public class MainEditorVM : ObservableObjectSerializable
     {
         private Project m_project;
 

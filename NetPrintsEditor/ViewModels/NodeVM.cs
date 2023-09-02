@@ -13,7 +13,7 @@ using NetPrintsEditor.Messages;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class NodeVM : ObservableObject
+    public class NodeVM : ObservableObjectSerializable
     {
         private static readonly SolidColorBrush DefaultNodeBrush =
             new(Color.FromArgb(0xFF, 0x30, 0x30, 0x30));

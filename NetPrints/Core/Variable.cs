@@ -25,7 +25,7 @@ namespace NetPrints.Core
     /// </summary>
     [Serializable()]
     [DataContract(Name = "PropertySpecifier")]
-    public class Variable : ObservableObject
+    public class Variable : ObservableObjectSerializable
     {
         /// <summary>
         /// Name of the variable without any prefixes.

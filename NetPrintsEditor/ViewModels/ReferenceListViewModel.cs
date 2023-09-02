@@ -4,7 +4,7 @@ using NetPrints.Core;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class ReferenceListViewModel : ObservableObject
+    public class ReferenceListViewModel : ObservableObjectSerializable
     {
         public Project Project
         {

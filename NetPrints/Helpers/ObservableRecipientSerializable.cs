@@ -12,7 +12,7 @@ using Microsoft.Toolkit.Mvvm.Messaging.Messages;
 namespace Microsoft.Toolkit.Mvvm.ComponentModel
 {
     [DataContract()]
-    public abstract class ObservableRecipient : ObservableObject
+    public abstract class ObservableRecipientSerializable : ObservableObjectSerializable
     {
         private bool isActive;
 
@@ -40,12 +40,12 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             }
         }
 
-        protected ObservableRecipient()
+        protected ObservableRecipientSerializable()
             : this(WeakReferenceMessenger.Default)
         {
         }
 
-        protected ObservableRecipient(IMessenger messenger)
+        protected ObservableRecipientSerializable(IMessenger messenger)
         {
             Messenger = messenger;
         }

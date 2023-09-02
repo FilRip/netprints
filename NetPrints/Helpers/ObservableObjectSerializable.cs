@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Toolkit.Mvvm.ComponentModel
 {
     [DataContract()]
-    public abstract class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
+    public abstract class ObservableObjectSerializable : INotifyPropertyChanged, INotifyPropertyChanging
     {
         private interface ITaskNotifier<TTask> where TTask : Task
         {

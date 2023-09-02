@@ -14,7 +14,7 @@ namespace NetPrints.Graph
     [KnownType(typeof(NodeOutputExecPin))]
     [KnownType(typeof(NodeInputTypePin))]
     [KnownType(typeof(NodeOutputTypePin))]
-    public abstract class NodePin : ObservableObject
+    public abstract class NodePin : ObservableObjectSerializable
     {
         /// <summary>
         /// Name of the pin.

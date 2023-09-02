@@ -11,7 +11,7 @@ using NetPrintsEditor.Messages;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class MemberVariableVM : ObservableObject
+    public class MemberVariableVM : ObservableObjectSerializable
     {
         public TypeSpecifier Type => Variable.Type;
 

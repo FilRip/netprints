@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -36,7 +35,7 @@ namespace NetPrints.Graph
     [KnownType(typeof(TernaryNode))]
     [KnownType(typeof(TypeReturnNode))]
     [KnownType(typeof(DefaultNode))]
-    public abstract class Node : ObservableObject
+    public abstract class Node : ObservableObjectSerializable
     {
         /// <summary>
         /// Input data pins of this node.

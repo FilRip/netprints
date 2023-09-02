@@ -39,7 +39,7 @@ namespace NetPrints.Core
     /// Project model.
     /// </summary>
     [DataContract()]
-    public class Project : ObservableObject
+    public class Project : ObservableObjectSerializable
     {
         private static readonly IEnumerable<FrameworkAssemblyReference> DefaultReferences = new FrameworkAssemblyReference[]
         {

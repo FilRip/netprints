@@ -28,28 +28,76 @@ namespace NetPrintsEditor.ViewModels
         }
     }
 
-    public class SuggestionListVM : ObservableObject
+    public class SuggestionListVM : ObservableObjectSerializable
     {
-        private readonly SuggestionListConverter suggestionConverter = new();
+        private readonly SuggestionListConverter suggestionConverter;
 
-        public IEnumerable<SearchableComboBoxItem> Items { get; set; }
-        public NodeGraph Graph { get; set; }
-        public double PositionX { get; set; }
-        public double PositionY { get; set; }
-        public NodePin SuggestionPin { get; set; }
-        public Action HideContextMenu { get; set; }
+        private IEnumerable<SearchableComboBoxItem> m_items;
+        public IEnumerable<SearchableComboBoxItem> Items
+        {
+            get { return m_items; }
+            set
+            {
+                SetProperty(ref m_items, value);
+                OnItemsChanged();
+            }
+        }
 
-        public string SearchText { get; set; } = "";
-        private string[] splitSearchText = Array.Empty<string>();
+        private NodeGraph m_graph;
+        public NodeGraph Graph
+        {
+            get { return m_graph; }
+            set { SetProperty(ref m_graph, value); }
+        }
+
+        private double m_positionX, m_positionY;
+        public double PositionX
+        {
+            get { return m_positionX; }
+            set { SetProperty(ref m_positionX, value); }
+        }
+        public double PositionY
+        {
+            get { return m_positionY; }
+            set { SetProperty(ref m_positionY, value); }
+        }
+
+        private NodePin m_nodePin;
+        public NodePin SuggestionPin
+        {
+            get { return m_nodePin; }
+            set { SetProperty(ref m_nodePin, value); }
+        }
+
+        private Action m_hideContextMenu;
+        public Action HideContextMenu
+        {
+            get { return m_hideContextMenu; }
+            set { m_hideContextMenu = value; }
+        }
+
+        private string m_searchText;
+        public string SearchText
+        {
+            get { return m_searchText; }
+            set
+            {
+                SetProperty(ref m_searchText, value);
+                OnSearchTextChanged();
+            }
+        }
+
+        private string[] splitSearchText;
 
         public event EventHandler ItemsChanged;
 
         public SuggestionListVM()
         {
-
+            SearchText = "";
+            splitSearchText = Array.Empty<string>();
+            suggestionConverter = new();
         }
 
-        // TODO FILRIP
         public void OnItemsChanged() => ItemsChanged?.Invoke(this, EventArgs.Empty);
 
         public bool ItemFilter(object item)
@@ -71,7 +119,6 @@ namespace NetPrintsEditor.ViewModels
             }
         }
 
-        // TODO FILRIP
         public void OnSearchTextChanged() => splitSearchText = SearchText.Split(' ');
 
         private void AddNode<T>(params object[] arguments)

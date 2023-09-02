@@ -15,7 +15,7 @@ using NetPrintsEditor.Messages;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class ClassEditorVM : ObservableObject
+    public class ClassEditorVM : ObservableObjectSerializable
     {
         public Project Project => Class?.Project;
 

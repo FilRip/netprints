@@ -17,7 +17,7 @@ using NetPrintsEditor.Reflection;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class NodeGraphVM : ObservableObject
+    public class NodeGraphVM : ObservableObjectSerializable
     {
         public IEnumerable<SearchableComboBoxItem> Suggestions
         {
