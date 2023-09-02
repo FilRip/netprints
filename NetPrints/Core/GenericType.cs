@@ -80,7 +80,7 @@ namespace NetPrints.Core
 
         public override bool Equals(object obj)
         {
-            if (obj is TypeSpecifier t)
+            if (obj is TypeSpecifier /*t*/)
             {
                 // TODO: Check constraints
                 return true;

@@ -57,7 +57,7 @@ namespace NetPrintsEditor.Controls
 
         private void UpdateItems()
         {
-            List<SearchableComboBoxItem> items = ViewModel?.Items.ToList();
+            List<SearchableComboBoxItem> items = ViewModel?.Items?.ToList();
 
             if (items != null)
             {
