@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using NetPrints.Core;
 using NetPrints.Graph;
+using NetPrints.Helpers;
 
 namespace NetPrints.Translator
 {
@@ -341,8 +342,8 @@ namespace NetPrints.Translator
                 WriteGotoOutputPin(graph.EntryNode.OutputExecPins[0]);
             }
 
-            List<Node> listeNoeuds = execNodes.ToList();
-            List<int> listeFermerAccolade = new();
+            List<Node> listAllNodes = execNodes.ToList();
+            List<int> listCloseBracket = new();
             List<Node> nodeAlreadyTreated = new();
 
             bool move = true;
@@ -350,26 +351,25 @@ namespace NetPrints.Translator
             while (move)
             {
                 move = false;
-                List<IfElseNode> listeIf = listeNoeuds.OfType<IfElseNode>().Where(item => !nodeAlreadyTreated.Contains(item) && item.FalsePin.OutgoingPin != null && item.TruePin.OutgoingPin != null).ToList();
-                foreach (IfElseNode ifElse in listeIf)
+                List<IfElseNode> listIf = listAllNodes.OfType<IfElseNode>().Where(item => !nodeAlreadyTreated.Contains(item) && item.FalsePin.OutgoingPin != null && item.TruePin.OutgoingPin != null).ToList();
+                foreach (IfElseNode ifElse in listIf)
                 {
-                    int posDebutElse = listeNoeuds.IndexOf(ifElse.FalsePin.OutgoingPin.Node);
-                    int posNoeudCourant, posLastParent = listeNoeuds.IndexOf(ifElse);
-                    Node noeudCourant = ifElse.FalsePin.OutgoingPin.Node;
-                    while (noeudCourant != null && noeudCourant.OutputExecPins?.Count > 0 && noeudCourant.OutputExecPins[0].OutgoingPin?.Node != null)
+                    int posStartElse = listAllNodes.IndexOf(ifElse.FalsePin.OutgoingPin.Node);
+                    int posCurrentNode, posLastParent = listAllNodes.IndexOf(ifElse);
+                    Node currentNode = ifElse.FalsePin.OutgoingPin.Node;
+                    while (currentNode != null && currentNode.OutputExecPins?.Count > 0 && currentNode.OutputExecPins[0].OutgoingPin?.Node != null)
                     {
-                        posNoeudCourant = listeNoeuds.IndexOf(noeudCourant);
-                        if (posNoeudCourant < posDebutElse)
+                        posCurrentNode = listAllNodes.IndexOf(currentNode);
+                        if (posCurrentNode < posStartElse)
                         {
-                            List<Node> listeNoeudsEndIf = listeNoeuds.GetRange(posNoeudCourant, posDebutElse - posNoeudCourant);
-                            listeNoeuds.RemoveRange(posNoeudCourant, posDebutElse - posNoeudCourant);
-                            listeNoeuds.InsertRange(posLastParent - listeNoeudsEndIf.Count + 1, listeNoeudsEndIf);
-                            listeFermerAccolade.Add(posLastParent - listeNoeudsEndIf.Count);
+                            int taille = posStartElse - posCurrentNode;
+                            listAllNodes.MoveRange(posCurrentNode, posStartElse - posCurrentNode, posLastParent - taille + 1);
+                            listCloseBracket.Add(posLastParent - taille);
                             move = true;
                             break;
                         }
-                        noeudCourant = noeudCourant.OutputExecPins?[0].OutgoingPin?.Node;
-                        posLastParent = posNoeudCourant;
+                        currentNode = currentNode.OutputExecPins?[0].OutgoingPin?.Node;
+                        posLastParent = posCurrentNode;
                     }
                     nodeAlreadyTreated.Add(ifElse);
                     if (move)
@@ -383,23 +383,21 @@ namespace NetPrints.Translator
             while (move)
             {
                 move = false;
-                List<CallMethodNode> listeCallMethod = listeNoeuds.OfType<CallMethodNode>().Where(item => !nodeAlreadyTreated.Contains(item) && item.HandlesExceptions).ToList();
+                List<CallMethodNode> listeCallMethod = listAllNodes.OfType<CallMethodNode>().Where(item => !nodeAlreadyTreated.Contains(item) && item.HandlesExceptions).ToList();
                 foreach (CallMethodNode noeud in listeCallMethod)
                 {
                     Node noeudCourant = noeud.CatchPin.OutgoingPin.Node;
-                    int posDebut = listeNoeuds.IndexOf(noeudCourant);
+                    int posDebut = listAllNodes.IndexOf(noeudCourant);
                     int posNoeudCourant;
                     int taille = 0;
-                    int posSuite = listeNoeuds.IndexOf(noeud.OutputExecPins[0].OutgoingPin.Node);
+                    int posSuite = listAllNodes.IndexOf(noeud.OutputExecPins[0].OutgoingPin.Node);
                     while (noeudCourant != null && noeudCourant.OutputExecPins?.Count > 0 && noeudCourant.OutputExecPins[0].OutgoingPin?.Node != null)
                     {
-                        posNoeudCourant = listeNoeuds.IndexOf(noeudCourant);
+                        posNoeudCourant = listAllNodes.IndexOf(noeudCourant);
                         if (posNoeudCourant <= posSuite)
                         {
-                            List<Node> listeNoeudsCatch = listeNoeuds.GetRange(posDebut, taille);
-                            listeNoeuds.RemoveRange(posDebut, taille);
-                            listeNoeuds.InsertRange(posSuite, listeNoeudsCatch);
-                            listeFermerAccolade.Add(posSuite + taille - 1);
+                            listAllNodes.MoveRange(posDebut, taille, posSuite);
+                            listCloseBracket.Add(posSuite + taille - 1);
                             move = true;
                             break;
                         }
@@ -414,14 +412,14 @@ namespace NetPrints.Translator
 
             bool ifelseOpen = false, catchOpen = false;
             // Translate every exec node
-            foreach (Node node in listeNoeuds)
+            foreach (Node node in listAllNodes)
             {
                 if (!(node is MethodEntryNode))
                 {
-                    if (listeNoeuds.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
+                    if (listAllNodes.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
                         builder.AppendLine("}");
 
-                    if (listeNoeuds.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node && ifelse.TruePin.OutgoingPin != null))
+                    if (listAllNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node && ifelse.TruePin.OutgoingPin != null))
                     {
                         builder.AppendLine("}");
                         builder.AppendLine("else");
@@ -435,16 +433,16 @@ namespace NetPrints.Translator
                             ifelseOpen = true;
                         else if (node is CallMethodNode noeudCall && noeudCall.HandlesExceptions)
                             catchOpen = true;
-                        if (node is not ReturnNode || listeNoeuds.IndexOf(node) != listeNoeuds.Count - 1 || ((MethodGraph)graph).ReturnTypes.Any())
+                        if (node is not ReturnNode || listAllNodes.IndexOf(node) != listAllNodes.Count - 1 || ((MethodGraph)graph).ReturnTypes.Any())
                             TranslateNode(node, pinIndex);
                     }
 
-                    if (ifelseOpen && listeFermerAccolade.Contains(listeNoeuds.IndexOf(node)))
+                    if (ifelseOpen && listCloseBracket.Contains(listAllNodes.IndexOf(node)))
                     {
                         builder.AppendLine("}");
                         ifelseOpen = false;
                     }
-                    if (catchOpen && listeFermerAccolade.Contains(listeNoeuds.IndexOf(node)))
+                    if (catchOpen && listCloseBracket.Contains(listAllNodes.IndexOf(node)))
                     {
                         builder.AppendLine("}");
                         ifelseOpen = false;
