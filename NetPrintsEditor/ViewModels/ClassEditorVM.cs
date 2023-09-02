@@ -113,25 +113,27 @@ namespace NetPrintsEditor.ViewModels
             Class = cls;
 
             codeTimer = new Timer(1000);
-            codeTimer.Elapsed += (sender, eventArgs) =>
+            codeTimer.Elapsed += CodeTimerThread;
+            codeTimer.Start();
+        }
+
+        private void CodeTimerThread(object sender, EventArgs e)
+        {
+            codeTimer.Stop();
+
+            string code;
+
+            try
             {
-                codeTimer.Stop();
+                code = classTranslator.TranslateClass(Class);
+            }
+            catch (Exception ex)
+            {
+                code = ex.ToString();
+            }
 
-                string code;
+            Dispatcher.CurrentDispatcher.Invoke(() => GeneratedCode = code);
 
-                try
-                {
-                    code = classTranslator.TranslateClass(Class);
-                }
-                catch (Exception ex)
-                {
-                    code = ex.ToString();
-                }
-
-                Dispatcher.CurrentDispatcher.Invoke(() => GeneratedCode = code);
-
-                codeTimer.Start();
-            };
             codeTimer.Start();
         }
 

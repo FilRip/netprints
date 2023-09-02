@@ -55,12 +55,15 @@ namespace NetPrintsEditor
 
         private void OnAddSourceDirectoryReferenceClicked(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.FolderBrowserDialog openFolderDialog = new();
-            if (openFolderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            OpenFileDialog openFolderDialog = new();
+            openFolderDialog.CheckFileExists = false;
+            openFolderDialog.FileName = "Select a directory...";
+
+            if (openFolderDialog.ShowDialog() == true)
             {
                 try
                 {
-                    SourceDirectoryReference sourceDirectoryReference = new(openFolderDialog.SelectedPath);
+                    SourceDirectoryReference sourceDirectoryReference = new(Path.GetDirectoryName(openFolderDialog.FileName));
 
                     if (!ViewModel.Project.References.OfType<SourceDirectoryReference>().Any(r =>
                         string.Equals(Path.GetFullPath(r.SourceDirectory), Path.GetFullPath(sourceDirectoryReference.SourceDirectory), StringComparison.OrdinalIgnoreCase)))
@@ -70,7 +73,7 @@ namespace NetPrintsEditor
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Failed to add sources at {openFolderDialog.SelectedPath}:\n\n{ex}");
+                    MessageBox.Show($"Failed to add sources at {Path.GetDirectoryName(openFolderDialog.FileName)}:\n\n{ex}");
                 }
             }
         }

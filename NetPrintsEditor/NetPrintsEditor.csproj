@@ -4,7 +4,6 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <AssemblyName>NetPrintsEditor</AssemblyName>
     <UseWPF>True</UseWPF>
-    <UseWindowsForms>True</UseWindowsForms>
     <StartupObject>NetPrintsEditor.App</StartupObject>
     <ApplicationIcon>NetPrintsLogo.ico</ApplicationIcon>
     <LangVersion>preview</LangVersion>
