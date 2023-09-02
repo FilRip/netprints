@@ -328,10 +328,6 @@ namespace NetPrints.Translator
 
             builder.AppendLine("{"); // Method start
 
-            // Write a placeholder for the jump stack declaration
-            // Replaced later
-            builder.Append("%JUMPSTACKPLACEHOLDER%");
-
             // Write the variable declarations
             TranslateVariables();
             builder.AppendLine();
@@ -445,7 +441,7 @@ namespace NetPrints.Translator
                     if (catchOpen && listCloseBracket.Contains(listAllNodes.IndexOf(node)))
                     {
                         builder.AppendLine("}");
-                        ifelseOpen = false;
+                        catchOpen = false;
                     }
                 }
             }
@@ -453,48 +449,13 @@ namespace NetPrints.Translator
             if (ifelseOpen || catchOpen)
                 builder.AppendLine("}");
 
-            // Write the jump stack if it was ever used
-            if (pinsJumpedTo.Count > 0)
-            {
-                TranslateJumpStack();
-
-                builder.Replace("%JUMPSTACKPLACEHOLDER%", $"{JumpStackType} {JumpStackVarName} = new {JumpStackType}();{Environment.NewLine}");
-            }
-            else
-            {
-                builder.Replace("%JUMPSTACKPLACEHOLDER%", "");
-            }
-
             builder.AppendLine("}"); // Method end
 
-            string code = builder.ToString();
-
-            code = RemoveUnnecessaryLabels(code);
-
-            // Remove unused labels
-            return code;
-        }
-
-        private string RemoveUnnecessaryLabels(string code)
-        {
-            foreach (int stateId in nodeStateIds.Values.SelectMany(i => i))
-            {
-                if (!code.Contains($"goto State{stateId};"))
-                {
-                    code = code.Replace($"State{stateId}:", "");
-                }
-            }
-
-            return code;
+            return builder.ToString();
         }
 
         public void TranslateNode(Node node, int pinIndex)
         {
-            /*if (!(node is RerouteNode))
-            {
-                builder.AppendLine($"// {node}");
-            }*/
-
             if (nodeTypeHandlers.ContainsKey(node.GetType()))
             {
                 nodeTypeHandlers[node.GetType()][pinIndex](this, node);
@@ -508,16 +469,6 @@ namespace NetPrints.Translator
         private void WriteGotoJumpStack()
         {
             builder.AppendLine($"goto State{jumpStackStateId};");
-        }
-
-        private void WritePushJumpStack(NodeInputExecPin pin)
-        {
-            if (!pinsJumpedTo.Contains(pin))
-            {
-                pinsJumpedTo.Add(pin);
-            }
-
-            builder.AppendLine($"{JumpStackVarName}.Push({GetExecPinStateId(pin)});");
         }
 
         private void WriteGotoInputPin(NodeInputExecPin pin)
