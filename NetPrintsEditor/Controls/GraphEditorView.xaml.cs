@@ -86,7 +86,7 @@ namespace NetPrintsEditor.Controls
             HideVariableGetSet();
         }
 
-        /*private void OnVariableSetClicked(VariableGetSetControl sender,
+        private void OnVariableSetClicked(VariableGetSetControl sender,
             VariableSpecifier variableSpecifier, bool wasSet)
         {
             Point position = Mouse.GetPosition(drawCanvas);
@@ -115,7 +115,7 @@ namespace NetPrintsEditor.Controls
             }
 
             HideVariableGetSet();
-        }*/
+        }
 
         private void OnGridDrop(object sender, DragEventArgs e)
         {
