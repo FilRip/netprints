@@ -40,7 +40,7 @@ namespace NetPrints.Translator
             { typeof(CallMethodNode), new List<NodeTypeHandler> { (translator, node) => translator.TranslateCallMethodNode(node as CallMethodNode) } },
             { typeof(VariableSetterNode), new List<NodeTypeHandler> { (translator, node) => translator.TranslateVariableSetterNode(node as VariableSetterNode) } },
             { typeof(ReturnNode), new List<NodeTypeHandler> { (translator, node) => translator.TranslateReturnNode(node as ReturnNode) } },
-            { typeof(MethodEntryNode), new List<NodeTypeHandler> { (translator, node) => translator.TranslateMethodEntry(node as MethodEntryNode) } },
+            { typeof(MethodEntryNode), new List<NodeTypeHandler> { (translator, node) => TranslateMethodEntry(node as MethodEntryNode) } },
             { typeof(IfElseNode), new List<NodeTypeHandler> { (translator, node) => translator.TranslateIfElseNode(node as IfElseNode) } },
             { typeof(ConstructorNode), new List<NodeTypeHandler> { (translator, node) => translator.TranslateConstructorNode(node as ConstructorNode) } },
             { typeof(ExplicitCastNode), new List<NodeTypeHandler> { (translator, node) => translator.TranslateExplicitCastNode(node as ExplicitCastNode) } },
@@ -471,7 +471,7 @@ namespace NetPrints.Translator
             }
         }
 
-        public void TranslateMethodEntry(MethodEntryNode node)
+        public static void TranslateMethodEntry(MethodEntryNode node)
         {
             /*// Go to the next state.
             // Only write if it's not the initial state (id==0) anyway.

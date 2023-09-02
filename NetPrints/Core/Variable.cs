@@ -52,8 +52,10 @@ namespace NetPrints.Core
         /// </summary>
         public TypeSpecifier Type => TypeGraph.ReturnType;
 
+#pragma warning disable IDE0051
         [DataMember(Name = "Type", EmitDefaultValue = false, IsRequired = false)]
         private TypeSpecifier OldType
+#pragma warning restore IDE0051
         {
             get => null;
             set

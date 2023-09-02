@@ -493,7 +493,7 @@ namespace NetPrints.Core
             Process.Start(exePath);
         }
 
-        private void FixReferencePaths()
+        /*private void FixReferencePaths()
         {
             List<CompilationReference> referencesToRemove = new();
 
@@ -522,7 +522,7 @@ namespace NetPrints.Core
                         else
                         {
                             referencesToRemove.Add(reference);
-                        }*/
+                        }*//*
                     }
                 }
             }
@@ -535,9 +535,9 @@ namespace NetPrints.Core
                 // TODO
                 /*MessageBox.Show("The following assemblies could not be found and have been removed from the project:\n\n" +
                     string.Join(Environment.NewLine, referencesToRemove.Select(n => n.ToString())),
-                    "Could not load some assemblies", MessageBoxButton.OK, MessageBoxImage.Warning);*/
+                    "Could not load some assemblies", MessageBoxButton.OK, MessageBoxImage.Warning);*//*
             }
-        }
+        }*/
 
         #region Create / Load / Save Project
         /// <summary>
