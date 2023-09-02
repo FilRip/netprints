@@ -3,8 +3,7 @@
   <PropertyGroup>
     <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <TargetFrameworkProfile />
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>NetPrintsLogo.ico</ApplicationIcon>
@@ -20,7 +19,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NetPrints.VSIX</RootNamespace>
     <AssemblyName>NetPrints.VSIX</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFramework>net472</TargetFramework>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
@@ -40,7 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>preview</LangVersion>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,7 +48,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>preview</LangVersion>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ClassEditorView.xaml.cs">
@@ -87,27 +86,8 @@
     <PackageReference Include="MahApps.Metro.IconPacks">
       <Version>3.0.0-alpha0146</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="15.9.3" ExcludeAssets="runtime">
-      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.1.3116">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="PropertyChanged.Fody">
-      <Version>3.0.1-beta.1</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NetPrintsEditor\NetPrintsEditor.csproj">
-      <Project>{d967186e-1d97-4ced-bc7b-de5fba3d5989}</Project>
-      <Name>NetPrintsEditor</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </ProjectReference>
-    <ProjectReference Include="..\NetPrints\NetPrints.csproj">
-      <Project>{9f33e024-e65f-4954-9df2-a1a26d68c0ad}</Project>
-      <Name>NetPrints</Name>
-    </ProjectReference>
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.0.206" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.11.64" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ClassEditorView.xaml">
@@ -115,7 +95,13 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\NetPrintsEditor\NetPrintsEditor.csproj" />
+    <ProjectReference Include="..\NetPrints\NetPrints.csproj">
+      <Project>{9f33e024-e65f-4954-9df2-a1a26d68c0ad}</Project>
+      <Name>NetPrints</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="NetPrintsLogo.ico" />
     <Content Include="NetPrintsLogo.png">
