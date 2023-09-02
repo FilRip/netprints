@@ -291,8 +291,7 @@ namespace NetPrints.VSIX
         {
             if (e.AddedItems.Count > 0)
             {
-                var methodSpecifier = e.AddedItems[0] as MethodSpecifier;
-                if (methodSpecifier != null)
+                if (e.AddedItems[0] is MethodSpecifier methodSpecifier)
                 {
                     ViewModel.CreateOverrideMethod(methodSpecifier);
                 }
