@@ -341,6 +341,7 @@ namespace NetPrints.Translator
                 WriteGotoOutputPin(graph.EntryNode.OutputExecPins[0]);
             }
 
+            bool ifelseOpen = false;
             // Translate every exec node
             foreach (Node node in execNodes)
             {
@@ -348,19 +349,34 @@ namespace NetPrints.Translator
                 {
                     if (execNodes.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
                         builder.AppendLine("}");
+
                     if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin.OutgoingPin.Node == node))
                     {
                         builder.AppendLine("else");
                         builder.AppendLine("{");
+                        ifelseOpen = true;
                     }
+
                     for (int pinIndex = 0; pinIndex < node.InputExecPins.Count; pinIndex++)
                     {
-                        builder.AppendLine($"State{nodeStateIds[node][pinIndex]}:");
+                        if (node is IfElseNode)
+                            ifelseOpen = true;
+                        //builder.AppendLine($"State{nodeStateIds[node][pinIndex]}:");
                         TranslateNode(node, pinIndex);
-                        builder.AppendLine();
+                        //builder.AppendLine();
                     }
-                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.TruePin.OutgoingPin.Node == node || ifelse.FalsePin.OutgoingPin.Node == node))
+
+                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelseOpen && node.OutputExecPins.Count == 0))
+                    {
                         builder.AppendLine("}");
+                        ifelseOpen = false;
+                    }
+
+                    // TODO : We need to move the else before the next of if
+                    /*if (node == execNodes.ElementAt(execNodes.Count() -1) && node is not ReturnNode && node.OutputExecPins.Count > 0 && node.OutputExecPins[0].OutgoingPin?.Node != null)
+                    {
+                        TranslateNode(node.OutputExecPins[0].OutgoingPin.Node, 0);
+                    }*/
                 }
             }
 
@@ -379,6 +395,8 @@ namespace NetPrints.Translator
             builder.AppendLine("}"); // Method end
 
             string code = builder.ToString();
+
+            code = RemoveUnnecessaryLabels(code);
 
             // Remove unused labels
             return RemoveUnnecessaryLabels(code);
@@ -399,10 +417,10 @@ namespace NetPrints.Translator
 
         public void TranslateNode(Node node, int pinIndex)
         {
-            if (!(node is RerouteNode))
+            /*if (!(node is RerouteNode))
             {
                 builder.AppendLine($"// {node}");
-            }
+            }*/
 
             if (nodeTypeHandlers.ContainsKey(node.GetType()))
             {
