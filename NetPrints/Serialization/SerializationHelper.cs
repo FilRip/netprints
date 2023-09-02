@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Xml;
 
 using NetPrints.Core;
 
@@ -23,8 +24,15 @@ namespace NetPrints.Serialization
         /// <param name="outputPath">Path to save the class at.</param>
         public static void SaveClass(ClassGraph cls, string outputPath)
         {
-            using FileStream fileStream = File.Open(outputPath, FileMode.Create);
-            classSerializer.WriteObject(fileStream, cls);
+            XmlWriterSettings settings = new()
+            {
+                Indent = true,
+            };
+            XmlWriter xw = XmlWriter.Create(outputPath, settings);
+            classSerializer.WriteObject(xw, cls);
+            xw.Flush();
+            xw.Close();
+            xw.Dispose();
         }
 
         /// <summary>

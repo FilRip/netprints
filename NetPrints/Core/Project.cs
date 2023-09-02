@@ -9,6 +9,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Xml;
 
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
@@ -173,9 +174,15 @@ namespace NetPrints.Core
 
             SaveVersion = Assembly.GetExecutingAssembly().GetName().Version;
 
-            using FileStream fileStream = File.Open(Path, FileMode.Create);
-
-            ProjectSerializer.WriteObject(fileStream, this);
+            XmlWriterSettings settings = new()
+            {
+                Indent = true,
+            };
+            XmlWriter xw = XmlWriter.Create(Path, settings);
+            ProjectSerializer.WriteObject(xw, this);
+            xw.Flush();
+            xw.Close();
+            xw.Dispose();
         }
 
         /// <summary>
