@@ -101,11 +101,14 @@ namespace NetPrintsEditor.Reflection
                     if (docPath != null)
                     {
                         XmlDocument doc = new();
-                        doc.Load(File.OpenRead(docPath));
+                        if (File.Exists(docPath))
+                        {
+                            doc.Load(File.OpenRead(docPath));
 
-                        cachedDocuments.Add(key, doc);
+                            cachedDocuments.Add(key, doc);
 
-                        return doc;
+                            return doc;
+                        }
                     }
                 }
                 catch { }

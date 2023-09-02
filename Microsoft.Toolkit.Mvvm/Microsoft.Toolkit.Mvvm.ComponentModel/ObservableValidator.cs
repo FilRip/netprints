@@ -51,7 +51,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             this.validationContext = validationContext;
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, bool validate, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, bool validate, [CallerMemberName()] string? propertyName = null)
         {
             bool num = SetProperty(ref field, newValue, propertyName);
             if (num && validate)
@@ -61,7 +61,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, bool validate, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, bool validate, [CallerMemberName()] string? propertyName = null)
         {
             bool num = SetProperty(ref field, newValue, comparer, propertyName);
             if (num && validate)
@@ -71,7 +71,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<T>(T oldValue, T newValue, Action<T> callback, bool validate, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>(T oldValue, T newValue, Action<T> callback, bool validate, [CallerMemberName()] string? propertyName = null)
         {
             bool num = SetProperty(oldValue, newValue, callback, propertyName);
             if (num && validate)
@@ -81,7 +81,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, bool validate, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, bool validate, [CallerMemberName()] string? propertyName = null)
         {
             bool num = SetProperty(oldValue, newValue, comparer, callback, propertyName);
             if (num && validate)
@@ -91,7 +91,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, bool validate, [CallerMemberName] string? propertyName = null) where TModel : class
+        protected bool SetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, bool validate, [CallerMemberName()] string? propertyName = null) where TModel : class
         {
             bool num = SetProperty(oldValue, newValue, model, callback, propertyName);
             if (num && validate)
@@ -101,7 +101,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, bool validate, [CallerMemberName] string? propertyName = null) where TModel : class
+        protected bool SetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, bool validate, [CallerMemberName()] string? propertyName = null) where TModel : class
         {
             bool num = SetProperty(oldValue, newValue, comparer, model, callback, propertyName);
             if (num && validate)
@@ -111,7 +111,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool TrySetProperty<T>(ref T field, T newValue, out IReadOnlyCollection<ValidationResult> errors, [CallerMemberName] string? propertyName = null)
+        protected bool TrySetProperty<T>(ref T field, T newValue, out IReadOnlyCollection<ValidationResult>? errors, [CallerMemberName()] string? propertyName = null)
         {
             if (TryValidateProperty(newValue, propertyName, out errors))
             {
@@ -120,7 +120,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return false;
         }
 
-        protected bool TrySetProperty<T>(ref T field, T newValue, IEqualityComparer<T> comparer, out IReadOnlyCollection<ValidationResult> errors, [CallerMemberName] string? propertyName = null)
+        protected bool TrySetProperty<T>(ref T field, T newValue, IEqualityComparer<T> comparer, out IReadOnlyCollection<ValidationResult>? errors, [CallerMemberName()] string? propertyName = null)
         {
             if (TryValidateProperty(newValue, propertyName, out errors))
             {
@@ -129,7 +129,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return false;
         }
 
-        protected bool TrySetProperty<T>(T oldValue, T newValue, Action<T> callback, out IReadOnlyCollection<ValidationResult> errors, [CallerMemberName] string? propertyName = null)
+        protected bool TrySetProperty<T>(T oldValue, T newValue, Action<T> callback, out IReadOnlyCollection<ValidationResult>? errors, [CallerMemberName()] string? propertyName = null)
         {
             if (TryValidateProperty(newValue, propertyName, out errors))
             {
@@ -138,7 +138,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return false;
         }
 
-        protected bool TrySetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, out IReadOnlyCollection<ValidationResult> errors, [CallerMemberName] string? propertyName = null)
+        protected bool TrySetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, out IReadOnlyCollection<ValidationResult>? errors, [CallerMemberName()] string? propertyName = null)
         {
             if (TryValidateProperty(newValue, propertyName, out errors))
             {
@@ -147,7 +147,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return false;
         }
 
-        protected bool TrySetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, out IReadOnlyCollection<ValidationResult> errors, [CallerMemberName] string? propertyName = null) where TModel : class
+        protected bool TrySetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, out IReadOnlyCollection<ValidationResult>? errors, [CallerMemberName()] string? propertyName = null) where TModel : class
         {
             if (TryValidateProperty(newValue, propertyName, out errors))
             {
@@ -156,7 +156,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return false;
         }
 
-        protected bool TrySetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, out IReadOnlyCollection<ValidationResult> errors, [CallerMemberName] string? propertyName = null) where TModel : class
+        protected bool TrySetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, out IReadOnlyCollection<ValidationResult>? errors, [CallerMemberName()] string? propertyName = null) where TModel : class
         {
             if (TryValidateProperty(newValue, propertyName, out errors))
             {
@@ -203,20 +203,26 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
         protected void ValidateAllProperties()
         {
             EntityValidatorMap.GetValue(GetType(), (Type t) => GetValidationAction(t))(this);
-            static Action<object> GetValidationAction(Type type)
+
+            static Action<object>? GetValidationAction(Type type)
             {
-                Type type2 = type.Assembly.GetType("Microsoft.Toolkit.Mvvm.ComponentModel.__Internals.__ObservableValidatorExtensions");
-                if (type2 != null)
+                if (type != null && type.Assembly != null)
                 {
-                    MethodInfo method = type2.GetMethod("CreateAllPropertiesValidator", new Type[1] { type });
-                    if (method != null)
+                    Type? type2 = type.Assembly.GetType("Microsoft.Toolkit.Mvvm.ComponentModel.__Internals.__ObservableValidatorExtensions");
+                    if (type2 != null)
                     {
-                        return (Action<object>)method.Invoke(null, new object[1]);
+                        MethodInfo? method = type2.GetMethod("CreateAllPropertiesValidator", new Type[1] { type });
+                        if (method != null)
+                        {
+                            return (Action<object>?)method.Invoke(null, new object[1]);
+                        }
                     }
+                    return GetValidationActionFallback(type);
                 }
-                return GetValidationActionFallback(type);
+                return null;
             }
-            static Action<object> GetValidationActionFallback(Type type)
+
+            static Action<object>? GetValidationActionFallback(Type type)
             {
                 (string, MethodInfo)[] array = (from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                                                 where property.GetIndexParameters().Length == 0 && property.GetCustomAttributes<ValidationAttribute>(inherit: true).Any()
@@ -231,20 +237,25 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
                 }
                 ParameterExpression parameterExpression = Expression.Parameter(typeof(object));
                 UnaryExpression inst0 = Expression.Convert(parameterExpression, type);
-                MethodInfo validateMethod = typeof(ObservableValidator).GetMethod("ValidateProperty", BindingFlags.Instance | BindingFlags.NonPublic);
-                return Expression.Lambda<Action<object>>(Expression.Block(array.Select(((string Name, MethodInfo GetMethod) property) => Expression.Call(inst0, validateMethod, new Expression[2]
+                MethodInfo? validateMethod = typeof(ObservableValidator).GetMethod("ValidateProperty", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (validateMethod != null)
                 {
-                Expression.Convert(Expression.Call(inst0, property.GetMethod), typeof(object)),
-                Expression.Constant(property.Name)
-                }))), new ParameterExpression[1] { parameterExpression }).Compile();
+                    return Expression.Lambda<Action<object>>(Expression.Block(array.Select(((string Name, MethodInfo GetMethod) property) => Expression.Call(inst0, validateMethod, new Expression[2]
+                    {
+                    Expression.Convert(Expression.Call(inst0, property.GetMethod), typeof(object)),
+                    Expression.Constant(property.Name)
+                    }))), new ParameterExpression[1] { parameterExpression }).Compile();
+                }
+                return null;
             }
         }
 
-        protected internal void ValidateProperty(object? value, [CallerMemberName] string? propertyName = null)
+        protected internal void ValidateProperty(object? value, [CallerMemberName()] string? propertyName = null)
         {
             if (propertyName == null)
             {
                 ThrowArgumentNullExceptionForNullPropertyName();
+                return;
             }
             if (!errors.TryGetValue(propertyName, out List<ValidationResult>? value2))
             {
@@ -285,11 +296,13 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             }
         }
 
-        private bool TryValidateProperty(object? value, string? propertyName, out IReadOnlyCollection<ValidationResult> errors)
+        private bool TryValidateProperty(object? value, string? propertyName, out IReadOnlyCollection<ValidationResult>? errors)
         {
             if (propertyName == null)
             {
                 ThrowArgumentNullExceptionForNullPropertyName();
+                errors = null;
+                return false;
             }
             if (!this.errors.TryGetValue(propertyName, out List<ValidationResult>? value2))
             {
@@ -358,10 +371,10 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
                 PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (PropertyInfo propertyInfo in properties)
                 {
-                    DisplayAttribute customAttribute = propertyInfo.GetCustomAttribute<DisplayAttribute>();
+                    DisplayAttribute? customAttribute = propertyInfo.GetCustomAttribute<DisplayAttribute>();
                     if (customAttribute != null)
                     {
-                        string name = customAttribute.GetName();
+                        string? name = customAttribute.GetName();
                         if (name != null)
                         {
                             dictionary.Add(propertyInfo.Name, name);

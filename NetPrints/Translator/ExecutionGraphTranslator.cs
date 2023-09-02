@@ -159,7 +159,7 @@ namespace NetPrints.Translator
                 {
                     nodeStateIds.Add(node, new List<int>());
 
-                    foreach (NodeInputExecPin execPin in node.InputExecPins)
+                    foreach (NodeInputExecPin _ in node.InputExecPins)
                     {
                         nodeStateIds[node].Add(GetNextStateId());
                     }

@@ -42,9 +42,11 @@ namespace Microsoft.Toolkit.Mvvm.Messaging.Messages
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public TaskAwaiter<T> GetAwaiter()
+        public TaskAwaiter<T>? GetAwaiter()
         {
-            return Response.GetAwaiter();
+            if (Response != null)
+                return Response.GetAwaiter();
+            return null;
         }
 
         private static void ThrowInvalidOperationExceptionForNoResponseReceived()

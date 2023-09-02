@@ -69,7 +69,7 @@ namespace NetPrintsEditor.Reflection
             {
                 if (namedType.IsUnboundGenericType)
                 {
-                    throw new ArgumentException(nameof(type));
+                    throw new ArgumentException("Specified type is generic type", nameof(type));
                 }
 
                 foreach (ITypeSymbol genType in namedType.TypeArguments)

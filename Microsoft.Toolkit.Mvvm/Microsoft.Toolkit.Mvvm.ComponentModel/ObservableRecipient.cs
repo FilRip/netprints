@@ -66,7 +66,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             Messenger.Send(message);
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, bool broadcast, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, bool broadcast, [CallerMemberName()] string? propertyName = null)
         {
             T oldValue = field;
             bool num = SetProperty(ref field, newValue, propertyName);
@@ -77,7 +77,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, bool broadcast, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, bool broadcast, [CallerMemberName()] string? propertyName = null)
         {
             T oldValue = field;
             bool num = SetProperty(ref field, newValue, comparer, propertyName);
@@ -88,7 +88,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<T>(T oldValue, T newValue, Action<T> callback, bool broadcast, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>(T oldValue, T newValue, Action<T> callback, bool broadcast, [CallerMemberName()] string? propertyName = null)
         {
             bool num = SetProperty(oldValue, newValue, callback, propertyName);
             if (num && broadcast)
@@ -98,7 +98,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, bool broadcast, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, bool broadcast, [CallerMemberName()] string? propertyName = null)
         {
             bool num = SetProperty(oldValue, newValue, comparer, callback, propertyName);
             if (num && broadcast)
@@ -108,7 +108,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, bool broadcast, [CallerMemberName] string? propertyName = null) where TModel : class
+        protected bool SetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, bool broadcast, [CallerMemberName()] string? propertyName = null) where TModel : class
         {
             bool num = SetProperty(oldValue, newValue, model, callback, propertyName);
             if (num && broadcast)
@@ -118,7 +118,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, bool broadcast, [CallerMemberName] string? propertyName = null) where TModel : class
+        protected bool SetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, bool broadcast, [CallerMemberName()] string? propertyName = null) where TModel : class
         {
             bool num = SetProperty(oldValue, newValue, comparer, model, callback, propertyName);
             if (num && broadcast)

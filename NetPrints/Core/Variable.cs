@@ -183,7 +183,7 @@ namespace NetPrints.Core
             GraphUtil.ConnectTypePins(typePin, TypeGraph.ReturnNode.TypePin);
         }
 
-        [OnDeserialized]
+        [OnDeserialized()]
         private void OnDeserialized(StreamingContext context)
         {
             if (TypeGraph is null)

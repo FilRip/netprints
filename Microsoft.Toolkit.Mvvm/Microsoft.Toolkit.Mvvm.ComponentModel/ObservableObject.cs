@@ -76,25 +76,25 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            this.PropertyChanged?.Invoke(this, e);
+            PropertyChanged?.Invoke(this, e);
         }
 
         protected virtual void OnPropertyChanging(PropertyChangingEventArgs e)
         {
-            this.PropertyChanging?.Invoke(this, e);
+            PropertyChanging?.Invoke(this, e);
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName()] string? propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        protected void OnPropertyChanging([CallerMemberName] string? propertyName = null)
+        protected void OnPropertyChanging([CallerMemberName()] string? propertyName = null)
         {
             OnPropertyChanging(new PropertyChangingEventArgs(propertyName));
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, [CallerMemberName()] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, newValue))
             {
@@ -106,7 +106,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return true;
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, [CallerMemberName()] string? propertyName = null)
         {
             if (comparer.Equals(field, newValue))
             {
@@ -118,7 +118,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return true;
         }
 
-        protected bool SetProperty<T>(T oldValue, T newValue, Action<T> callback, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>(T oldValue, T newValue, Action<T> callback, [CallerMemberName()] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
             {
@@ -130,7 +130,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return true;
         }
 
-        protected bool SetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, [CallerMemberName] string? propertyName = null)
+        protected bool SetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, [CallerMemberName()] string? propertyName = null)
         {
             if (comparer.Equals(oldValue, newValue))
             {
@@ -142,7 +142,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return true;
         }
 
-        protected bool SetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null) where TModel : class
+        protected bool SetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, [CallerMemberName()] string? propertyName = null) where TModel : class
         {
             if (EqualityComparer<T>.Default.Equals(oldValue, newValue))
             {
@@ -154,7 +154,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return true;
         }
 
-        protected bool SetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null) where TModel : class
+        protected bool SetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, [CallerMemberName()] string? propertyName = null) where TModel : class
         {
             if (comparer.Equals(oldValue, newValue))
             {
@@ -166,32 +166,43 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return true;
         }
 
-        protected bool SetPropertyAndNotifyOnCompletion([NotNull] ref TaskNotifier? taskNotifier, Task? newValue, [CallerMemberName] string? propertyName = null)
+        protected bool SetPropertyAndNotifyOnCompletion([NotNull] ref TaskNotifier? taskNotifier, Task? newValue, [CallerMemberName()] string? propertyName = null)
         {
+#pragma warning disable CS8620, CS8631 // Impossible d'utiliser le type en tant que paramètre de type dans le type ou la méthode générique. La nullabilité de l'argument de type ne correspond pas au type de contrainte.
             return SetPropertyAndNotifyOnCompletion(taskNotifier ??= new TaskNotifier(), newValue, delegate
+#pragma warning restore CS8620, CS8631 // Impossible d'utiliser le type en tant que paramètre de type dans le type ou la méthode générique. La nullabilité de l'argument de type ne correspond pas au type de contrainte.
             {
             }, propertyName);
         }
 
-        protected bool SetPropertyAndNotifyOnCompletion([NotNull] ref TaskNotifier? taskNotifier, Task? newValue, Action<Task?> callback, [CallerMemberName] string? propertyName = null)
+        protected bool SetPropertyAndNotifyOnCompletion([NotNull] ref TaskNotifier? taskNotifier, Task? newValue, Action<Task?> callback, [CallerMemberName()] string? propertyName = null)
         {
+#pragma warning disable CS8620, CS8631 // Impossible d'utiliser le type en tant que paramètre de type dans le type ou la méthode générique. La nullabilité de l'argument de type ne correspond pas au type de contrainte.
             return SetPropertyAndNotifyOnCompletion(taskNotifier ??= new TaskNotifier(), newValue, callback, propertyName);
+#pragma warning restore CS8620, CS8631 // Impossible d'utiliser le type en tant que paramètre de type dans le type ou la méthode générique. La nullabilité de l'argument de type ne correspond pas au type de contrainte.
         }
 
-        protected bool SetPropertyAndNotifyOnCompletion<T>([NotNull] ref TaskNotifier<T>? taskNotifier, Task<T>? newValue, [CallerMemberName] string? propertyName = null)
+        protected bool SetPropertyAndNotifyOnCompletion<T>([NotNull] ref TaskNotifier<T>? taskNotifier, Task<T>? newValue, [CallerMemberName()] string? propertyName = null)
         {
+#pragma warning disable CS8620, CS8631 // Impossible d'utiliser le type en tant que paramètre de type dans le type ou la méthode générique. La nullabilité de l'argument de type ne correspond pas au type de contrainte.
             return SetPropertyAndNotifyOnCompletion(taskNotifier ??= new TaskNotifier<T>(), newValue, delegate
+#pragma warning restore CS8620, CS8631 // Impossible d'utiliser le type en tant que paramètre de type dans le type ou la méthode générique. La nullabilité de l'argument de type ne correspond pas au type de contrainte.
             {
             }, propertyName);
         }
 
-        protected bool SetPropertyAndNotifyOnCompletion<T>([NotNull] ref TaskNotifier<T>? taskNotifier, Task<T>? newValue, Action<Task<T>?> callback, [CallerMemberName] string? propertyName = null)
+        protected bool SetPropertyAndNotifyOnCompletion<T>([NotNull] ref TaskNotifier<T>? taskNotifier, Task<T>? newValue, Action<Task<T>?> callback, [CallerMemberName()] string? propertyName = null)
         {
+#pragma warning disable CS8620, CS8631 // Impossible d'utiliser le type en tant que paramètre de type dans le type ou la méthode générique. La nullabilité de l'argument de type ne correspond pas au type de contrainte.
             return SetPropertyAndNotifyOnCompletion(taskNotifier ??= new TaskNotifier<T>(), newValue, callback, propertyName);
+#pragma warning restore CS8620, CS8631 // Impossible d'utiliser le type en tant que paramètre de type dans le type ou la méthode générique. La nullabilité de l'argument de type ne correspond pas au type de contrainte.
         }
 
-        private bool SetPropertyAndNotifyOnCompletion<TTask>(ITaskNotifier<TTask> taskNotifier, TTask? newValue, Action<TTask?> callback, [CallerMemberName] string? propertyName = null) where TTask : Task
+        private bool SetPropertyAndNotifyOnCompletion<TTask>(ITaskNotifier<TTask> taskNotifier, TTask newValue, Action<TTask?> callback, [CallerMemberName()] string? propertyName = null) where TTask : Task
         {
+            if (propertyName == null)
+                throw new ArgumentNullException(nameof(propertyName));
+
             TTask newValue2 = newValue;
             ITaskNotifier<TTask> taskNotifier2 = taskNotifier;
             string propertyName2 = propertyName;
@@ -215,7 +226,8 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             {
                 try
                 {
-                    await newValue2;
+                    if (newValue2 != null)
+                        await newValue2;
                 }
                 catch
                 {

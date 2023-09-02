@@ -99,7 +99,7 @@ namespace NetPrints.Core
             _ = new ReturnNode(this);
         }
 
-        [OnDeserialized]
+        [OnDeserialized()]
         private void OnDeserialized(StreamingContext context)
         {
             // Call Node.OnMethodDeserialized until the types don't change anymore

@@ -29,7 +29,7 @@ namespace Microsoft.Toolkit.Mvvm.DependencyInjection
             {
                 ThrowInvalidOperationExceptionForMissingInitialization();
             }
-            return (T)obj!.GetService(typeof(T));
+            return (T?)obj!.GetService(typeof(T));
         }
 
         public T? GetRequiredService<T>() where T : class
@@ -39,7 +39,7 @@ namespace Microsoft.Toolkit.Mvvm.DependencyInjection
             {
                 ThrowInvalidOperationExceptionForMissingInitialization();
             }
-            T obj2 = (T)obj!.GetService(typeof(T));
+            T? obj2 = (T?)obj!.GetService(typeof(T));
             if (obj2 == null)
             {
                 ThrowInvalidOperationExceptionForUnregisteredType();

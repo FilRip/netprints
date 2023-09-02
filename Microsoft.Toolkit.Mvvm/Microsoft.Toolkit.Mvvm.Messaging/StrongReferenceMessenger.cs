@@ -72,7 +72,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
         {
             lock (recipientsMap)
             {
-                if (!TryGetMapping(out Mapping<TMessage, TToken> mapping))
+                if (!TryGetMapping(out Mapping<TMessage, TToken>? mapping))
                 {
                     return false;
                 }
@@ -87,7 +87,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
             {
                 Mapping<TMessage, TToken> orAddMapping = GetOrAddMapping<TMessage, TToken>();
                 Recipient key = new(recipient);
-                ref DictionarySlim<TToken, object> orAddValueRef = ref orAddMapping.GetOrAddValueRef(key);
+                ref DictionarySlim<TToken, object>? orAddValueRef = ref orAddMapping.GetOrAddValueRef(key);
                 if (orAddValueRef == null)
                 {
                     orAddValueRef = new DictionarySlim<TToken, object>();
@@ -98,7 +98,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
                     ThrowInvalidOperationExceptionForDuplicateRegistration();
                 }
                 orAddValueRef2 = handler;
-                ref HashSet<IMapping> orAddValueRef3 = ref recipientsMap.GetOrAddValueRef(key);
+                ref HashSet<IMapping>? orAddValueRef3 = ref recipientsMap.GetOrAddValueRef(key);
                 if (orAddValueRef3 == null)
                 {
                     orAddValueRef3 = new HashSet<IMapping>();
@@ -130,7 +130,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
         public void UnregisterAll<TToken>(object recipient, TToken token) where TToken : IEquatable<TToken>
         {
             bool lockTaken = false;
-            object[] array = null;
+            object[]? array = null;
             int length = 0;
             try
             {
@@ -152,8 +152,8 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
                 for (int i = 0; i < span.Length; i++)
                 {
                     IDictionarySlim<Recipient, IDictionarySlim<TToken>> dictionarySlim2 = Unsafe.As<IDictionarySlim<Recipient, IDictionarySlim<TToken>>>(span[i]);
-                    IDictionarySlim<TToken> dictionarySlim3 = dictionarySlim2[key];
-                    if (dictionarySlim3.TryRemove(token) && dictionarySlim3.Count == 0)
+                    IDictionarySlim<TToken>? dictionarySlim3 = dictionarySlim2[key];
+                    if (dictionarySlim3 != null && dictionarySlim3.TryRemove(token) && dictionarySlim3.Count == 0)
                     {
                         dictionarySlim2.TryRemove(key);
                         if (dictionarySlim2.Count == 0 && value.Remove(Unsafe.As<IMapping>(dictionarySlim2)) && value.Count == 0)
@@ -181,7 +181,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
         {
             lock (recipientsMap)
             {
-                if (!TryGetMapping(out Mapping<TMessage, TToken> mapping))
+                if (!TryGetMapping(out Mapping<TMessage, TToken>? mapping))
                 {
                     return;
                 }
@@ -189,8 +189,8 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
                 if (mapping.TryGetValue(key, out var value) && value.TryRemove(token) && value.Count == 0)
                 {
                     mapping.TryRemove(key);
-                    HashSet<IMapping> hashSet = recipientsMap[key];
-                    if (hashSet.Remove(mapping) && hashSet.Count == 0)
+                    HashSet<IMapping>? hashSet = recipientsMap[key];
+                    if (hashSet != null && hashSet.Remove(mapping) && hashSet.Count == 0)
                     {
                         recipientsMap.TryRemove(key);
                     }
@@ -205,21 +205,24 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
             object[] array;
             lock (recipientsMap)
             {
-                TryGetMapping(out Mapping<TMessage, TToken> mapping);
+                TryGetMapping(out Mapping<TMessage, TToken>? mapping);
                 int num2 = mapping?.Count ?? 0;
                 if (num2 == 0)
                 {
                     return message;
                 }
-                span = (array = ArrayPool<object>.Shared.Rent(2 * num2));
-                DictionarySlim<Recipient, DictionarySlim<TToken, object>>.Enumerator enumerator = mapping.GetEnumerator();
-                while (enumerator.MoveNext())
+                span = array = ArrayPool<object>.Shared.Rent(2 * num2);
+                if (mapping != null)
                 {
-                    if (enumerator.Value.TryGetValue(token, out object? value))
+                    DictionarySlim<Recipient, DictionarySlim<TToken, object>>.Enumerator enumerator = mapping.GetEnumerator();
+                    while (enumerator.MoveNext())
                     {
-                        span[2 * num] = value;
-                        span[2 * num + 1] = enumerator.Key.Target;
-                        num++;
+                        if (enumerator.Value != null && enumerator.Value.TryGetValue(token, out object? value))
+                        {
+                            span[2 * num] = value;
+                            span[2 * num + 1] = enumerator.Key.Target;
+                            num++;
+                        }
                     }
                 }
             }
@@ -268,7 +271,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
         private Mapping<TMessage, TToken> GetOrAddMapping<TMessage, TToken>() where TMessage : class where TToken : IEquatable<TToken>
         {
             Type2 key = new(typeof(TMessage), typeof(TToken));
-            ref IMapping orAddValueRef = ref typesMap.GetOrAddValueRef(key);
+            ref IMapping? orAddValueRef = ref typesMap.GetOrAddValueRef(key);
             if (orAddValueRef == null)
             {
                 orAddValueRef = new Mapping<TMessage, TToken>();

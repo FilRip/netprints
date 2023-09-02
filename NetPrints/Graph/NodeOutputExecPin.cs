@@ -30,7 +30,7 @@ namespace NetPrints.Graph
                 {
                     var oldPin = outgoingPin;
 
-                    outgoingPin = value;
+                    SetProperty(ref outgoingPin, value);
 
                     OutgoingPinChanged?.Invoke(this, oldPin, outgoingPin);
                 }

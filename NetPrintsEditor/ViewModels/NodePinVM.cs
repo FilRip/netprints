@@ -119,7 +119,7 @@ namespace NetPrintsEditor.ViewModels
             }
         }
 
-        private bool isBeingConnected = false;
+        private bool isBeingConnected;
 
         // TODO: Save this property (perhaps move to model)
         public bool IsFaint { get; set; }
@@ -180,6 +180,15 @@ namespace NetPrintsEditor.ViewModels
             GraphUtil.DisconnectPin(pin);
         }
 
+        public bool CheckedUnconnectedValue
+        {
+            get
+            {
+                return UnconnectedValue != null;
+            }
+            set { }
+        }
+
         public object UnconnectedValue
         {
             get
@@ -207,15 +216,13 @@ namespace NetPrintsEditor.ViewModels
                         {
                             p.UnconnectedValue = Convert.ChangeType(value, t);
                         }
-                        catch (InvalidCastException)
-                        {
-                        }
+                        catch (InvalidCastException) { }
                     }
                     else
                     {
                         p.UnconnectedValue = value;
                     }
-
+                    OnPropertyChanged(nameof(CheckedUnconnectedValue));
                     OnPropertyChanged(nameof(UnconnectedValue));
                 }
             }

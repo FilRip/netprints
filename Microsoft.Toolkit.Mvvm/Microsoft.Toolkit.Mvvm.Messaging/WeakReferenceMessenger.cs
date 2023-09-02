@@ -31,7 +31,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
             lock (recipientsMap)
             {
                 Type2 key = new(typeof(TMessage), typeof(TToken));
-                return recipientsMap.TryGetValue(key, out ConditionalWeakTable<object, IDictionarySlim> value) && value.TryGetValue(recipient, out IDictionarySlim value2) && Unsafe.As<DictionarySlim<TToken, object>>(value2).ContainsKey(token);
+                return recipientsMap.TryGetValue(key, out ConditionalWeakTable<object, IDictionarySlim>? value) && value.TryGetValue(recipient, out IDictionarySlim? value2) && Unsafe.As<DictionarySlim<TToken, object>>(value2).ContainsKey(token);
             }
         }
 
@@ -40,7 +40,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
             lock (recipientsMap)
             {
                 Type2 key = new(typeof(TMessage), typeof(TToken));
-                ref ConditionalWeakTable<object, IDictionarySlim> orAddValueRef = ref recipientsMap.GetOrAddValueRef(key);
+                ref ConditionalWeakTable<object, IDictionarySlim>? orAddValueRef = ref recipientsMap.GetOrAddValueRef(key);
                 if (orAddValueRef == null)
                 {
                     orAddValueRef = new ConditionalWeakTable<object, IDictionarySlim>();
@@ -61,7 +61,8 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
                 DictionarySlim<Type2, ConditionalWeakTable<object, IDictionarySlim>>.Enumerator enumerator = recipientsMap.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
-                    enumerator.Value.Remove(recipient);
+                    if (enumerator.Value != null)
+                        enumerator.Value.Remove(recipient);
                 }
             }
         }
@@ -73,7 +74,7 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
                 DictionarySlim<Type2, ConditionalWeakTable<object, IDictionarySlim>>.Enumerator enumerator = recipientsMap.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
-                    if (enumerator.Key.TToken == typeof(TToken) && enumerator.Value.TryGetValue(recipient, out var value))
+                    if (enumerator.Key.TToken == typeof(TToken) && enumerator.Value != null && enumerator.Value.TryGetValue(recipient, out var value))
                     {
                         Unsafe.As<DictionarySlim<TToken, object>>(value).TryRemove(token);
                     }
@@ -180,26 +181,29 @@ namespace Microsoft.Toolkit.Mvvm.Messaging
                     {
                         arrayPoolBufferWriter2.Reset();
                         bool flag = false;
-                        foreach (KeyValuePair<object, IDictionarySlim> item in enumerator.Value)
+                        if (enumerator.Value != null)
                         {
-                            if (item.Value.Count == 0)
+                            foreach (KeyValuePair<object, IDictionarySlim> item in enumerator.Value)
                             {
-                                arrayPoolBufferWriter2.Add(item.Key);
+                                if (item.Value.Count == 0)
+                                {
+                                    arrayPoolBufferWriter2.Add(item.Key);
+                                }
+                                else
+                                {
+                                    flag = true;
+                                }
                             }
-                            else
+                            ReadOnlySpan<object> span = arrayPoolBufferWriter2.Span;
+                            for (int i = 0; i < span.Length; i++)
                             {
-                                flag = true;
+                                object key = span[i];
+                                enumerator.Value.Remove(key);
                             }
-                        }
-                        ReadOnlySpan<object> span = arrayPoolBufferWriter2.Span;
-                        for (int i = 0; i < span.Length; i++)
-                        {
-                            object key = span[i];
-                            enumerator.Value.Remove(key);
-                        }
-                        if (!flag)
-                        {
-                            arrayPoolBufferWriter.Add(enumerator.Key);
+                            if (!flag)
+                            {
+                                arrayPoolBufferWriter.Add(enumerator.Key);
+                            }
                         }
                     }
                     ReadOnlySpan<Type2> span2 = arrayPoolBufferWriter.Span;

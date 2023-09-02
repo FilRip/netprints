@@ -240,7 +240,7 @@ namespace Microsoft.Toolkit.Mvvm.Input
             {
                 return false;
             }
-            return CanExecute((T)parameter);
+            return CanExecute((T?)parameter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -251,7 +251,7 @@ namespace Microsoft.Toolkit.Mvvm.Input
 
         public void Execute(object? parameter)
         {
-            ExecuteAsync((T)parameter);
+            ExecuteAsync((T?)parameter);
         }
 
         public Task ExecuteAsync(T? parameter)
@@ -272,7 +272,7 @@ namespace Microsoft.Toolkit.Mvvm.Input
 
         public Task ExecuteAsync(object? parameter)
         {
-            return ExecuteAsync((T)parameter);
+            return ExecuteAsync((T?)parameter);
         }
 
         public void Cancel()

@@ -80,7 +80,7 @@ namespace Microsoft.Toolkit.Mvvm.Input
             {
                 return false;
             }
-            return CanExecute((T)parameter);
+            return CanExecute((T?)parameter);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -94,7 +94,7 @@ namespace Microsoft.Toolkit.Mvvm.Input
 
         public void Execute(object? parameter)
         {
-            Execute((T)parameter);
+            Execute((T?)parameter);
         }
     }
 }

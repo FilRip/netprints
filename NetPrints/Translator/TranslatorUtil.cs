@@ -285,8 +285,13 @@ namespace NetPrints.Translator
         public static string FormatCode(string code)
         {
             SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
-            SyntaxNode formatted = Formatter.Format(syntaxTree.GetCompilationUnitRoot(), new AdhocWorkspace()).NormalizeWhitespace();
-            return formatted.ToFullString();
+            try
+            {
+                SyntaxNode formatted = Formatter.Format(syntaxTree.GetCompilationUnitRoot(), new AdhocWorkspace()).NormalizeWhitespace();
+                return formatted.ToFullString();
+            }
+            catch (Exception) { }
+            return "";
         }
     }
 }

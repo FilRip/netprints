@@ -91,7 +91,7 @@
                 SelectedItem="{Binding UnconnectedValue}"
                 ItemsSource="{Binding PossibleEnumNames}" />
 
-            <CheckBox IsChecked="{Binding UnconnectedValue, Mode=TwoWay}"
+            <CheckBox IsChecked="{Binding CheckedUnconnectedValue, Mode=TwoWay}"
                 MouseUp="OnClearUnconnectedValue"
                 Visibility="{Binding ShowBooleanValue, Converter={StaticResource ResourceKey=BoolToVis}}" />
         </Grid>

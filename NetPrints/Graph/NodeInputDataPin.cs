@@ -33,7 +33,7 @@ namespace NetPrints.Graph
                 {
                     var oldPin = incomingPin;
 
-                    incomingPin = value;
+                    SetProperty(ref incomingPin, value);
 
                     IncomingPinChanged?.Invoke(this, oldPin, incomingPin);
                 }
@@ -74,7 +74,7 @@ namespace NetPrints.Graph
                     throw new ArgumentException("Pin unconnected");
                 }
 
-                unconnectedValue = value;
+                SetProperty(ref unconnectedValue, value);
             }
         }
 

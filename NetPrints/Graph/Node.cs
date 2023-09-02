@@ -131,6 +131,7 @@ namespace NetPrints.Graph
         /// These nodes will usually be executed when one of their output data
         /// pins is used in an execution node.
         /// </summary>
+        [DataMember()]
         public bool IsPure
         {
             get
@@ -147,9 +148,8 @@ namespace NetPrints.Graph
                 if (IsPure != value)
                 {
                     SetPurity(value);
+                    OnPropertyChanged(nameof(IsPure));
                 }
-
-                Debug.Assert(value == IsPure, "Purity could not be set correctly.");
             }
         }
 
@@ -281,7 +281,7 @@ namespace NetPrints.Graph
         {
         }
 
-        [OnDeserialized]
+        [OnDeserialized()]
         private void OnDeserializing(StreamingContext context)
         {
             foreach (var inputTypePin in InputTypePins)

@@ -28,34 +28,34 @@ namespace NetPrints.Core
         private static readonly Dictionary<string, OperatorInfo> operatorSymbols = new()
         {
             // Unary
-            ["op_Increment"] = new OperatorInfo("Increment", "++", true, true),
-            ["op_Decrement"] = new OperatorInfo("Decrement", "--", true, true),
-            ["op_UnaryPlus"] = new OperatorInfo("Unary Plus", "+", true),
-            ["op_UnaryNegation"] = new OperatorInfo("Unary Negation", "-", true),
-            ["op_LogicalNot"] = new OperatorInfo("Not", "!", true),
+            [OperatorPrefix + "Increment"] = new OperatorInfo("Increment", "++", true, true),
+            [OperatorPrefix + "Decrement"] = new OperatorInfo("Decrement", "--", true, true),
+            [OperatorPrefix + "UnaryPlus"] = new OperatorInfo("Unary Plus", "+", true),
+            [OperatorPrefix + "UnaryNegation"] = new OperatorInfo("Unary Negation", "-", true),
+            [OperatorPrefix + "LogicalNot"] = new OperatorInfo("Not", "!", true),
 
             // Binary
-            ["op_Addition"] = new OperatorInfo("Add", "+", false),
-            ["op_Subtraction"] = new OperatorInfo("Subtract", "-", false),
-            ["op_Multiply"] = new OperatorInfo("Multiply", "*", false),
-            ["op_Division"] = new OperatorInfo("Divide", "/", false),
-            ["op_Modulus"] = new OperatorInfo("Modulus", "%", false),
-            ["op_GreaterThan"] = new OperatorInfo("Greater than", ">", false),
-            ["op_GreaterThanOrEqual"] = new OperatorInfo("Greater than or equal", ">=", false),
-            ["op_Equality"] = new OperatorInfo("Equal", "==", false),
-            ["op_Inequality"] = new OperatorInfo("Not Equal", "!=", false),
-            ["op_LessThan"] = new OperatorInfo("Less than", "<", false),
-            ["op_LessThanOrEqual"] = new OperatorInfo("Less than or equal", "<=", false),
-            ["op_BitwiseAnd"] = new OperatorInfo("Bitwise AND", "&", false),
-            ["op_BitwiseOr"] = new OperatorInfo("Bitwise OR", "|", false),
-            ["op_ExclusiveOr"] = new OperatorInfo("Bitwise XOR", "^", false),
-            ["op_LeftShift"] = new OperatorInfo("Shift Left", "<<", false),
-            ["op_RightShift"] = new OperatorInfo("Shift Right", ">>", false),
+            [OperatorPrefix + "Addition"] = new OperatorInfo("Add", "+", false),
+            [OperatorPrefix + "Subtraction"] = new OperatorInfo("Subtract", "-", false),
+            [OperatorPrefix + "Multiply"] = new OperatorInfo("Multiply", "*", false),
+            [OperatorPrefix + "Division"] = new OperatorInfo("Divide", "/", false),
+            [OperatorPrefix + "Modulus"] = new OperatorInfo("Modulus", "%", false),
+            [OperatorPrefix + "GreaterThan"] = new OperatorInfo("Greater than", ">", false),
+            [OperatorPrefix + "GreaterThanOrEqual"] = new OperatorInfo("Greater than or equal", ">=", false),
+            [OperatorPrefix + "Equality"] = new OperatorInfo("Equal", "==", false),
+            [OperatorPrefix + "Inequality"] = new OperatorInfo("Not Equal", "!=", false),
+            [OperatorPrefix + "LessThan"] = new OperatorInfo("Less than", "<", false),
+            [OperatorPrefix + "LessThanOrEqual"] = new OperatorInfo("Less than or equal", "<=", false),
+            [OperatorPrefix + "BitwiseAnd"] = new OperatorInfo("Bitwise AND", "&", false),
+            [OperatorPrefix + "BitwiseOr"] = new OperatorInfo("Bitwise OR", "|", false),
+            [OperatorPrefix + "ExclusiveOr"] = new OperatorInfo("Bitwise XOR", "^", false),
+            [OperatorPrefix + "LeftShift"] = new OperatorInfo("Shift Left", "<<", false),
+            [OperatorPrefix + "RightShift"] = new OperatorInfo("Shift Right", ">>", false),
 
             // Custom (not part of .NET symbols)
-            ["op_BitwiseNot"] = new OperatorInfo("Bitwise NOT", "~", true),
-            ["op_LogicalAnd"] = new OperatorInfo("And", "&&", false),
-            ["op_LogicalOr"] = new OperatorInfo("Or", "||", false),
+            [OperatorPrefix + "BitwiseNot"] = new OperatorInfo("Bitwise NOT", "~", true),
+            [OperatorPrefix + "LogicalAnd"] = new OperatorInfo("And", "&&", false),
+            [OperatorPrefix + "LogicalOr"] = new OperatorInfo("Or", "||", false),
         };
 
         /// <summary>
