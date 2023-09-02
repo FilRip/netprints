@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="NetPrintsEditor.Controls.GraphEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NetPrintsEditor.Controls"
+             xmlns:converters="clr-namespace:NetPrintsEditor.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800" x:Name="graphEditorWindow">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <converters:BoolToDoubleConverter x:Key="FaintToOpacity" True="0.1" False="0.7" />
+        <converters:BoolToDoubleConverter x:Key="FaintToThickness" True="2" False="4" />
+    </UserControl.Resources>
+
+    <Grid x:Name="grid" ClipToBounds="True" AllowDrop="True" DragOver="OnDragOver" Drop="OnGridDrop"
+          Tag="{Binding}" ContextMenuOpening="OnContextMenuOpening">
+        <Grid.ContextMenu>
+            <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                <ContextMenu.Template>
+                    <ControlTemplate>
+                        <local:SearchableComboBox DataContext="{Binding SuggestionViewModel}"
+                            Width="700" Height="300"/>
+                    </ControlTemplate>
+                </ContextMenu.Template>
+            </ContextMenu>
+        </Grid.ContextMenu>
+
+        <Canvas x:Name="drawCanvas" MouseLeftButtonDown="OnDrawCanvasLeftMouseButtonDown" MouseLeftButtonUp="OnDrawCanvasLeftMouseButtonUp"
+                MouseRightButtonDown="OnDrawCanvasRightMouseButtonDown" MouseRightButtonUp="OnDrawCanvasRightMouseUp"
+                MouseMove="OnDrawCanvasMouseMove" MouseWheel="OnMouseWheelScroll" Width="10000" Height="10000">
+            <Canvas.Background>
+                <DrawingBrush TileMode="Tile" Viewport="0,0,28,28" ViewportUnits="Absolute">
+                    <DrawingBrush.Drawing>
+                        <GeometryDrawing>
+                            <GeometryDrawing.Geometry>
+                                <RectangleGeometry Rect="0,0,28,28"/>
+                            </GeometryDrawing.Geometry>
+                            <GeometryDrawing.Pen>
+                                <Pen Brush="Gray" Thickness="0.5"/>
+                            </GeometryDrawing.Pen>
+                        </GeometryDrawing>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Canvas.Background>
+
+            <Border x:Name="boxSelectionBorder" Background="#3300FF00" BorderThickness="1" BorderBrush="#FF00CC00" CornerRadius="1" Visibility="Hidden" />
+
+            <ItemsControl Panel.ZIndex="0" x:Name="nodeList" ItemsSource="{Binding Nodes}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <local:NodeControl />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Panel.ZIndex" Value="{Binding ZIndex}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+
+            <ItemsControl Panel.ZIndex="-1" ItemsSource="{Binding AllPins}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Path MouseDown="CablePath_MouseDown" MouseUp="CablePath_MouseUp" MouseEnter="CablePath_MouseEnter" MouseLeave="CablePath_MouseLeave"
+                              x:Name="cablePath" Visibility="{Binding IsCableVisible, Converter={StaticResource ResourceKey=BoolToVis}}"
+                              Stroke="{Binding BorderBrush}" StrokeThickness="{Binding IsFaint, Converter={StaticResource FaintToThickness}}"
+                              Opacity="{Binding IsFaint, Converter={StaticResource FaintToOpacity}}" StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathGeometry.Figures>
+                                        <PathFigureCollection>
+                                            <PathFigure StartPoint="{Binding AbsolutePosition}">
+                                                <PathFigure.Segments>
+                                                    <PathSegmentCollection>
+                                                        <BezierSegment 
+                                                                Point1="{Binding ConnectedCP1}" 
+                                                                Point2="{Binding ConnectedCP2}" 
+                                                                Point3="{Binding ConnectedAbsolutePosition}" />
+                                                    </PathSegmentCollection>
+                                                </PathFigure.Segments>
+                                            </PathFigure>
+                                        </PathFigureCollection>
+                                    </PathGeometry.Figures>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <local:VariableGetSetControl Panel.ZIndex="2" x:Name="variableGetSet" Visibility="Hidden" Width="200" Height="60" 
+                                             MouseLeave="OnVariableGetSetMouseLeave" OnVariableGetSet="OnVariableSetClicked" />
+        </Canvas>
+
+        <Label Content="{Binding Name}" FontWeight="Bold"
+               FontSize="32" VerticalContentAlignment="Bottom" IsHitTestVisible="False" Background="Transparent" Foreground="#CCEEEEEE" />
+    </Grid>
+</UserControl>

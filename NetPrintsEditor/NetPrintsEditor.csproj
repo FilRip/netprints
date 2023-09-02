@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <AssemblyName>NetPrintsEditor</AssemblyName>
+    <UseWPF>True</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
+    <StartupObject>NetPrintsEditor.App</StartupObject>
+    <ApplicationIcon>NetPrintsLogo.ico</ApplicationIcon>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="ClassEditorWindow.xaml" />
+    <None Remove="Controls\GraphEditorView.xaml" />
+    <None Remove="Controls\MemberVariableView.xaml" />
+    <None Remove="NetPrintsLogo.ico" />
+    <None Remove="ReferenceListWindow.xaml" />
+    <None Remove="Resources\ConditionalRule_16x.png" />
+    <None Remove="Resources\Convert_16x.png" />
+    <None Remove="Resources\Create_16x.png" />
+    <None Remove="Resources\Delegate_16x.png" />
+    <None Remove="Resources\If_16x.png" />
+    <None Remove="Resources\ListView_16x.png" />
+    <None Remove="Resources\Literal_16x.png" />
+    <None Remove="Resources\Loop_16x.png" />
+    <None Remove="Resources\Method_16x.png" />
+    <None Remove="Resources\None_16x.png" />
+    <None Remove="Resources\Operator_16x.png" />
+    <None Remove="Resources\Return_16x.png" />
+    <None Remove="Resources\Task_16x.png" />
+    <None Remove="Resources\Throw_16x.png" />
+    <None Remove="Resources\Type_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.2.0" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Toolkit.Mvvm\Microsoft.Toolkit.Mvvm.csproj" />
+    <ProjectReference Include="..\NetPrints\NetPrints.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="NetPrintsLogo.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\ConditionalRule_16x.png" />
+    <Resource Include="Resources\Create_16x.png" />
+    <Resource Include="Resources\Delegate_16x.png" />
+    <Resource Include="Resources\If_16x.png" />
+    <Resource Include="Resources\ListView_16x.png" />
+    <Resource Include="Resources\Literal_16x.png" />
+    <Resource Include="Resources\Loop_16x.png" />
+    <Resource Include="Resources\Method_16x.png" />
+    <Resource Include="Resources\None_16x.png" />
+    <Resource Include="Resources\Operator_16x.png" />
+    <Resource Include="Resources\Property_16x.png" />
+    <Resource Include="Resources\Return_16x.png" />
+    <Resource Include="Resources\Task_16x.png" />
+    <Resource Include="Resources\Throw_16x.png" />
+    <Resource Include="Resources\Type_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Convert_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="ClassEditorWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Controls\MemberVariableView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

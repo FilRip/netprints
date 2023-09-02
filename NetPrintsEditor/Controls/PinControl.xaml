@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="NetPrintsEditor.Controls.PinControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:local="clr-namespace:NetPrintsEditor.Controls"
+             xmlns:converters="clr-namespace:NetPrintsEditor.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="100" x:Name="pinWindow">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <converters:BoolToVisibilityConverter x:Key="InverseBoolToVis" True="Collapsed" False="Visible" />
+    </UserControl.Resources>
+
+    <Grid x:Name="grid" MouseLeftButtonDown="Canvas_MouseLeftButtonDown" MouseDown="OnMouseDown" MouseUp="OnMouseUp">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Canvas x:Name="connector" Grid.Column="0" Width="14" Height="14">
+            <Rectangle ToolTip="{Binding ToolTip}" Width="14" Height="14"
+                       Visibility="{Binding ShowRectangle, Converter={StaticResource ResourceKey=BoolToVis}}"
+                       Fill="{Binding FillBrush}"
+                       MouseMove="OnPinElementMouseMove" DragOver="OnPinElementDragOver"
+                       Drop="OnPinElementDrop" AllowDrop="True" StrokeThickness="3">
+                <Rectangle.Style>
+                    <Style TargetType="{x:Type Rectangle}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Stroke" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Rectangle.Style>
+            </Rectangle>
+
+            <Ellipse ToolTip="{Binding ToolTip}" Width="14" Height="14"
+                       Visibility="{Binding ShowCircle, Converter={StaticResource ResourceKey=BoolToVis}}"
+                       Fill="{Binding FillBrush}"
+                       MouseMove="OnPinElementMouseMove" DragOver="OnPinElementDragOver"
+                       Drop="OnPinElementDrop" AllowDrop="True" StrokeThickness="3">
+                <Ellipse.Style>
+                    <Style TargetType="{x:Type Ellipse}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Stroke" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Ellipse.Style>
+            </Ellipse>
+
+            <Polygon ToolTip="{Binding ToolTip}" Width="14" Height="14"
+                     Points="0,0 13,7 0,14" 
+                       Visibility="{Binding ShowTriangle, Converter={StaticResource ResourceKey=BoolToVis}}"
+                       Fill="{Binding FillBrush}"
+                       MouseMove="OnPinElementMouseMove" DragOver="OnPinElementDragOver"
+                       Drop="OnPinElementDrop" AllowDrop="True" StrokeThickness="1">
+                <Polygon.Style>
+                    <Style TargetType="{x:Type Polygon}">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Stroke" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Polygon.Style>
+            </Polygon>
+
+            <Polygon 
+                Width="14" Height="14"
+                IsHitTestVisible="False"
+                Points="0,0 6,7 0,14" 
+                Visibility="{Binding ShowDefaultValueIndicator, Converter={StaticResource ResourceKey=BoolToVis}}"
+                Fill="{Binding DefaultValueIndicatorBrush}"
+                StrokeThickness="1">
+            </Polygon>
+        </Canvas>
+
+        <Grid x:Name="unconnectedContainer" Grid.Column="1">
+            <TextBox Text="{Binding UnconnectedValue, Mode=TwoWay}"
+                Visibility="{Binding ShowUnconnectedValue, Converter={StaticResource ResourceKey=BoolToVis}}"
+                MouseUp="OnClearUnconnectedValue"
+                mah:TextBoxHelper.Watermark="{Binding UnconnectedTextWatermark}" />
+
+            <ComboBox Visibility="{Binding ShowEnumValue, Converter={StaticResource ResourceKey=BoolToVis}}" 
+                MouseUp="OnClearUnconnectedValue"
+                SelectedItem="{Binding UnconnectedValue}"
+                ItemsSource="{Binding PossibleEnumNames}" />
+
+            <CheckBox IsChecked="{Binding UnconnectedValue, Mode=TwoWay}"
+                MouseUp="OnClearUnconnectedValue"
+                Visibility="{Binding ShowBooleanValue, Converter={StaticResource ResourceKey=BoolToVis}}" />
+        </Grid>
+        
+        <Grid x:Name="labelContainer" Grid.Column="2" Visibility="{Binding IsRerouteNodePin, Converter={StaticResource ResourceKey=InverseBoolToVis}}">
+            <Label x:Name="label" Content="{Binding DisplayName}"
+                   Visibility="{Binding IsNameEditable, Converter={StaticResource ResourceKey=InverseBoolToVis}}"
+                   FontSize="14" FontWeight="SemiBold" Foreground="#FFEEEEEE" VerticalContentAlignment="Stretch" />
+            
+            <TextBox x:Name="editableLabel" Text="{Binding Name, Mode=TwoWay}"
+                        Visibility="{Binding IsNameEditable, Converter={StaticResource ResourceKey=BoolToVis}}"
+                        FontSize="14" FontWeight="SemiBold" Foreground="#FFEEEEEE" VerticalContentAlignment="Stretch" />
+        </Grid>
+    </Grid>
+
+        
+</UserControl>

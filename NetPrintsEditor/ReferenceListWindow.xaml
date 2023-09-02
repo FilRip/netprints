@@ -1,0 +1,67 @@
+﻿<mah:CustomDialog
+        x:Class="NetPrintsEditor.ReferenceListWindow"
+        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="clr-namespace:NetPrintsEditor.Converters"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="References">
+
+    <mah:CustomDialog.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis" True="Visible" False="Collapsed" />
+        <converters:ModelToViewModelConverter x:Key="modelToViewModelConverter" />
+    </mah:CustomDialog.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Style="{StaticResource MahApps.Styles.Button.MetroWindow.Base}" Margin="0,0,2,0" Content="Assembly" Click="OnAddAssemblyReferenceClicked" FontSize="12"
+                    ToolTip="Add an assembly reference"/>
+            <Button Grid.Column="1" Style="{StaticResource MahApps.Styles.Button.MetroWindow.Base}" Margin="2,0,0,0" Content="Source code" Click="OnAddSourceDirectoryReferenceClicked" FontSize="12"
+                    ToolTip="Add a source code directory reference which searches for .cs files" />
+        </Grid>
+            
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="referenceList" ItemsSource="{Binding Project.References}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid DataContext="{Binding Converter={StaticResource modelToViewModelConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Reference}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" FontSize="14"
+                                       ToolTip="{Binding Reference}"/>
+                            
+                            <mah:ToggleSwitch Grid.Column="1" IsOn="{Binding IncludeInCompilation}"
+                                VerticalAlignment="Center" IsEnabled="{Binding ShowIncludeInCompilationCheckBox}"
+                                OnContent="Include" OffContent="Exclude" ToolTip="Whether to include the reference as a source in the compilation process."
+                                ToolTipService.ShowOnDisabled="True" />
+                            
+                            <Button Style="{DynamicResource MahApps.Styles.Button.Circle}" Width="32" Height="32" Grid.Column="2"
+                                    Click="OnRemoveReferenceClicked" ToolTip="Remove this reference">
+                                <iconPacks:PackIconMaterial Kind="Minus" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Button x:Name="CloseButton" Grid.Row="2" Margin="5,5,5,10" Content="Close" />
+    </Grid>
+</mah:CustomDialog>

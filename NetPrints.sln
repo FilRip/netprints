@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28705.295
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPrints", "NetPrints\NetPrints.csproj", "{9F33E024-E65F-4954-9DF2-A1A26D68C0AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPrintsEditor", "NetPrintsEditor\NetPrintsEditor.csproj", "{D967186E-1D97-4CED-BC7B-DE5FBA3D5989}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{56BFC8BD-C86A-4C00-8DED-6F9F508BC3C7}"
+	ProjectSection(SolutionItems) = preProject
+		CSharpRuleSet.ruleset = CSharpRuleSet.ruleset
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetPrintsCLI", "NetPrintsCLI\NetPrintsCLI.csproj", "{141EFA2F-E182-4767-8641-27840507EF8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetPrintsVSIX", "NetPrintsVSIX\NetPrintsVSIX.csproj", "{F67E1137-28AA-44BD-A173-ECE01D50DC44}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Toolkit.Mvvm", "Microsoft.Toolkit.Mvvm\Microsoft.Toolkit.Mvvm.csproj", "{6D46D0F6-BEA7-4EEE-866D-A33E38D0D756}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F33E024-E65F-4954-9DF2-A1A26D68C0AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F33E024-E65F-4954-9DF2-A1A26D68C0AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F33E024-E65F-4954-9DF2-A1A26D68C0AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F33E024-E65F-4954-9DF2-A1A26D68C0AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D967186E-1D97-4CED-BC7B-DE5FBA3D5989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D967186E-1D97-4CED-BC7B-DE5FBA3D5989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D967186E-1D97-4CED-BC7B-DE5FBA3D5989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D967186E-1D97-4CED-BC7B-DE5FBA3D5989}.Release|Any CPU.Build.0 = Release|Any CPU
+		{141EFA2F-E182-4767-8641-27840507EF8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{141EFA2F-E182-4767-8641-27840507EF8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{141EFA2F-E182-4767-8641-27840507EF8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{141EFA2F-E182-4767-8641-27840507EF8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F67E1137-28AA-44BD-A173-ECE01D50DC44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F67E1137-28AA-44BD-A173-ECE01D50DC44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F67E1137-28AA-44BD-A173-ECE01D50DC44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F67E1137-28AA-44BD-A173-ECE01D50DC44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D46D0F6-BEA7-4EEE-866D-A33E38D0D756}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D46D0F6-BEA7-4EEE-866D-A33E38D0D756}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D46D0F6-BEA7-4EEE-866D-A33E38D0D756}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D46D0F6-BEA7-4EEE-866D-A33E38D0D756}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {485EEF88-FD6B-41D8-834D-3056F6936722}
+	EndGlobalSection
+EndGlobal
