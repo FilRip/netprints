@@ -341,17 +341,53 @@ namespace NetPrints.Translator
                 WriteGotoOutputPin(graph.EntryNode.OutputExecPins[0]);
             }
 
+            List<Node> listeNoeuds = execNodes.ToList();
+            List<int> listeFermerAccolade = new();
+            List<IfElseNode> ifElseDejaTraite = new();
+
+            bool move = true;
+            while (move)
+            {
+                move = false;
+                List<IfElseNode> listeIf = execNodes.OfType<IfElseNode>().Where(item => !ifElseDejaTraite.Contains(item) && item.FalsePin.OutgoingPin != null && item.TruePin.OutgoingPin != null).ToList();
+                foreach (IfElseNode ifElse in listeIf)
+                {
+                    int posDebutElse = listeNoeuds.IndexOf(ifElse.FalsePin.OutgoingPin.Node);
+                    int posNoeudCourant, posLastParent = listeNoeuds.IndexOf(ifElse);
+                    Node noeudCourant = ifElse.FalsePin.OutgoingPin.Node;
+                    while (noeudCourant != null && noeudCourant.OutputExecPins?.Count > 0 && noeudCourant.OutputExecPins[0].OutgoingPin?.Node != null)
+                    {
+                        posNoeudCourant = listeNoeuds.IndexOf(noeudCourant);
+                        if (posNoeudCourant < posDebutElse)
+                        {
+                            List<Node> listeNoeudsEndIf = listeNoeuds.GetRange(posNoeudCourant, posDebutElse - posNoeudCourant);
+                            listeNoeuds.RemoveRange(posNoeudCourant, posDebutElse - posNoeudCourant);
+                            listeNoeuds.InsertRange(posLastParent - listeNoeudsEndIf.Count + 1, listeNoeudsEndIf);
+                            listeFermerAccolade.Add(posLastParent - listeNoeudsEndIf.Count);
+                            move = true;
+                            break;
+                        }
+                        noeudCourant = noeudCourant.OutputExecPins?[0].OutgoingPin?.Node;
+                        posLastParent = posNoeudCourant;
+                    }
+                    ifElseDejaTraite.Add(ifElse);
+                    if (move)
+                        break;
+                }
+            }
+
             bool ifelseOpen = false;
             // Translate every exec node
-            foreach (Node node in execNodes)
+            foreach (Node node in listeNoeuds)
             {
                 if (!(node is MethodEntryNode))
                 {
                     if (execNodes.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
                         builder.AppendLine("}");
 
-                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin.OutgoingPin.Node == node))
+                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node))
                     {
+                        builder.AppendLine("}");
                         builder.AppendLine("else");
                         builder.AppendLine("{");
                         ifelseOpen = true;
@@ -361,24 +397,20 @@ namespace NetPrints.Translator
                     {
                         if (node is IfElseNode)
                             ifelseOpen = true;
-                        //builder.AppendLine($"State{nodeStateIds[node][pinIndex]}:");
-                        TranslateNode(node, pinIndex);
-                        //builder.AppendLine();
+                        if (node is not ReturnNode || listeNoeuds.IndexOf(node) != listeNoeuds.Count - 1 || ((MethodGraph)graph).ReturnTypes.Any())
+                            TranslateNode(node, pinIndex);
                     }
 
-                    if (execNodes.OfType<IfElseNode>().Any(ifelse => ifelseOpen && node.OutputExecPins.Count == 0))
+                    if (ifelseOpen && listeFermerAccolade.Contains(listeNoeuds.IndexOf(node)))
                     {
                         builder.AppendLine("}");
                         ifelseOpen = false;
                     }
-
-                    // TODO : We need to move the else before the next of if
-                    /*if (node == execNodes.ElementAt(execNodes.Count() -1) && node is not ReturnNode && node.OutputExecPins.Count > 0 && node.OutputExecPins[0].OutgoingPin?.Node != null)
-                    {
-                        TranslateNode(node.OutputExecPins[0].OutgoingPin.Node, 0);
-                    }*/
                 }
             }
+
+            if (ifelseOpen)
+                builder.AppendLine("}");
 
             // Write the jump stack if it was ever used
             if (pinsJumpedTo.Count > 0)
@@ -399,7 +431,7 @@ namespace NetPrints.Translator
             code = RemoveUnnecessaryLabels(code);
 
             // Remove unused labels
-            return RemoveUnnecessaryLabels(code);
+            return code;
         }
 
         private string RemoveUnnecessaryLabels(string code)
