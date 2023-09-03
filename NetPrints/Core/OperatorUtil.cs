@@ -2,20 +2,12 @@
 
 namespace NetPrints.Core
 {
-    public class OperatorInfo
+    public class OperatorInfo(string displayName, string symbol, bool unary, bool unaryRightPosition = false)
     {
-        public string DisplayName { get; }
-        public string Symbol { get; }
-        public bool Unary { get; }
-        public bool UnaryRightPosition { get; }
-
-        public OperatorInfo(string displayName, string symbol, bool unary, bool unaryRightPosition = false)
-        {
-            DisplayName = displayName;
-            Symbol = symbol;
-            Unary = unary;
-            UnaryRightPosition = unaryRightPosition;
-        }
+        public string DisplayName { get; } = displayName;
+        public string Symbol { get; } = symbol;
+        public bool Unary { get; } = unary;
+        public bool UnaryRightPosition { get; } = unaryRightPosition;
     }
 
     public static class OperatorUtil

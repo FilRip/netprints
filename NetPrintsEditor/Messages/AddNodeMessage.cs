@@ -11,14 +11,14 @@ namespace NetPrintsEditor.Messages
     /// </summary>
     public class AddNodeMessage
     {
-        public bool Handled;
+        public bool Handled { get; set; }
 
-        public Type NodeType;
-        public NodeGraph Graph;
-        public double PositionX;
-        public double PositionY;
-        public NodePin SuggestionPin;
-        public object[] ConstructorParameters;
+        public Type NodeType { get; set; }
+        public NodeGraph Graph { get; set; }
+        public double PositionX { get; set; }
+        public double PositionY { get; set; }
+        public NodePin SuggestionPin { get; set; }
+        public object[] ConstructorParameters { get; set; }
 
         public AddNodeMessage(Type nodeType, NodeGraph graph, double posX, double posY, NodePin suggestionPin, params object[] constructorParameters)
         {

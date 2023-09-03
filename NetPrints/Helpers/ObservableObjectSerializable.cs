@@ -79,14 +79,14 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             PropertyChanged?.Invoke(this, e);
         }
 
-        protected virtual void OnPropertyChanging(PropertyChangingEventArgs e)
-        {
-            PropertyChanging?.Invoke(this, e);
-        }
-
         protected void OnPropertyChanged([CallerMemberName()] string? propertyName = null)
         {
             OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected virtual void OnPropertyChanging(PropertyChangingEventArgs e)
+        {
+            PropertyChanging?.Invoke(this, e);
         }
 
         protected void OnPropertyChanging([CallerMemberName()] string? propertyName = null)
@@ -94,7 +94,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             OnPropertyChanging(new PropertyChangingEventArgs(propertyName));
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, [CallerMemberName()] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, [CallerMemberName()] string? propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, newValue))
             {
@@ -106,7 +106,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return true;
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, [CallerMemberName()] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, IEqualityComparer<T> comparer, [CallerMemberName()] string? propertyName = null)
         {
             if (comparer.Equals(field, newValue))
             {
@@ -231,6 +231,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
                 }
                 catch
                 {
+                    // Nothing to do
                 }
                 if (taskNotifier2.Task == newValue2)
                 {

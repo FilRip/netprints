@@ -120,19 +120,19 @@ namespace NetPrintsEditor.ViewModels
                     if (odp.PinType.Value is TypeSpecifier pinTypeSpec)
                     {
                         // Add make delegate
-                        AddSuggestionsWithCategory("NetPrints", new[] { new MakeDelegateTypeInfo(pinTypeSpec, Graph.Class.Type) });
+                        AddSuggestionsWithCategory("NetPrints", new[] { new MakeDelegateTypeInfo(pinTypeSpec, Graph.Class.Type()) });
 
                         // Add variables and methods of the pin type
                         AddSuggestionsWithCategory("Pin Variables",
                             App.ReflectionProvider.GetVariables(
                                 new ReflectionProviderVariableQuery()
                                     .WithType(pinTypeSpec)
-                                    .WithVisibleFrom(Graph.Class.Type)
+                                    .WithVisibleFrom(Graph.Class.Type())
                                     .WithStatic(false)));
 
                         AddSuggestionsWithCategory("Pin Methods", App.ReflectionProvider.GetMethods(
                             new ReflectionProviderMethodQuery()
-                                .WithVisibleFrom(Graph.Class.Type)
+                                .WithVisibleFrom(Graph.Class.Type())
                                 .WithStatic(false)
                                 .WithType(pinTypeSpec)));
 
@@ -141,7 +141,7 @@ namespace NetPrintsEditor.ViewModels
                         {
                             AddSuggestionsWithCategory("This Methods", App.ReflectionProvider.GetMethods(
                                 new ReflectionProviderMethodQuery()
-                                    .WithVisibleFrom(Graph.Class.Type)
+                                    .WithVisibleFrom(Graph.Class.Type())
                                     .WithStatic(false)
                                     .WithArgumentType(pinTypeSpec)
                                     .WithType(baseType)));
@@ -151,7 +151,7 @@ namespace NetPrintsEditor.ViewModels
                         AddSuggestionsWithCategory("Static Methods", App.ReflectionProvider.GetMethods(
                             new ReflectionProviderMethodQuery()
                                 .WithArgumentType(pinTypeSpec)
-                                .WithVisibleFrom(Graph.Class.Type)
+                                .WithVisibleFrom(Graph.Class.Type())
                                 .WithStatic(true)));
                     }
                 }
@@ -165,7 +165,7 @@ namespace NetPrintsEditor.ViewModels
                             AddSuggestionsWithCategory("This Variables", App.ReflectionProvider.GetVariables(
                                 new ReflectionProviderVariableQuery()
                                     .WithType(baseType)
-                                    .WithVisibleFrom(Graph.Class.Type)
+                                    .WithVisibleFrom(Graph.Class.Type())
                                     .WithVariableType(pinTypeSpec, true)));
                         }
 
@@ -173,7 +173,7 @@ namespace NetPrintsEditor.ViewModels
                         AddSuggestionsWithCategory("Static Methods", App.ReflectionProvider.GetMethods(
                             new ReflectionProviderMethodQuery()
                                 .WithStatic(true)
-                                .WithVisibleFrom(Graph.Class.Type)
+                                .WithVisibleFrom(Graph.Class.Type())
                                 .WithReturnType(pinTypeSpec)));
                     }
                 }
@@ -189,15 +189,15 @@ namespace NetPrintsEditor.ViewModels
                             new ReflectionProviderMethodQuery()
                                 .WithType(baseType)
                                 .WithStatic(false)
-                                .WithVisibleFrom(Graph.Class.Type)));
+                                .WithVisibleFrom(Graph.Class.Type())));
                     }
 
                     AddSuggestionsWithCategory("Static Methods", App.ReflectionProvider.GetMethods(
                         new ReflectionProviderMethodQuery()
                             .WithStatic(true)
-                            .WithVisibleFrom(Graph.Class.Type)));
+                            .WithVisibleFrom(Graph.Class.Type())));
                 }
-                else if (SuggestionPin is NodeInputExecPin ixp)
+                else if (SuggestionPin is NodeInputExecPin)
                 {
                     AddSuggestionsWithCategory("NetPrints", GetBuiltInNodes(Graph));
 
@@ -207,15 +207,15 @@ namespace NetPrintsEditor.ViewModels
                         new ReflectionProviderMethodQuery()
                             .WithType(baseType)
                             .WithStatic(false)
-                            .WithVisibleFrom(Graph.Class.Type)));
+                            .WithVisibleFrom(Graph.Class.Type())));
                     }
 
                     AddSuggestionsWithCategory("Static Methods", App.ReflectionProvider.GetMethods(
                         new ReflectionProviderMethodQuery()
                             .WithStatic(true)
-                            .WithVisibleFrom(Graph.Class.Type)));
+                            .WithVisibleFrom(Graph.Class.Type())));
                 }
-                else if (SuggestionPin is NodeInputTypePin itp)
+                else if (SuggestionPin is NodeInputTypePin)
                 {
                     // TODO: Consider static types
                     AddSuggestionsWithCategory("Types", App.ReflectionProvider.GetNonStaticTypes());
@@ -228,7 +228,7 @@ namespace NetPrintsEditor.ViewModels
                             .GetMethods(new ReflectionProviderMethodQuery()
                                 .WithType(typeSpecifier)
                                 .WithStatic(true)
-                                .WithVisibleFrom(Graph.Class.Type)));
+                                .WithVisibleFrom(Graph.Class.Type())));
                     }
 
                     // Types with type parameters
@@ -242,7 +242,7 @@ namespace NetPrintsEditor.ViewModels
                             .GetMethods(new ReflectionProviderMethodQuery()
                                 .WithStatic(true)
                                 .WithHasGenericArguments(true)
-                                .WithVisibleFrom(Graph.Class.Type)));
+                                .WithVisibleFrom(Graph.Class.Type())));
                     }
                 }
 
@@ -259,26 +259,26 @@ namespace NetPrintsEditor.ViewModels
                     {
                         AddSuggestionsWithCategory("This Variables", App.ReflectionProvider.GetVariables(
                         new ReflectionProviderVariableQuery()
-                            .WithVisibleFrom(Graph.Class.Type)
+                            .WithVisibleFrom(Graph.Class.Type())
                             .WithType(baseType)
                             .WithStatic(false)));
 
                         AddSuggestionsWithCategory("This Methods", App.ReflectionProvider.GetMethods(
                             new ReflectionProviderMethodQuery()
                                 .WithType(baseType)
-                                .WithVisibleFrom(Graph.Class.Type)
+                                .WithVisibleFrom(Graph.Class.Type())
                                 .WithStatic(false)));
                     }
                     
                     AddSuggestionsWithCategory("Static Methods", App.ReflectionProvider.GetMethods(
                         new ReflectionProviderMethodQuery()
                             .WithStatic(true)
-                            .WithVisibleFrom(Graph.Class.Type)));
+                            .WithVisibleFrom(Graph.Class.Type())));
                     
                     AddSuggestionsWithCategory("Static Variables", App.ReflectionProvider.GetVariables(
                         new ReflectionProviderVariableQuery()
                             .WithStatic(true)
-                            .WithVisibleFrom(Graph.Class.Type)));
+                            .WithVisibleFrom(Graph.Class.Type())));
                 }
                 else if (Graph is ClassGraph)
                 {
@@ -350,13 +350,13 @@ namespace NetPrintsEditor.ViewModels
         }
 
         public IEnumerable<BaseType> ArgumentTypes =>
-            graph is ExecutionGraph execGraph ? execGraph.ArgumentTypes : null;
+            graph is ExecutionGraph execGraph ? execGraph.ArgumentTypes() : null;
 
         public IEnumerable<Named<BaseType>> NamedArgumentTypes =>
-            graph is ExecutionGraph execGraph ? execGraph.NamedArgumentTypes : null;
+            graph is ExecutionGraph execGraph ? execGraph.NamedArgumentTypes() : null;
 
         public IEnumerable<BaseType> ReturnTypes =>
-            graph is MethodGraph methodGraph ? methodGraph.ReturnTypes : null;
+            graph is MethodGraph methodGraph ? methodGraph.ReturnTypes() : null;
 
         private ClassEditorVM m_class;
         public ClassEditorVM Class
@@ -503,10 +503,10 @@ namespace NetPrintsEditor.ViewModels
             // Snap final position to grid
             if (SelectedNodes != null)
             {
-                foreach (NodeVM selectedNode in SelectedNodes)
+                foreach (Node selectedNode in SelectedNodes.Select(selectedNode => selectedNode.Node))
                 {
-                    selectedNode.Node.PositionX -= selectedNode.Node.PositionX % GraphEditorView.GridCellSize;
-                    selectedNode.Node.PositionY -= selectedNode.Node.PositionY % GraphEditorView.GridCellSize;
+                    selectedNode.PositionX -= selectedNode.PositionX % GraphEditorView.GridCellSize;
+                    selectedNode.PositionY -= selectedNode.PositionY % GraphEditorView.GridCellSize;
                 }
             }
         }
@@ -609,22 +609,19 @@ namespace NetPrintsEditor.ViewModels
                     }
                 }
             }
-            else if (pin.Pin is NodeInputTypePin itp)
+            else if (pin.Pin is NodeInputTypePin itp && itp.IncomingPin != null)
             {
-                if (itp.IncomingPin != null)
+                if (add)
                 {
-                    if (add)
-                    {
-                        NodeOutputTypePin connPin = itp.IncomingPin;
-                        pin.ConnectedPin = Nodes
-                            .Single(n => n.Node == connPin.Node)
-                            .OutputTypePins
-                            .Single(x => x.Pin == connPin);
-                    }
-                    else
-                    {
-                        pin.ConnectedPin = null;
-                    }
+                    NodeOutputTypePin connPin = itp.IncomingPin;
+                    pin.ConnectedPin = Nodes
+                        .Single(n => n.Node == connPin.Node)
+                        .OutputTypePins
+                        .Single(x => x.Pin == connPin);
+                }
+                else
+                {
+                    pin.ConnectedPin = null;
                 }
             }
         }

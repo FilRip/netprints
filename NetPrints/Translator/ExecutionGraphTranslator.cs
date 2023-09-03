@@ -16,9 +16,6 @@ namespace NetPrints.Translator
     /// </summary>
     public class ExecutionGraphTranslator
     {
-        private const string JumpStackVarName = "jumpStack";
-        private const string JumpStackType = "System.Collections.Generic.Stack<int>";
-
         private readonly Dictionary<NodeOutputDataPin, string> variableNames = new();
         private readonly Dictionary<Node, List<int>> nodeStateIds = new();
         private int nextStateId = 0;
@@ -121,7 +118,7 @@ namespace NetPrints.Translator
                 }
                 else
                 {
-                    throw new Exception($"Input data pin {pin} on {pin.Node} was unconnected without an explicit default or unconnected value.");
+                    throw new Exceptions.NetPrintsException($"Input data pin {pin} on {pin.Node} was unconnected without an explicit default or unconnected value.");
                     //return $"default({pin.PinType.Value.FullCodeName})";
                 }
             }
@@ -154,16 +151,13 @@ namespace NetPrints.Translator
 
         private void CreateStates()
         {
-            foreach (Node node in execNodes)
+            foreach (Node node in execNodes.Where(node => node is not MethodEntryNode))
             {
-                if (!(node is MethodEntryNode))
-                {
-                    nodeStateIds.Add(node, new List<int>());
+                nodeStateIds.Add(node, new List<int>());
 
-                    foreach (NodeInputExecPin _ in node.InputExecPins)
-                    {
-                        nodeStateIds[node].Add(GetNextStateId());
-                    }
+                foreach (NodeInputExecPin _ in node.InputExecPins)
+                {
+                    nodeStateIds[node].Add(GetNextStateId());
                 }
             }
         }
@@ -185,7 +179,7 @@ namespace NetPrints.Translator
                 NodeOutputDataPin pin = v.Key;
                 string variableName = v.Value;
 
-                if (!(pin.Node is MethodEntryNode))
+                if (pin.Node is not MethodEntryNode)
                 {
                     builder.AppendLine($"{pin.PinType.Value.FullCodeName} {variableName} = default({pin.PinType.Value.FullCodeName});");
                 }
@@ -234,17 +228,17 @@ namespace NetPrints.Translator
                 }
 
                 // Write return type
-                if (methodGraph.ReturnTypes.Count() > 1)
+                if (methodGraph.ReturnTypes().Count() > 1)
                 {
                     // Tuple<Types..> (won't be needed in the future)
-                    string returnType = typeof(Tuple).FullName + "<" + string.Join(", ", methodGraph.ReturnTypes.Select(t => t.FullCodeName)) + ">";
+                    string returnType = typeof(Tuple).FullName + "<" + string.Join(", ", methodGraph.ReturnTypes().Select(t => t.FullCodeName)) + ">";
                     builder.Append(returnType + " ");
 
                     //builder.Append($"({string.Join(", ", method.ReturnTypes.Select(t => t.FullName))}) ");
                 }
-                else if (methodGraph.ReturnTypes.Count() == 1)
+                else if (methodGraph.ReturnTypes().Count() == 1)
                 {
-                    builder.Append($"{methodGraph.ReturnTypes.Single().FullCodeName} ");
+                    builder.Append($"{methodGraph.ReturnTypes().Single().FullCodeName} ");
                 }
                 else
                 {
@@ -255,38 +249,14 @@ namespace NetPrints.Translator
             // Write name
             builder.Append(graph.ToString());
 
-            if (methodGraph != null)
+            if (methodGraph != null && methodGraph.GenericArgumentTypes().Any())
             {
                 // Write generic arguments if any
-                if (methodGraph.GenericArgumentTypes.Any())
-                {
-                    builder.Append("<" + string.Join(", ", methodGraph.GenericArgumentTypes.Select(arg => arg.FullCodeName)) + ">");
-                }
+                builder.Append("<" + string.Join(", ", methodGraph.GenericArgumentTypes().Select(arg => arg.FullCodeName)) + ">");
             }
 
             // Write parameters
             builder.AppendLine($"({string.Join(", ", GetOrCreateTypedPinNames(graph.EntryNode.OutputDataPins))})");
-        }
-
-        private void TranslateJumpStack()
-        {
-            builder.AppendLine("// Jump stack");
-
-            builder.AppendLine($"State{jumpStackStateId}:");
-            builder.AppendLine($"if ({JumpStackVarName}.Count == 0) throw new System.Exception();");
-            builder.AppendLine($"switch ({JumpStackVarName}.Pop())");
-            builder.AppendLine("{");
-
-            foreach (NodeInputExecPin pin in pinsJumpedTo)
-            {
-                builder.AppendLine($"case {GetExecPinStateId(pin)}:");
-                WriteGotoInputPin(pin);
-            }
-
-            builder.AppendLine("default:");
-            builder.AppendLine("throw new System.Exception();");
-
-            builder.AppendLine("}"); // End switch
         }
 
         /// <summary>
@@ -415,41 +385,38 @@ namespace NetPrints.Translator
 
             bool ifelseOpen = false, catchOpen = false;
             // Translate every exec node
-            foreach (Node node in listAllNodes)
+            foreach (Node node in listAllNodes.Where(node => node is not MethodEntryNode))
             {
-                if (!(node is MethodEntryNode))
+                if (listAllNodes.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
+                    builder.AppendLine("}");
+
+                if (listAllNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node && ifelse.TruePin.OutgoingPin != null))
                 {
-                    if (listAllNodes.OfType<ForLoopNode>().Any(loop => loop.CompletedPin.OutgoingPin.Node == node))
-                        builder.AppendLine("}");
+                    builder.AppendLine("}");
+                    builder.AppendLine("else");
+                    builder.AppendLine("{");
+                    ifelseOpen = true;
+                }
 
-                    if (listAllNodes.OfType<IfElseNode>().Any(ifelse => ifelse.FalsePin?.OutgoingPin?.Node == node && ifelse.TruePin.OutgoingPin != null))
-                    {
-                        builder.AppendLine("}");
-                        builder.AppendLine("else");
-                        builder.AppendLine("{");
+                for (int pinIndex = 0; pinIndex < node.InputExecPins.Count; pinIndex++)
+                {
+                    if (node is IfElseNode)
                         ifelseOpen = true;
-                    }
+                    else if (node is CallMethodNode noeudCall && noeudCall.HandlesExceptions)
+                        catchOpen = true;
+                    if (node is not ReturnNode || listAllNodes.IndexOf(node) != listAllNodes.Count - 1 || ((MethodGraph)graph).ReturnTypes().Any())
+                        TranslateNode(node, pinIndex);
+                }
 
-                    for (int pinIndex = 0; pinIndex < node.InputExecPins.Count; pinIndex++)
-                    {
-                        if (node is IfElseNode)
-                            ifelseOpen = true;
-                        else if (node is CallMethodNode noeudCall && noeudCall.HandlesExceptions)
-                            catchOpen = true;
-                        if (node is not ReturnNode || listAllNodes.IndexOf(node) != listAllNodes.Count - 1 || ((MethodGraph)graph).ReturnTypes.Any())
-                            TranslateNode(node, pinIndex);
-                    }
-
-                    if (ifelseOpen && listCloseBracket.Contains(listAllNodes.IndexOf(node)))
-                    {
-                        builder.AppendLine("}");
-                        ifelseOpen = false;
-                    }
-                    if (catchOpen && listCloseBracket.Contains(listAllNodes.IndexOf(node)))
-                    {
-                        builder.AppendLine("}");
-                        catchOpen = false;
-                    }
+                if (ifelseOpen && listCloseBracket.Contains(listAllNodes.IndexOf(node)))
+                {
+                    builder.AppendLine("}");
+                    ifelseOpen = false;
+                }
+                if (catchOpen && listCloseBracket.Contains(listAllNodes.IndexOf(node)))
+                {
+                    builder.AppendLine("}");
+                    catchOpen = false;
                 }
             }
 
@@ -558,54 +525,54 @@ namespace NetPrints.Translator
             }
 
             // Write assignment of return values
-            if (node.ReturnValuePins.Count == 1)
+            if (node.ReturnValuePins().Count == 1)
             {
-                string returnName = GetOrCreatePinName(node.ReturnValuePins[0]);
+                string returnName = GetOrCreatePinName(node.ReturnValuePins()[0]);
 
                 builder.Append($"{returnName} = ");
             }
-            else if (node.ReturnValuePins.Count > 1)
+            else if (node.ReturnValuePins().Count > 1)
             {
                 temporaryReturnName = TranslatorUtil.GetTemporaryVariableName(random);
 
-                string returnTypeNames = string.Join(", ", node.ReturnValuePins.Select(pin => pin.PinType.Value.FullCodeName));
+                string returnTypeNames = string.Join(", ", node.ReturnValuePins().Select(pin => pin.PinType.Value.FullCodeName));
 
                 builder.Append($"{typeof(Tuple).FullName}<{returnTypeNames}> {temporaryReturnName} = ");
             }
 
             // Get arguments for method call
-            List<string> argumentNames = GetPinIncomingValues(node.ArgumentPins).ToList();
+            List<string> argumentNames = GetPinIncomingValues(node.ArgumentPins()).ToList();
 
             // Check whether the method is an operator and we need to translate its name
             // into operator symbols. Otherwise just call the method normally.
             if (OperatorUtil.TryGetOperatorInfo(node.MethodSpecifier, out OperatorInfo operatorInfo))
             {
-                Debug.Assert(!argumentNames.Any(a => a is null));
+                Debug.Assert(!argumentNames.Exists(a => a is null));
 
                 if (operatorInfo.Unary)
                 {
                     if (argumentNames.Count != 1)
                     {
-                        throw new Exception($"Unary operator was found but did not have one argument: {node.MethodName}");
+                        throw new Exceptions.NetPrintsException($"Unary operator was found but did not have one argument: {node.MethodName}");
                     }
 
                     if (operatorInfo.UnaryRightPosition)
                     {
-                        builder.AppendLine($"{argumentNames.ElementAt(0)}{operatorInfo.Symbol};");
+                        builder.AppendLine($"{argumentNames[0]}{operatorInfo.Symbol};");
                     }
                     else
                     {
-                        builder.AppendLine($"{operatorInfo.Symbol}{argumentNames.ElementAt(0)};");
+                        builder.AppendLine($"{operatorInfo.Symbol}{argumentNames[0]};");
                     }
                 }
                 else
                 {
                     if (argumentNames.Count != 2)
                     {
-                        throw new Exception($"Binary operator was found but did not have two arguments: {node.MethodName}");
+                        throw new Exceptions.NetPrintsException($"Binary operator was found but did not have two arguments: {node.MethodName}");
                     }
 
-                    builder.AppendLine($"{argumentNames.ElementAt(0)}{operatorInfo.Symbol}{argumentNames.ElementAt(1)};");
+                    builder.AppendLine($"{argumentNames[0]}{operatorInfo.Symbol}{argumentNames[1]};");
                 }
             }
             else
@@ -634,14 +601,14 @@ namespace NetPrints.Translator
                 string[] argNameArray = argumentNames.ToArray();
                 Debug.Assert(argNameArray.Length == node.MethodSpecifier.Parameters.Count);
 
-                bool prependArgumentName = argNameArray.Any(a => a is null);
+                bool prependArgumentName = Array.Exists(argNameArray, a => a is null);
 
                 List<string> arguments = new();
 
                 foreach ((string argName, MethodParameter methodParameter) in argNameArray.Zip(node.MethodSpecifier.Parameters, Tuple.Create))
                 {
                     // null means use default value
-                    if (!(argName is null))
+                    if (argName is not null)
                     {
                         string argument = argName;
 
@@ -677,12 +644,12 @@ namespace NetPrints.Translator
             }
 
             // Assign the real variables from the temporary tuple
-            if (node.ReturnValuePins.Count > 1)
+            if (node.ReturnValuePins().Count > 1)
             {
-                List<string> returnNames = GetOrCreatePinNames(node.ReturnValuePins).ToList();
+                List<string> returnNames = GetOrCreatePinNames(node.ReturnValuePins()).ToList();
                 for (int i = 0; i < returnNames.Count; i++)
                 {
-                    builder.AppendLine($"{returnNames.ElementAt(i)} = {temporaryReturnName}.Item{i + 1};");
+                    builder.AppendLine($"{returnNames[i]} = {temporaryReturnName}.Item{i + 1};");
                 }
             }
 
@@ -708,7 +675,7 @@ namespace NetPrints.Translator
                 builder.AppendLine($"{GetOrCreatePinName(node.ExceptionPin)} = {exceptionVarName};");
 
                 // Set all return values to default on exception
-                foreach (NodeOutputDataPin returnValuePin in node.ReturnValuePins)
+                foreach (NodeOutputDataPin returnValuePin in node.ReturnValuePins())
                 {
                     string returnName = GetOrCreatePinName(returnValuePin);
                     builder.AppendLine($"{returnName} = default({returnValuePin.PinType.Value.FullCodeName});");
@@ -743,14 +710,14 @@ namespace NetPrints.Translator
             string[] argNameArray = argumentNames.ToArray();
             Debug.Assert(argNameArray.Length == node.ConstructorSpecifier.Arguments.Count);
 
-            bool prependArgumentName = argNameArray.Any(a => a is null);
+            bool prependArgumentName = Array.Exists(argNameArray, a => a is null);
 
             List<string> arguments = new();
 
             foreach ((string argName, MethodParameter constructorParameter) in argNameArray.Zip(node.ConstructorSpecifier.Arguments, Tuple.Create))
             {
                 // null means use default value
-                if (!(argName is null))
+                if (argName is not null)
                 {
                     string argument = argName;
 
@@ -892,7 +859,7 @@ namespace NetPrints.Translator
             // Add target name if there is a target (null for local and static variables)
             if (node.IsStatic)
             {
-                if (!(node.TargetType is null))
+                if (node.TargetType is not null)
                 {
                     builder.Append(node.TargetType.FullCodeName);
                 }
@@ -1031,7 +998,7 @@ namespace NetPrints.Translator
 
             if (node.IsStatic)
             {
-                if (!(node.TargetType is null))
+                if (node.TargetType is not null)
                 {
                     builder.Append(node.TargetType.FullCodeName);
                 }

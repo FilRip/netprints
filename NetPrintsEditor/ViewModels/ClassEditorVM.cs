@@ -42,7 +42,7 @@ namespace NetPrintsEditor.ViewModels
         public IEnumerable<MethodSpecifier> OverridableMethods =>
             Class.AllBaseTypes.SelectMany(type => App.ReflectionProvider.GetOverridableMethodsForType(type));
 
-        public TypeSpecifier Type => Class?.Type;
+        public TypeSpecifier Type => Class?.Type();
 
         public string FullName => Class?.FullName;
 

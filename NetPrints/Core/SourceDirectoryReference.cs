@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace NetPrints.Core
 {
     [DataContract()]
-    public class SourceDirectoryReference : CompilationReference
+    public class SourceDirectoryReference(string directory, bool includeInCompilation = false) : CompilationReference
     {
         /// <summary>
         /// All source file paths in the source directory.
@@ -27,7 +27,7 @@ namespace NetPrints.Core
         {
             get;
             set;
-        }
+        } = includeInCompilation;
 
         /// <summary>
         /// Path of source directory.
@@ -37,13 +37,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
-
-        public SourceDirectoryReference(string directory, bool includeInCompilation = false)
-        {
-            SourceDirectory = directory;
-            IncludeInCompilation = includeInCompilation;
-        }
+        } = directory;
 
         public override string ToString() => $"Source files at {SourceDirectory}";
     }

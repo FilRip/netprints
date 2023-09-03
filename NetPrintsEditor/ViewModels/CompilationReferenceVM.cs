@@ -6,7 +6,7 @@ using NetPrints.Core;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class CompilationReferenceVM : ObservableObjectSerializable
+    public class CompilationReferenceVM(CompilationReference compilationReference) : ObservableObjectSerializable
     {
         public bool ShowIncludeInCompilationCheckBox =>
             Reference is SourceDirectoryReference;
@@ -27,11 +27,6 @@ namespace NetPrintsEditor.ViewModels
             }
         }
 
-        public CompilationReference Reference { get; }
-
-        public CompilationReferenceVM(CompilationReference compilationReference)
-        {
-            Reference = compilationReference;
-        }
+        public CompilationReference Reference { get; } = compilationReference;
     }
 }

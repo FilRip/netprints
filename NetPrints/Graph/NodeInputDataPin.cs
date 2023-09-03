@@ -12,7 +12,7 @@ namespace NetPrints.Graph
     /// Input data pin which can be connected to up to one output data pin to receive a value.
     /// </summary>
     [DataContract()]
-    public class NodeInputDataPin : NodeDataPin
+    public class NodeInputDataPin(Node node, string name, ObservableValue<BaseType> pinType) : NodeDataPin(node, name, pinType)
     {
         /// <summary>
         /// Called when the node's incoming pin changed.
@@ -69,7 +69,7 @@ namespace NetPrints.Graph
                 if (value != null && (!UsesUnconnectedValue
                     || (PinType.Value is TypeSpecifier t && (
                         (!t.IsEnum && TypeSpecifier.FromType(value.GetType()) != t)
-                        || (t.IsEnum && value.GetType() != typeof(string))))))
+                        || (t.IsEnum && !(value is string))))))
                 {
                     throw new ArgumentException("Pin unconnected");
                 }
@@ -92,11 +92,6 @@ namespace NetPrints.Graph
         {
             get;
             set;
-        }
-
-        public NodeInputDataPin(Node node, string name, ObservableValue<BaseType> pinType)
-            : base(node, name, pinType)
-        {
         }
     }
 }

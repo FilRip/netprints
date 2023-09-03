@@ -499,7 +499,7 @@ namespace NetPrintsEditor.ViewModels
             }
             else
             {
-                throw new Exception("Tried to change overload for underlying node even though it does not support overloads.");
+                throw new NetPrints.Exceptions.NetPrintsException("Tried to change overload for underlying node even though it does not support overloads.");
             }
 
             if (newNode != null)

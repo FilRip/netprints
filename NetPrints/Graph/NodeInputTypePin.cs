@@ -11,7 +11,7 @@ namespace NetPrints.Graph
     /// Pin which can receive types.
     /// </summary>
     [DataContract()]
-    public class NodeInputTypePin : NodeTypePin
+    public class NodeInputTypePin(Node node, string name) : NodeTypePin(node, name)
     {
         /// <summary>
         /// Called when the node's incoming pin changed.
@@ -45,10 +45,5 @@ namespace NetPrints.Graph
         }
 
         private NodeOutputTypePin incomingPin;
-
-        public NodeInputTypePin(Node node, string name)
-            : base(node, name)
-        {
-        }
     }
 }

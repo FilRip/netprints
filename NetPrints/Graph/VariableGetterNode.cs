@@ -8,13 +8,8 @@ namespace NetPrints.Graph
     /// Node that gets the value of a variable.
     /// </summary>
     [DataContract()]
-    public class VariableGetterNode : VariableNode
+    public class VariableGetterNode(NodeGraph graph, VariableSpecifier variable) : VariableNode(graph, variable)
     {
-        public VariableGetterNode(NodeGraph graph, VariableSpecifier variable)
-            : base(graph, variable)
-        {
-        }
-
         public override string ToString()
         {
             string staticText = IsStatic ? $"{TargetType.ShortName}." : "";

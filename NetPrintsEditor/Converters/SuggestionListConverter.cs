@@ -16,32 +16,32 @@ namespace NetPrintsEditor.Converters
     {
         private readonly MethodSpecifierConverter methodSpecifierConverter = new();
 
-        public object Convert(object tupleObject, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string text;
             string iconPath;
 
-            SearchableComboBoxItem item = (SearchableComboBoxItem)tupleObject;
+            SearchableComboBoxItem item = (SearchableComboBoxItem)value;
             string category = item.Category;
-            object value = item.Value;
+            object valueCast = item.Value;
 
-            if (value is MethodSpecifier methodSpecifier)
+            if (valueCast is MethodSpecifier methodSpecifier)
             {
                 text = methodSpecifierConverter.Convert(methodSpecifier, typeof(string), parameter, culture) as string;
 
                 iconPath = OperatorUtil.IsOperator(methodSpecifier) ? "Operator_16x.png" : "Method_16x.png";
             }
-            else if (value is VariableSpecifier variableSpecifier)
+            else if (valueCast is VariableSpecifier variableSpecifier)
             {
                 text = $"{variableSpecifier.Type} {variableSpecifier.Name} : {variableSpecifier.Type}";
                 iconPath = "Property_16x.png";
             }
-            else if (value is MakeDelegateTypeInfo makeDelegateTypeInfo)
+            else if (valueCast is MakeDelegateTypeInfo makeDelegateTypeInfo)
             {
                 text = $"Make Delegate For A Method Of {makeDelegateTypeInfo.Type.ShortName}";
                 iconPath = "Delegate_16x.png";
             }
-            else if (value is TypeSpecifier t)
+            else if (valueCast is TypeSpecifier t)
             {
                 if (t == TypeSpecifier.FromType<ForLoopNode>())
                 {

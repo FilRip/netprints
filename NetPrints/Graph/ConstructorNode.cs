@@ -39,9 +39,9 @@ namespace NetPrints.Graph
         /// <summary>
         /// List of type specifiers the constructor takes.
         /// </summary>
-        public IReadOnlyList<BaseType> ArgumentTypes
+        public IReadOnlyList<BaseType> ArgumentTypes()
         {
-            get => ArgumentPins.Select(p => p.PinType.Value).ToList();
+            return ArgumentPins.Select(p => p.PinType.Value).ToList();
         }
 
         /// <summary>
@@ -97,10 +97,8 @@ namespace NetPrints.Graph
             }
 
             // Construct data output
-            {
-                BaseType constructedType = GenericsHelper.ConstructWithTypePins(ConstructorSpecifier.DeclaringType, InputTypePins);
-                OutputDataPins[0].PinType.Value = constructedType;
-            }
+            BaseType constructType = GenericsHelper.ConstructWithTypePins(ConstructorSpecifier.DeclaringType, InputTypePins);
+            OutputDataPins[0].PinType.Value = constructType;
         }
 
         public override string ToString()

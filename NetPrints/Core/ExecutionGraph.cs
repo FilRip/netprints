@@ -22,17 +22,17 @@ namespace NetPrints.Core
         /// <summary>
         /// Ordered argument types this graph takes.
         /// </summary>
-        public IEnumerable<BaseType> ArgumentTypes
+        public IEnumerable<BaseType> ArgumentTypes()
         {
-            get => EntryNode != null ? EntryNode.InputTypePins.Select(pin => pin.InferredType?.Value ?? TypeSpecifier.FromType<object>()).ToList() : new List<BaseType>();
+            return EntryNode != null ? EntryNode.InputTypePins.Select(pin => pin.InferredType?.Value ?? TypeSpecifier.FromType<object>()).ToList() : new List<BaseType>();
         }
 
         /// <summary>
         /// Ordered argument types with their names this graph takes.
         /// </summary>
-        public IEnumerable<Named<BaseType>> NamedArgumentTypes
+        public IEnumerable<Named<BaseType>> NamedArgumentTypes()
         {
-            get => EntryNode != null ? EntryNode.InputTypePins.Zip(EntryNode.OutputDataPins, (type, data) => (type, data))
+            return EntryNode != null ? EntryNode.InputTypePins.Zip(EntryNode.OutputDataPins, (type, data) => (type, data))
                 .Select(pair => new Named<BaseType>(pair.data.Name, pair.type.InferredType?.Value ?? TypeSpecifier.FromType<object>())).ToList() : new List<Named<BaseType>>();
         }
 

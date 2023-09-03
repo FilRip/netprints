@@ -30,7 +30,7 @@ namespace NetPrintsEditor.ViewModels
                     {
                         if (dataPin is NodeInputDataPin inputDataPin)
                         {
-                            int paramIndex = callMethodNode.ArgumentPins.IndexOf(inputDataPin);
+                            int paramIndex = callMethodNode.ArgumentPins().IndexOf(inputDataPin);
                             if (paramIndex >= 0)
                             {
                                 MethodParameter parameter = callMethodNode.MethodSpecifier.Parameters[paramIndex];
@@ -186,7 +186,6 @@ namespace NetPrintsEditor.ViewModels
             {
                 return UnconnectedValue != null;
             }
-            set { }
         }
 
         public object UnconnectedValue
@@ -216,7 +215,7 @@ namespace NetPrintsEditor.ViewModels
                         {
                             p.UnconnectedValue = Convert.ChangeType(value, t);
                         }
-                        catch (InvalidCastException) { }
+                        catch (InvalidCastException) { /* Nothing to do */ }
                     }
                     else
                     {
@@ -423,7 +422,7 @@ namespace NetPrintsEditor.ViewModels
             {
                 if (!(Pin is NodeOutputExecPin || Pin is NodeInputDataPin || Pin is NodeInputTypePin))
                 {
-                    throw new Exception("Can only set connected pin of NodeOutputExecPin and NodeInputDataPin");
+                    throw new NetPrints.Exceptions.NetPrintsException("Can only set connected pin of NodeOutputExecPin and NodeInputDataPin");
                 }
 
                 if (connectedPin != value)
@@ -582,7 +581,7 @@ namespace NetPrintsEditor.ViewModels
             }
             else
             {
-                throw new Exception("Can't add reroute node for invalid pin type");
+                throw new NetPrints.Exceptions.NetPrintsException("Can't add reroute node for invalid pin type");
             }
         }
 

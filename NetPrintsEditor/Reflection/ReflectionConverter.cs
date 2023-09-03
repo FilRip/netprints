@@ -54,7 +54,7 @@ namespace NetPrintsEditor.Reflection
                     containingType = containingType.ContainingType;
                 }
 
-                typeName = nestedPrefix + type.Name.Split('`').First();
+                typeName = nestedPrefix + type.Name.Split('`')[0];
                 if (type.ContainingNamespace != null && !type.ContainingNamespace.IsGlobalNamespace)
                 {
                     typeName = type.ContainingNamespace + "." + typeName;

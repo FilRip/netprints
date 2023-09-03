@@ -354,12 +354,12 @@ namespace NetPrintsEditor.Reflection
             return typeA != null && typeB != null && typeA.IsSubclassOf(typeB);
         }
 
+        private readonly Dictionary<TypeSpecifier, ITypeSymbol> cachedTypeSpecifierSymbols = new();
+
         private T GetTypeFromSpecifier<T>(TypeSpecifier specifier)
         {
             return (T)GetTypeFromSpecifier(specifier);
         }
-
-        private readonly Dictionary<TypeSpecifier, ITypeSymbol> cachedTypeSpecifierSymbols = new();
 
         private ITypeSymbol GetTypeFromSpecifier(TypeSpecifier specifier)
         {
@@ -373,11 +373,11 @@ namespace NetPrintsEditor.Reflection
             // Find array ranks and remove them from the lookup name.
             // Example: int[][,] -> arrayRanks: { 1, 2 }, lookupName: int
             Stack<int> arrayRanks = new();
-            while (lookupName.EndsWith("]"))
+            while (lookupName.EndsWith(']'))
             {
                 lookupName = lookupName.Remove(lookupName.Length - 1);
                 int arrayRank = 1;
-                while (lookupName.EndsWith(","))
+                while (lookupName.EndsWith(','))
                 {
                     arrayRank++;
                     lookupName = lookupName.Remove(lookupName.Length - 1);
@@ -386,7 +386,7 @@ namespace NetPrintsEditor.Reflection
 
                 if (lookupName.Last() != '[')
                 {
-                    throw new Exception("Expected [ in lookupName");
+                    throw new NetPrints.Exceptions.NetPrintsException("Expected [ in lookupName");
                 }
 
                 lookupName = lookupName.Remove(lookupName.Length - 1);
@@ -442,7 +442,7 @@ namespace NetPrintsEditor.Reflection
             INamedTypeSymbol declaringType = GetTypeFromSpecifier<INamedTypeSymbol>(specifier.DeclaringType);
             return declaringType?.GetMethods().FirstOrDefault(
                     m => m.Name == specifier.Name
-                    && m.Parameters.Select(p => ReflectionConverter.BaseTypeSpecifierFromSymbol(p.Type)).SequenceEqual(specifier.ArgumentTypes));
+                    && m.Parameters.Select(p => ReflectionConverter.BaseTypeSpecifierFromSymbol(p.Type)).SequenceEqual(specifier.ArgumentTypes()));
         }
 
         // Documentation
@@ -499,7 +499,7 @@ namespace NetPrintsEditor.Reflection
             IEnumerable<IMethodSymbol> methodSymbols;
 
             // Check if type is set (no type => get all methods)
-            if (!(query.Type is null))
+            if (query.Type is not null)
             {
                 // Get all methods of the type
                 ITypeSymbol type = GetTypeFromSpecifier(query.Type);
@@ -539,7 +539,7 @@ namespace NetPrintsEditor.Reflection
             }
 
             // Check visibility
-            if (!(query.VisibleFrom is null))
+            if (query.VisibleFrom is not null)
             {
                 methodSymbols = methodSymbols.Where(m => NetPrintsUtil.IsVisible(query.VisibleFrom,
                     ReflectionConverter.TypeSpecifierFromSymbol(m.ContainingType),
@@ -548,7 +548,7 @@ namespace NetPrintsEditor.Reflection
             }
 
             // Check argument type
-            if (!(query.ArgumentType is null))
+            if (query.ArgumentType is not null)
             {
                 ITypeSymbol searchType = GetTypeFromSpecifier(query.ArgumentType);
 
@@ -561,7 +561,7 @@ namespace NetPrintsEditor.Reflection
             }
 
             // Check return type
-            if (!(query.ReturnType is null))
+            if (query.ReturnType is not null)
             {
                 ITypeSymbol searchType = GetTypeFromSpecifier(query.ReturnType);
 
@@ -583,19 +583,19 @@ namespace NetPrintsEditor.Reflection
             {
                 List<MethodSpecifier> defaultOperatorSpecifiers = DefaultOperatorSpecifiers.All.ToList();
 
-                if (!(query.Type is null))
+                if (query.Type is not null)
                 {
                     defaultOperatorSpecifiers = defaultOperatorSpecifiers.Where(t => t.DeclaringType == query.Type).ToList();
                 }
 
-                if (!(query.ReturnType is null))
+                if (query.ReturnType is not null)
                 {
                     defaultOperatorSpecifiers = defaultOperatorSpecifiers.Where(t => t.ReturnTypes.Any(rt => rt == query.ReturnType)).ToList();
                 }
 
-                if (!(query.ArgumentType is null))
+                if (query.ArgumentType is not null)
                 {
-                    defaultOperatorSpecifiers = defaultOperatorSpecifiers.Where(t => t.ArgumentTypes.Any(at => at == query.ArgumentType)).ToList();
+                    defaultOperatorSpecifiers = defaultOperatorSpecifiers.Where(t => t.ArgumentTypes().Any(at => at == query.ArgumentType)).ToList();
                 }
 
                 methodSpecifiers = defaultOperatorSpecifiers.Concat(methodSpecifiers).ToList();
@@ -627,7 +627,7 @@ namespace NetPrintsEditor.Reflection
             IEnumerable<ISymbol> propertySymbols;
 
             // Check if type is set (no type => get all methods)
-            if (!(query.Type is null))
+            if (query.Type is not null)
             {
                 // Get all properties of the type
                 ITypeSymbol type = GetTypeFromSpecifier(query.Type);
@@ -655,7 +655,7 @@ namespace NetPrintsEditor.Reflection
             }
 
             // Check visibility
-            if (!(query.VisibleFrom is null))
+            if (query.VisibleFrom is not null)
             {
                 propertySymbols = propertySymbols.Where(p => NetPrintsUtil.IsVisible(query.VisibleFrom,
                     ReflectionConverter.TypeSpecifierFromSymbol(p.ContainingType),
@@ -664,7 +664,7 @@ namespace NetPrintsEditor.Reflection
             }
 
             // Check property type
-            if (!(query.VariableType is null))
+            if (query.VariableType is not null)
             {
                 ITypeSymbol searchType = GetTypeFromSpecifier(query.VariableType);
 

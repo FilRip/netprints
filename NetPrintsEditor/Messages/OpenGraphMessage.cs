@@ -5,16 +5,11 @@ namespace NetPrintsEditor.Messages
     /// <summary>
     /// Message for opening a graph.
     /// </summary>
-    public class OpenGraphMessage
+    public class OpenGraphMessage(NodeGraph graph)
     {
         /// <summary>
         /// Graph to open.
         /// </summary>
-        public NodeGraph Graph { get; }
-
-        public OpenGraphMessage(NodeGraph graph)
-        {
-            Graph = graph;
-        }
+        public NodeGraph Graph { get; } = graph;
     }
 }

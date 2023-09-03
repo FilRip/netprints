@@ -33,13 +33,11 @@ namespace NetPrints.Graph
 
                 foreach (NodeInputTypePin inputTypePin in inputTypePins)
                 {
-                    if (inputTypePin.InferredType?.Value is BaseType replacementType && !(replacementType is null))
+                    if (inputTypePin.InferredType?.Value is BaseType replacementType && replacementType is not null &&
+                        (!(typeSpecifier.GenericArguments.SingleOrDefault(arg => arg.Name == inputTypePin.Name) is not GenericType typeToReplace)))
                     {
                         // If we can not replace all 
-                        if (!(typeSpecifier.GenericArguments.SingleOrDefault(arg => arg.Name == inputTypePin.Name) is not GenericType typeToReplace))
-                        {
-                            replacementTypes.Add(typeToReplace, replacementType);
-                        }
+                        replacementTypes.Add(typeToReplace, replacementType);
                     }
                 }
 
@@ -53,7 +51,7 @@ namespace NetPrints.Graph
                     return typeSpecifier;
                 }
             }
-            else if (type is GenericType genericType)
+            else if (type is GenericType)
             {
                 BaseType replacementType = inputTypePins.SingleOrDefault(t => t.Name == type.Name)?.InferredType?.Value;
                 if (replacementType != null)

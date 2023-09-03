@@ -10,7 +10,7 @@ using NetPrints.Core;
 namespace NetPrints.Graph
 {
     [DataContract()]
-    public class ObservableValue<T> : ObservableObjectSerializable
+    public class ObservableValue<T>(T value) : ObservableObjectSerializable
     {
         public delegate void ObservableValueChangedEventHandler(object sender, EventArgs eventArgs);
 
@@ -26,12 +26,7 @@ namespace NetPrints.Graph
             }
         }
 
-        private T value;
-
-        public ObservableValue(T value)
-        {
-            this.value = value;
-        }
+        private T value = value;
 
         public new event PropertyChangedEventHandler PropertyChanged;
         public event ObservableValueChangedEventHandler OnValueChanged;

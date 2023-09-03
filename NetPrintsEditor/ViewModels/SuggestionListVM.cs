@@ -16,16 +16,10 @@ using NetPrintsEditor.Messages;
 
 namespace NetPrintsEditor.ViewModels
 {
-    public class SearchableComboBoxItem
+    public class SearchableComboBoxItem(string c, object v)
     {
-        public string Category { get; set; }
-        public object Value { get; set; }
-
-        public SearchableComboBoxItem(string c, object v)
-        {
-            Category = c;
-            Value = v;
-        }
+        public string Category { get; set; } = c;
+        public object Value { get; set; } = v;
     }
 
     public class SuggestionListVM : ObservableObjectSerializable
@@ -69,12 +63,7 @@ namespace NetPrintsEditor.ViewModels
             set { SetProperty(ref m_nodePin, value); }
         }
 
-        private Action m_hideContextMenu;
-        public Action HideContextMenu
-        {
-            get { return m_hideContextMenu; }
-            set { m_hideContextMenu = value; }
-        }
+        public Action HideContextMenu { get; set; }
 
         private string m_searchText;
         public string SearchText
@@ -110,12 +99,12 @@ namespace NetPrintsEditor.ViewModels
             object convertedItem = suggestionConverter.Convert(item, typeof(string), null, CultureInfo.CurrentUICulture);
             if (convertedItem is string listItemText)
             {
-                return splitSearchText.All(searchTerm =>
+                return Array.TrueForAll(splitSearchText, searchTerm =>
                     listItemText.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
             }
             else
             {
-                throw new Exception("Expected string type after conversion");
+                throw new NetPrints.Exceptions.NetPrintsException("Expected string type after conversion");
             }
         }
 
@@ -195,7 +184,7 @@ namespace NetPrintsEditor.ViewModels
 
                         if (selectedType.Equals(null))
                         {
-                            throw new Exception($"Type {selectTypeDialog.SelectedType} was not found using reflection.");
+                            throw new NetPrints.Exceptions.NetPrintsException($"Type {selectTypeDialog.SelectedType} was not found using reflection.");
                         }
 
                         // Get all public constructors for the type
@@ -251,7 +240,7 @@ namespace NetPrintsEditor.ViewModels
 
                         if (selectedType.Equals(null))
                         {
-                            throw new Exception($"Type {selectTypeDialog.SelectedType} was not found using reflection.");
+                            throw new NetPrints.Exceptions.NetPrintsException($"Type {selectTypeDialog.SelectedType} was not found using reflection.");
                         }
 
                         // LiteralNode(Method method, TypeSpecifier literalType)
@@ -267,7 +256,7 @@ namespace NetPrintsEditor.ViewModels
 
                         if (selectedType.Equals(null))
                         {
-                            throw new Exception($"Type {selectTypeDialog.SelectedType} was not found using reflection.");
+                            throw new NetPrints.Exceptions.NetPrintsException($"Type {selectTypeDialog.SelectedType} was not found using reflection.");
                         }
 
                         // LiteralNode(Method method, TypeSpecifier literalType)

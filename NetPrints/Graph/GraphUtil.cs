@@ -13,10 +13,9 @@ namespace NetPrints.Graph
         /// Splits camel-case names into words seperated by spaces.
         /// </summary>
         /// <param name="input"></param>
-        /// <returns></returns>
         public static string SplitCamelCase(string input)
         {
-            return Regex.Replace(input, "([A-Z])", " $1", System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
+            return Regex.Replace(input, "([A-Z])", " $1", RegexOptions.Compiled).Trim();
         }
 
         /// <summary>
@@ -80,7 +79,9 @@ namespace NetPrints.Graph
             else if (!swapped)
             {
                 // Try the same for swapped order
+#pragma warning disable S2234 // Arguments should be passed in the same order as the method parameters
                 return CanConnectNodePins(pinB, pinA, isSubclassOf, hasImplicitCast, true);
+#pragma warning restore S2234 // Arguments should be passed in the same order as the method parameters
             }
 
             return false;
@@ -109,7 +110,9 @@ namespace NetPrints.Graph
             }
             else if (!swapped)
             {
+#pragma warning disable S2234 // Arguments should be passed in the same order as the method parameters
                 ConnectNodePins(pinB, pinA, true);
+#pragma warning restore S2234 // Arguments should be passed in the same order as the method parameters
             }
             else
             {
@@ -125,10 +128,7 @@ namespace NetPrints.Graph
         public static void ConnectExecPins(NodeOutputExecPin fromPin, NodeInputExecPin toPin)
         {
             // Remove from old pin if any
-            if (fromPin.OutgoingPin != null)
-            {
-                fromPin.OutgoingPin.IncomingPins.Remove(fromPin);
-            }
+            fromPin.OutgoingPin?.IncomingPins.Remove(fromPin);
 
             fromPin.OutgoingPin = toPin;
             toPin.IncomingPins.Add(fromPin);
@@ -142,10 +142,7 @@ namespace NetPrints.Graph
         public static void ConnectDataPins(NodeOutputDataPin fromPin, NodeInputDataPin toPin)
         {
             // Remove from old pin if any
-            if (toPin.IncomingPin != null)
-            {
-                toPin.IncomingPin.OutgoingPins.Remove(toPin);
-            }
+            toPin.IncomingPin?.OutgoingPins.Remove(toPin);
 
             fromPin.OutgoingPins.Add(toPin);
             toPin.IncomingPin = fromPin;
@@ -159,10 +156,7 @@ namespace NetPrints.Graph
         public static void ConnectTypePins(NodeOutputTypePin fromPin, NodeInputTypePin toPin)
         {
             // Remove from old pin if any
-            if (toPin.IncomingPin != null)
-            {
-                toPin.IncomingPin.OutgoingPins.Remove(toPin);
-            }
+            toPin.IncomingPin?.OutgoingPins.Remove(toPin);
 
             fromPin.OutgoingPins.Add(toPin);
             toPin.IncomingPin = fromPin;
@@ -479,58 +473,50 @@ namespace NetPrints.Graph
             }
             else if (pin is NodeInputDataPin idp)
             {
-                foreach (NodeOutputDataPin otherOtp in node.OutputDataPins)
+                NodeOutputDataPin otherOtp = node.OutputDataPins.FirstOrDefault(otherOtp => CanConnectNodePins(otherOtp, idp, isSubclassOf, hasImplicitCast));
+                if (otherOtp != null)
                 {
-                    if (CanConnectNodePins(otherOtp, idp, isSubclassOf, hasImplicitCast))
+                    ConnectDataPins(otherOtp, idp);
+
+                    // Connect exec pins if possible.
+                    // Also forward the previous connection through the new node.
+                    if (pin.Node.InputExecPins.Count > 0 && node.OutputExecPins.Count > 0)
                     {
-                        ConnectDataPins(otherOtp, idp);
+                        NodeOutputExecPin oldConnected = pin.Node.InputExecPins[0].IncomingPins.FirstOrDefault();
 
-                        // Connect exec pins if possible.
-                        // Also forward the previous connection through the new node.
-                        if (pin.Node.InputExecPins.Count > 0 && node.OutputExecPins.Count > 0)
+                        if (oldConnected != null)
                         {
-                            NodeOutputExecPin oldConnected = pin.Node.InputExecPins[0].IncomingPins.FirstOrDefault();
-
-                            if (oldConnected != null)
-                            {
-                                DisconnectOutputExecPin(oldConnected);
-                            }
-
-                            ConnectExecPins(node.OutputExecPins[0], pin.Node.InputExecPins[0]);
-
-                            if (oldConnected != null && node.InputExecPins.Count > 0)
-                            {
-                                ConnectExecPins(oldConnected, node.InputExecPins[0]);
-                            }
+                            DisconnectOutputExecPin(oldConnected);
                         }
 
-                        break;
+                        ConnectExecPins(node.OutputExecPins[0], pin.Node.InputExecPins[0]);
+
+                        if (oldConnected != null && node.InputExecPins.Count > 0)
+                        {
+                            ConnectExecPins(oldConnected, node.InputExecPins[0]);
+                        }
                     }
                 }
             }
             else if (pin is NodeOutputDataPin odp)
             {
-                foreach (NodeInputDataPin otherIdp in node.InputDataPins)
+                NodeInputDataPin otherIdp = node.InputDataPins.FirstOrDefault(otherIdp => CanConnectNodePins(odp, otherIdp, isSubclassOf, hasImplicitCast));
+                if (otherIdp != null)
                 {
-                    if (CanConnectNodePins(odp, otherIdp, isSubclassOf, hasImplicitCast))
+                    ConnectDataPins(odp, otherIdp);
+
+                    // Connect exec pins if possible.
+                    // Also forward the previous connection through the new node.
+                    if (node.InputExecPins.Count > 0 && pin.Node.OutputExecPins.Count > 0)
                     {
-                        ConnectDataPins(odp, otherIdp);
+                        NodeInputExecPin oldConnected = pin.Node.OutputExecPins[0].OutgoingPin;
 
-                        // Connect exec pins if possible.
-                        // Also forward the previous connection through the new node.
-                        if (node.InputExecPins.Count > 0 && pin.Node.OutputExecPins.Count > 0)
+                        ConnectExecPins(pin.Node.OutputExecPins[0], node.InputExecPins[0]);
+
+                        if (oldConnected != null && node.OutputExecPins.Count > 0)
                         {
-                            NodeInputExecPin oldConnected = pin.Node.OutputExecPins[0].OutgoingPin;
-
-                            ConnectExecPins(pin.Node.OutputExecPins[0], node.InputExecPins[0]);
-
-                            if (oldConnected != null && node.OutputExecPins.Count > 0)
-                            {
-                                ConnectExecPins(node.OutputExecPins[0], oldConnected);
-                            }
+                            ConnectExecPins(node.OutputExecPins[0], oldConnected);
                         }
-
-                        break;
                     }
                 }
             }
@@ -541,12 +527,10 @@ namespace NetPrints.Graph
                     ConnectTypePins(node.OutputTypePins[0], itp);
                 }
             }
-            else if (pin is NodeOutputTypePin otp)
+            else if (pin is NodeOutputTypePin otp &&
+                node.InputTypePins.Count > 0)
             {
-                if (node.InputTypePins.Count > 0)
-                {
-                    ConnectTypePins(otp, node.InputTypePins[0]);
-                }
+                ConnectTypePins(otp, node.InputTypePins[0]);
             }
         }
     }

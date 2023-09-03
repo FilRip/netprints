@@ -9,19 +9,13 @@ namespace NetPrints.Core
     /// <typeparam name="T">Type of the value.</typeparam>
     [DataContract()]
     [KnownType(typeof(MethodParameter))]
-    public class Named<T>
+    public class Named<T>(string name, T type)
     {
         [DataMember()]
-        public string Name { get; set; }
+        public string Name { get; set; } = name;
 
         [DataMember()]
-        public T Value { get; set; }
-
-        public Named(string name, T type)
-        {
-            Name = name;
-            Value = type;
-        }
+        public T Value { get; set; } = type;
 
         public static implicit operator T(Named<T> namedValue) => namedValue.Value;
 

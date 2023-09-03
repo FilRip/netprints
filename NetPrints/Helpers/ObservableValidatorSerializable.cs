@@ -51,7 +51,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             this.validationContext = validationContext;
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, bool validate, [CallerMemberName()] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, bool validate, [CallerMemberName()] string? propertyName = null)
         {
             bool num = SetProperty(ref field, newValue, propertyName);
             if (num && validate)
@@ -61,7 +61,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, bool validate, [CallerMemberName()] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, IEqualityComparer<T> comparer, bool validate, [CallerMemberName()] string? propertyName = null)
         {
             bool num = SetProperty(ref field, newValue, comparer, propertyName);
             if (num && validate)
@@ -233,9 +233,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
                                                 select (property.Name, getMethod)).ToArray();
                 if (array.Length == 0)
                 {
-                    return delegate
-                    {
-                    };
+                    return delegate { };
                 }
                 ParameterExpression parameterExpression = Expression.Parameter(typeof(object));
                 UnaryExpression inst0 = Expression.Convert(parameterExpression, type);
@@ -244,8 +242,8 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
                 {
                     return Expression.Lambda<Action<object>>(Expression.Block(array.Select(((string Name, MethodInfo GetMethod) property) => Expression.Call(inst0, validateMethod, new Expression[2]
                     {
-                    Expression.Convert(Expression.Call(inst0, property.GetMethod), typeof(object)),
-                    Expression.Constant(property.Name)
+                        Expression.Convert(Expression.Call(inst0, property.GetMethod), typeof(object)),
+                        Expression.Constant(property.Name)
                     }))), new ParameterExpression[1] { parameterExpression }).Compile();
                 }
                 return null;
@@ -389,7 +387,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
 
         private static void ThrowArgumentNullExceptionForNullPropertyName()
         {
-            throw new ArgumentNullException("propertyName", "The input property name cannot be null when validating a property");
+            throw new NetPrints.Exceptions.NetPrintsException("The input property name cannot be null when validating a property");
         }
     }
 }

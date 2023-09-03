@@ -127,7 +127,6 @@ namespace NetPrints.Core
         /// Whether this property is static.
         /// </summary>
         [DataMember()]
-        [Obsolete("Why not ?")]
         public bool IsStatic
         {
             get;
@@ -156,7 +155,7 @@ namespace NetPrints.Core
 
         public VariableSpecifier Specifier
         {
-            get => new(Name, Type, GetterMethod?.Visibility ?? Visibility, SetterMethod?.Visibility ?? Visibility, Class.Type, Modifiers);
+            get => new(Name, Type, GetterMethod?.Visibility ?? Visibility, SetterMethod?.Visibility ?? Visibility, Class.Type(), Modifiers);
         }
 
         /// <summary>
@@ -188,10 +187,7 @@ namespace NetPrints.Core
         [OnDeserialized()]
         private void OnDeserialized(StreamingContext context)
         {
-            if (TypeGraph is null)
-            {
-                TypeGraph = new TypeGraph();
-            }
+            TypeGraph ??= new TypeGraph();
         }
     }
 }

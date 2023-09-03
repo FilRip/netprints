@@ -234,7 +234,7 @@ namespace NetPrintsEditor
             {
                 foreach (NodeVM selectedNode in graphEditor.Graph.SelectedNodes)
                 {
-                    if (!(selectedNode.Node is MethodEntryNode) && !(selectedNode.Node is ClassReturnNode)
+                    if (selectedNode.Node is not MethodEntryNode && selectedNode.Node is not ClassReturnNode
                         && selectedNode.Node != (graphEditor.Graph.Graph as MethodGraph)?.MainReturnNode)
                     {
                         // Remove the node from its method

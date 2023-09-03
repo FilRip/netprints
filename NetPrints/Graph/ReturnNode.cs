@@ -114,8 +114,8 @@ namespace NetPrints.Graph
 
             if (InputDataPins.Count > 0)
             {
-                NodeInputDataPin idpToRemove = InputDataPins.Last();
-                NodeInputTypePin itpToRemove = InputTypePins.Last();
+                NodeInputDataPin idpToRemove = InputDataPins[^1];
+                NodeInputTypePin itpToRemove = InputTypePins[^1];
 
                 GraphUtil.DisconnectInputDataPin(idpToRemove);
                 GraphUtil.DisconnectInputTypePin(itpToRemove);

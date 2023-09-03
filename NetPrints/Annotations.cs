@@ -113,17 +113,9 @@ namespace NetPrints.Annotations
     [AttributeUsage(
       AttributeTargets.Constructor | AttributeTargets.Method |
       AttributeTargets.Property | AttributeTargets.Delegate)]
-    public sealed class StringFormatMethodAttribute : Attribute
+    public sealed class StringFormatMethodAttribute([NotNull] string formatParameterName) : Attribute
     {
-        /// <param name="formatParameterName">
-        /// Specifies which parameter of an annotated method should be treated as the format string
-        /// </param>
-        public StringFormatMethodAttribute([NotNull] string formatParameterName)
-        {
-            FormatParameterName = formatParameterName;
-        }
-
-        [NotNull] public string FormatParameterName { get; }
+        [NotNull] public string FormatParameterName { get; } = formatParameterName;
     }
 
     /// <summary>
@@ -170,14 +162,9 @@ namespace NetPrints.Annotations
     [AttributeUsage(
       AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field,
       AllowMultiple = true)]
-    public sealed class ValueProviderAttribute : Attribute
+    public sealed class ValueProviderAttribute([NotNull] string name) : Attribute
     {
-        public ValueProviderAttribute([NotNull] string name)
-        {
-            Name = name;
-        }
-
-        [NotNull] public string Name { get; }
+        [NotNull] public string Name { get; } = name;
     }
 
     /// <summary>
@@ -348,20 +335,14 @@ namespace NetPrints.Annotations
     /// </code></item>
     /// </list></examples>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public sealed class ContractAnnotationAttribute : Attribute
+    public sealed class ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates) : Attribute
     {
         public ContractAnnotationAttribute([NotNull] string contract)
           : this(contract, false) { }
 
-        public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
-        {
-            Contract = contract;
-            ForceFullStates = forceFullStates;
-        }
+        [NotNull] public string Contract { get; } = contract;
 
-        [NotNull] public string Contract { get; }
-
-        public bool ForceFullStates { get; }
+        public bool ForceFullStates { get; } = forceFullStates;
     }
 
     /// <summary>
@@ -374,16 +355,11 @@ namespace NetPrints.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.All)]
-    public sealed class LocalizationRequiredAttribute : Attribute
+    public sealed class LocalizationRequiredAttribute(bool required) : Attribute
     {
         public LocalizationRequiredAttribute() : this(true) { }
 
-        public LocalizationRequiredAttribute(bool required)
-        {
-            Required = required;
-        }
-
-        public bool Required { get; }
+        public bool Required { get; } = required;
     }
 
     /// <summary>
@@ -422,20 +398,15 @@ namespace NetPrints.Annotations
     /// </code></example>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     [BaseTypeRequired(typeof(Attribute))]
-    public sealed class BaseTypeRequiredAttribute : Attribute
+    public sealed class BaseTypeRequiredAttribute([NotNull] Type baseType) : Attribute
     {
-        public BaseTypeRequiredAttribute([NotNull] Type baseType)
-        {
-            BaseType = baseType;
-        }
-
-        [NotNull] public Type BaseType { get; }
+        [NotNull] public Type BaseType { get; } = baseType;
     }
 
     /// <summary>
     /// Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
     /// so this symbol will be ignored by usage-checking inspections. <br/>
-    /// You can use <see cref="ImplicitUseKindFlags"/> and <see cref="ImplicitUseTargetFlags"/>
+    /// You can use <see cref="EImplicitUseKind"/> and <see cref="EImplicitUseTarget"/>
     /// to configure how this attribute is applied.
     /// </summary>
     /// <example><code>
@@ -452,26 +423,20 @@ namespace NetPrints.Annotations
     /// public interface IService {}
     /// </code></example>
     [AttributeUsage(AttributeTargets.All)]
-    public sealed class UsedImplicitlyAttribute : Attribute
+    public sealed class UsedImplicitlyAttribute(EImplicitUseKind useKindFlags, EImplicitUseTarget targetFlags) : Attribute
     {
         public UsedImplicitlyAttribute()
-          : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) { }
+          : this(EImplicitUseKind.Default, EImplicitUseTarget.Default) { }
 
-        public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
-          : this(useKindFlags, ImplicitUseTargetFlags.Default) { }
+        public UsedImplicitlyAttribute(EImplicitUseKind useKindFlags)
+          : this(useKindFlags, EImplicitUseTarget.Default) { }
 
-        public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
-          : this(ImplicitUseKindFlags.Default, targetFlags) { }
+        public UsedImplicitlyAttribute(EImplicitUseTarget targetFlags)
+          : this(EImplicitUseKind.Default, targetFlags) { }
 
-        public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
-        {
-            UseKindFlags = useKindFlags;
-            TargetFlags = targetFlags;
-        }
+        public EImplicitUseKind UseKindFlags { get; } = useKindFlags;
 
-        public ImplicitUseKindFlags UseKindFlags { get; }
-
-        public ImplicitUseTargetFlags TargetFlags { get; }
+        public EImplicitUseTarget TargetFlags { get; } = targetFlags;
     }
 
     /// <summary>
@@ -481,34 +446,28 @@ namespace NetPrints.Annotations
     /// indicates that the corresponding type is used implicitly.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.GenericParameter | AttributeTargets.Parameter)]
-    public sealed class MeansImplicitUseAttribute : Attribute
+    public sealed class MeansImplicitUseAttribute(EImplicitUseKind useKindFlags, EImplicitUseTarget targetFlags) : Attribute
     {
         public MeansImplicitUseAttribute()
-          : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default) { }
+          : this(EImplicitUseKind.Default, EImplicitUseTarget.Default) { }
 
-        public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
-          : this(useKindFlags, ImplicitUseTargetFlags.Default) { }
+        public MeansImplicitUseAttribute(EImplicitUseKind useKindFlags)
+          : this(useKindFlags, EImplicitUseTarget.Default) { }
 
-        public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
-          : this(ImplicitUseKindFlags.Default, targetFlags) { }
+        public MeansImplicitUseAttribute(EImplicitUseTarget targetFlags)
+          : this(EImplicitUseKind.Default, targetFlags) { }
 
-        public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
-        {
-            UseKindFlags = useKindFlags;
-            TargetFlags = targetFlags;
-        }
+        [UsedImplicitly] public EImplicitUseKind UseKindFlags { get; } = useKindFlags;
 
-        [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; }
-
-        [UsedImplicitly] public ImplicitUseTargetFlags TargetFlags { get; }
+        [UsedImplicitly] public EImplicitUseTarget TargetFlags { get; } = targetFlags;
     }
 
     /// <summary>
     /// Specifies the details of implicitly used symbol when it is marked
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
     /// </summary>
-    [Flags]
-    public enum ImplicitUseKindFlags
+    [Flags()]
+    public enum EImplicitUseKind
     {
         Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
         /// <summary>Only entity marked with attribute considered used.</summary>
@@ -528,11 +487,11 @@ namespace NetPrints.Annotations
     /// Specifies what is considered to be used implicitly when marked
     /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
     /// </summary>
-    [Flags]
-    public enum ImplicitUseTargetFlags
+    [Flags()]
+    public enum EImplicitUseTarget
     {
-        Default = Itself,
-        Itself = 1,
+        Default = 1,
+        Itself = Default,
         /// <summary>Members of the type marked with the attribute are considered used.</summary>
         Members = 2,
         /// <summary> Inherited entities are considered used. </summary>
@@ -545,13 +504,13 @@ namespace NetPrints.Annotations
     /// This attribute is intended to mark publicly available API,
     /// which should not be removed and so is treated as used.
     /// </summary>
-    [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
+    [MeansImplicitUse(EImplicitUseTarget.WithMembers)]
     [AttributeUsage(AttributeTargets.All, Inherited = false)]
-    public sealed class PublicAPIAttribute : Attribute
+    public sealed class PublicApiAttribute : Attribute
     {
-        public PublicAPIAttribute() { }
+        public PublicApiAttribute() { }
 
-        public PublicAPIAttribute([NotNull] string comment)
+        public PublicApiAttribute([NotNull] string comment)
         {
             Comment = comment;
         }
@@ -782,21 +741,16 @@ namespace NetPrints.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Property | AttributeTargets.ReturnValue)]
-    public sealed class CollectionAccessAttribute : Attribute
+    public sealed class CollectionAccessAttribute(CollectionAccessType collectionAccessType) : Attribute
     {
-        public CollectionAccessAttribute(CollectionAccessType collectionAccessType)
-        {
-            CollectionAccessType = collectionAccessType;
-        }
-
-        public CollectionAccessType CollectionAccessType { get; }
+        public CollectionAccessType CollectionAccessType { get; } = collectionAccessType;
     }
 
     /// <summary>
     /// Provides a value for the <see cref="CollectionAccessAttribute"/> to define
     /// how the collection method invocation affects the contents of the collection.
     /// </summary>
-    [Flags]
+    [Flags()]
     public enum CollectionAccessType
     {
         /// <summary>Method does not use or modify content of the collection.</summary>
@@ -805,8 +759,9 @@ namespace NetPrints.Annotations
         Read = 1,
         /// <summary>Method can change content of the collection but does not add new elements.</summary>
         ModifyExistingContent = 2,
+        Content = 4,
         /// <summary>Method can add new elements to the collection.</summary>
-        UpdatedContent = ModifyExistingContent | 4
+        UpdatedContent = ModifyExistingContent | Content
     }
 
     /// <summary>
@@ -823,14 +778,9 @@ namespace NetPrints.Annotations
     /// the attribute is the assertion type.
     /// </summary>
     [AttributeUsage(AttributeTargets.Parameter)]
-    public sealed class AssertionConditionAttribute : Attribute
+    public sealed class AssertionConditionAttribute(AssertionConditionType conditionType) : Attribute
     {
-        public AssertionConditionAttribute(AssertionConditionType conditionType)
-        {
-            ConditionType = conditionType;
-        }
-
-        public AssertionConditionType ConditionType { get; }
+        public AssertionConditionType ConditionType { get; } = conditionType;
     }
 
     /// <summary>
@@ -848,14 +798,6 @@ namespace NetPrints.Annotations
         /// <summary>Marked parameter should be evaluated to not null value.</summary>
         IS_NOT_NULL = 3,
     }
-
-    /// <summary>
-    /// Indicates that the marked method unconditionally terminates control flow execution.
-    /// For example, it could unconditionally throw exception.
-    /// </summary>
-    [Obsolete("Use [ContractAnnotation('=> halt')] instead")]
-    [AttributeUsage(AttributeTargets.Method)]
-    public sealed class TerminatesProgramAttribute : Attribute { }
 
     /// <summary>
     /// Indicates that the method is a pure LINQ method, with postponed enumeration (like Enumerable.Select,
@@ -913,15 +855,11 @@ namespace NetPrints.Annotations
     /// }
     /// </code></example>
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class LanguageInjectionAttribute : Attribute
+    public sealed class LanguageInjectionAttribute(InjectedLanguage injectedLanguage) : Attribute
     {
-        public LanguageInjectionAttribute(InjectedLanguage injectedLanguage)
-        {
-            InjectedLanguage = injectedLanguage;
-        }
 
         /// <summary>Specify a language of injected code fragment.</summary>
-        public InjectedLanguage InjectedLanguage { get; }
+        public InjectedLanguage InjectedLanguage { get; } = injectedLanguage;
 
         /// <summary>Specify a string that "precedes" injected string literal.</summary>
         [CanBeNull] public string Prefix { get; set; }
@@ -1083,19 +1021,15 @@ namespace NetPrints.Annotations
       | AttributeTargets.Enum,
       AllowMultiple = true,
       Inherited = false)]
-    public sealed class CodeTemplateAttribute : Attribute
+    public sealed class CodeTemplateAttribute(string searchTemplate) : Attribute
     {
-        public CodeTemplateAttribute(string searchTemplate)
-        {
-            SearchTemplate = searchTemplate;
-        }
 
         /// <summary>
         /// Structural search pattern to use in the code template.
         /// Pattern includes textual part, which must contain only identifiers allowed in the target language,
         /// and placeholders, which allow matching variable parts of the target code blocks.
         /// </summary>
-        public string SearchTemplate { get; }
+        public string SearchTemplate { get; } = searchTemplate;
 
         /// <summary>
         /// Message to show when the search pattern was found.
@@ -1141,17 +1075,11 @@ namespace NetPrints.Annotations
     #region ASP.NET
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class AspChildControlTypeAttribute : Attribute
+    public sealed class AspChildControlTypeAttribute([NotNull] string tagName, [NotNull] Type controlType) : Attribute
     {
-        public AspChildControlTypeAttribute([NotNull] string tagName, [NotNull] Type controlType)
-        {
-            TagName = tagName;
-            ControlType = controlType;
-        }
+        [NotNull] public string TagName { get; } = tagName;
 
-        [NotNull] public string TagName { get; }
-
-        [NotNull] public Type ControlType { get; }
+        [NotNull] public Type ControlType { get; } = controlType;
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
@@ -1164,25 +1092,15 @@ namespace NetPrints.Annotations
     public sealed class AspMethodPropertyAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class AspRequiredAttributeAttribute : Attribute
+    public sealed class AspRequiredAttributeAttribute([NotNull] string attribute) : Attribute
     {
-        public AspRequiredAttributeAttribute([NotNull] string attribute)
-        {
-            Attribute = attribute;
-        }
-
-        [NotNull] public string Attribute { get; }
+        [NotNull] public string Attribute { get; } = attribute;
     }
 
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class AspTypePropertyAttribute : Attribute
+    public sealed class AspTypePropertyAttribute(bool createConstructorReferences) : Attribute
     {
-        public bool CreateConstructorReferences { get; }
-
-        public AspTypePropertyAttribute(bool createConstructorReferences)
-        {
-            CreateConstructorReferences = createConstructorReferences;
-        }
+        public bool CreateConstructorReferences { get; } = createConstructorReferences;
     }
 
     #endregion
@@ -1190,69 +1108,39 @@ namespace NetPrints.Annotations
     #region ASP.NET MVC
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class AspMvcAreaMasterLocationFormatAttribute : Attribute
+    public sealed class AspMvcAreaMasterLocationFormatAttribute([NotNull] string format) : Attribute
     {
-        public AspMvcAreaMasterLocationFormatAttribute([NotNull] string format)
-        {
-            Format = format;
-        }
-
-        [NotNull] public string Format { get; }
+        [NotNull] public string Format { get; } = format;
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
+    public sealed class AspMvcAreaPartialViewLocationFormatAttribute([NotNull] string format) : Attribute
     {
-        public AspMvcAreaPartialViewLocationFormatAttribute([NotNull] string format)
-        {
-            Format = format;
-        }
-
-        [NotNull] public string Format { get; }
+        [NotNull] public string Format { get; } = format;
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
+    public sealed class AspMvcAreaViewLocationFormatAttribute([NotNull] string format) : Attribute
     {
-        public AspMvcAreaViewLocationFormatAttribute([NotNull] string format)
-        {
-            Format = format;
-        }
-
-        [NotNull] public string Format { get; }
+        [NotNull] public string Format { get; } = format;
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class AspMvcMasterLocationFormatAttribute : Attribute
+    public sealed class AspMvcMasterLocationFormatAttribute([NotNull] string format) : Attribute
     {
-        public AspMvcMasterLocationFormatAttribute([NotNull] string format)
-        {
-            Format = format;
-        }
-
-        [NotNull] public string Format { get; }
+        [NotNull] public string Format { get; } = format;
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
+    public sealed class AspMvcPartialViewLocationFormatAttribute([NotNull] string format) : Attribute
     {
-        public AspMvcPartialViewLocationFormatAttribute([NotNull] string format)
-        {
-            Format = format;
-        }
-
-        [NotNull] public string Format { get; }
+        [NotNull] public string Format { get; } = format;
     }
 
     [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class AspMvcViewLocationFormatAttribute : Attribute
+    public sealed class AspMvcViewLocationFormatAttribute([NotNull] string format) : Attribute
     {
-        public AspMvcViewLocationFormatAttribute([NotNull] string format)
-        {
-            Format = format;
-        }
-
-        [NotNull] public string Format { get; }
+        [NotNull] public string Format { get; } = format;
     }
 
     /// <summary>
@@ -1426,15 +1314,10 @@ namespace NetPrints.Annotations
     /// and check if constraint's proposed type conflicts with matched parameter's type
     /// </remarks>
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class RouteParameterConstraintAttribute : Attribute
+    public sealed class RouteParameterConstraintAttribute([NotNull] string constraintName) : Attribute
     {
-        [NotNull] public string ConstraintName { get; }
+        [NotNull] public string ConstraintName { get; } = constraintName;
         [CanBeNull] public Type ProposedType { get; set; }
-
-        public RouteParameterConstraintAttribute([NotNull] string constraintName)
-        {
-            ConstraintName = constraintName;
-        }
     }
 
     /// <summary>
@@ -1551,14 +1434,9 @@ namespace NetPrints.Annotations
     }
 
     [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
-    public sealed class HtmlAttributeValueAttribute : Attribute
+    public sealed class HtmlAttributeValueAttribute([NotNull] string name) : Attribute
     {
-        public HtmlAttributeValueAttribute([NotNull] string name)
-        {
-            Name = name;
-        }
-
-        [NotNull] public string Name { get; }
+        [NotNull] public string Name { get; } = name;
     }
 
     /// <summary>
@@ -1570,39 +1448,23 @@ namespace NetPrints.Annotations
     public sealed class RazorSectionAttribute : Attribute { }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    public sealed class RazorImportNamespaceAttribute : Attribute
+    public sealed class RazorImportNamespaceAttribute([NotNull] string name) : Attribute
     {
-        public RazorImportNamespaceAttribute([NotNull] string name)
-        {
-            Name = name;
-        }
-
-        [NotNull] public string Name { get; }
+        [NotNull] public string Name { get; } = name;
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    public sealed class RazorInjectionAttribute : Attribute
+    public sealed class RazorInjectionAttribute([NotNull] string type, [NotNull] string fieldName) : Attribute
     {
-        public RazorInjectionAttribute([NotNull] string type, [NotNull] string fieldName)
-        {
-            Type = type;
-            FieldName = fieldName;
-        }
+        [NotNull] public string Type { get; } = type;
 
-        [NotNull] public string Type { get; }
-
-        [NotNull] public string FieldName { get; }
+        [NotNull] public string FieldName { get; } = fieldName;
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
-    public sealed class RazorDirectiveAttribute : Attribute
+    public sealed class RazorDirectiveAttribute([NotNull] string directive) : Attribute
     {
-        public RazorDirectiveAttribute([NotNull] string directive)
-        {
-            Directive = directive;
-        }
-
-        [NotNull] public string Directive { get; }
+        [NotNull] public string Directive { get; } = directive;
     }
 
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]

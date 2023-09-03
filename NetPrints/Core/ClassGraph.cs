@@ -126,9 +126,9 @@ namespace NetPrints.Core
         /// <summary>
         /// TypeSpecifier describing this class.
         /// </summary>
-        public TypeSpecifier Type
+        public TypeSpecifier Type()
         {
-            get => new(FullName, SuperType.IsEnum, SuperType.IsInterface,
+            return new(FullName, SuperType.IsEnum, SuperType.IsInterface,
                 DeclaredGenericArguments.Cast<BaseType>().ToList());
         }
 

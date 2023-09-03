@@ -8,7 +8,7 @@ namespace NetPrints.Graph
     /// Pin that can be connected to output execution pins to receive execution.
     /// </summary>
     [DataContract()]
-    public class NodeInputExecPin : NodeExecPin
+    public class NodeInputExecPin(Node node, string name) : NodeExecPin(node, name)
     {
         /// <summary>
         /// Output execution pins connected to this pin.
@@ -16,10 +16,5 @@ namespace NetPrints.Graph
         [DataMember()]
         public ObservableRangeCollection<NodeOutputExecPin> IncomingPins { get; private set; } =
             new ObservableRangeCollection<NodeOutputExecPin>();
-
-        public NodeInputExecPin(Node node, string name)
-            : base(node, name)
-        {
-        }
     }
 }

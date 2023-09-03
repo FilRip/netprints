@@ -13,16 +13,14 @@ namespace NetPrintsEditor.Controls
     /// </summary>
     public partial class VariableGetSetControl : UserControl
     {
-#pragma warning disable CA2211
-        public static DependencyProperty VariableSpecifierProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty VariableSpecifierProperty = DependencyProperty.Register(
             nameof(VariableSpecifier), typeof(VariableSpecifier), typeof(VariableGetSetControl));
 
-        public static DependencyProperty CanGetProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty CanGetProperty = DependencyProperty.Register(
             nameof(CanGet), typeof(bool), typeof(VariableGetSetControl));
 
-        public static DependencyProperty CanSetProperty = DependencyProperty.Register(
+        public static readonly DependencyProperty CanSetProperty = DependencyProperty.Register(
             nameof(CanSet), typeof(bool), typeof(VariableGetSetControl));
-#pragma warning restore CA2211
 
         public event VariableGetSetDelegate OnVariableGetSet;
 

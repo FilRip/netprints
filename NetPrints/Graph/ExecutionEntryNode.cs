@@ -5,7 +5,7 @@ using NetPrints.Core;
 namespace NetPrints.Graph
 {
     [DataContract()]
-    public abstract class ExecutionEntryNode : Node
+    public abstract class ExecutionEntryNode(ExecutionGraph graph) : Node(graph)
     {
         /// <summary>
         /// Output execution pin that initially executes when a method gets called.
@@ -13,12 +13,6 @@ namespace NetPrints.Graph
         public NodeOutputExecPin InitialExecutionPin
         {
             get { return OutputExecPins[0]; }
-        }
-
-        public ExecutionEntryNode(ExecutionGraph graph)
-            : base(graph)
-        {
-
         }
     }
 }

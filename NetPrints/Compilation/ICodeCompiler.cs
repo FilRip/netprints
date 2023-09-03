@@ -7,7 +7,7 @@ namespace NetPrints.Compilation
     /// Contains results of a compilation.
     /// </summary>
     [Serializable()]
-    public class CodeCompileResults
+    public class CodeCompileResults(bool success, IEnumerable<string> errors, string pathToAssembly)
     {
         /// <summary>
         /// Whether the compilation was successful.
@@ -15,7 +15,7 @@ namespace NetPrints.Compilation
         public bool Success
         {
             get;
-        }
+        } = success;
 
         /// <summary>
         /// Errors of the compilation.
@@ -23,7 +23,7 @@ namespace NetPrints.Compilation
         public IEnumerable<string> Errors
         {
             get;
-        }
+        } = errors;
 
         /// <summary>
         /// Path to the generated assembly.
@@ -31,14 +31,7 @@ namespace NetPrints.Compilation
         public string PathToAssembly
         {
             get;
-        }
-
-        public CodeCompileResults(bool success, IEnumerable<string> errors, string pathToAssembly)
-        {
-            Success = success;
-            Errors = errors;
-            PathToAssembly = pathToAssembly;
-        }
+        } = pathToAssembly;
     }
 
     /// <summary>

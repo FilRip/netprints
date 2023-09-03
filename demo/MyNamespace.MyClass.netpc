@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassGraph xmlns:i="http://www.w3.org/2001/XMLSchema-instance" z:Id="1" xmlns:z="http://schemas.microsoft.com/2003/10/Serialization/" xmlns="http://schemas.datacontract.org/2004/07/NetPrints.Core">
+  <Class i:nil="true" />
+  <Nodes xmlns:d2p1="http://schemas.datacontract.org/2004/07/NetPrints.Graph" z:Id="2" z:Size="1">
+    <d2p1:Node z:Id="3" i:type="d2p1:ClassReturnNode">
+      <d2p1:Graph z:Ref="1" i:nil="true" />
+      <d2p1:InputDataPins z:Id="4" z:Size="0" />
+      <d2p1:InputExecPins z:Id="5" z:Size="0" />
+      <d2p1:InputTypePins z:Id="6" z:Size="1">
+        <d2p1:NodeInputTypePin z:Id="7">
+          <d2p1:Name z:Id="8">BaseType</d2p1:Name>
+          <d2p1:Node z:Ref="3" i:nil="true" />
+          <d2p1:IncomingPin i:nil="true" />
+        </d2p1:NodeInputTypePin>
+      </d2p1:InputTypePins>
+      <d2p1:Name z:Id="9">ClassReturnNode</d2p1:Name>
+      <d2p1:OutputDataPins z:Id="10" z:Size="0" />
+      <d2p1:OutputExecPins z:Id="11" z:Size="0" />
+      <d2p1:OutputTypePins z:Id="12" z:Size="0" />
+      <d2p1:PositionX>0</d2p1:PositionX>
+      <d2p1:PositionY>0</d2p1:PositionY>
+    </d2p1:Node>
+  </Nodes>
+  <Constructors z:Id="13" z:Size="0" />
+  <DeclaredGenericArguments z:Id="14" z:Size="0" />
+  <Methods z:Id="15" z:Size="1">
+    <MethodGraph z:Id="16">
+      <Class z:Ref="1" i:nil="true" />
+      <Nodes xmlns:d4p1="http://schemas.datacontract.org/2004/07/NetPrints.Graph" z:Id="17" z:Size="3">
+        <d4p1:Node z:Id="18" i:type="d4p1:MethodEntryNode">
+          <d4p1:Graph z:Ref="16" i:nil="true" />
+          <d4p1:InputDataPins z:Id="19" z:Size="0" />
+          <d4p1:InputExecPins z:Id="20" z:Size="0" />
+          <d4p1:InputTypePins z:Id="21" z:Size="0" />
+          <d4p1:Name z:Id="22">MethodEntryNode</d4p1:Name>
+          <d4p1:OutputDataPins z:Id="23" z:Size="0" />
+          <d4p1:OutputExecPins z:Id="24" z:Size="1">
+            <d4p1:NodeOutputExecPin z:Id="25">
+              <d4p1:Name z:Id="26">Exec</d4p1:Name>
+              <d4p1:Node z:Ref="18" i:nil="true" />
+              <d4p1:OutgoingPin z:Id="27">
+                <d4p1:Name z:Ref="26" i:nil="true" />
+                <d4p1:Node z:Id="28" i:type="d4p1:CallMethodNode">
+                  <d4p1:Graph z:Ref="16" i:nil="true" />
+                  <d4p1:InputDataPins z:Id="29" z:Size="1">
+                    <d4p1:NodeInputDataPin z:Id="30">
+                      <d4p1:Name z:Id="31">value</d4p1:Name>
+                      <d4p1:Node z:Ref="28" i:nil="true" />
+                      <d4p1:PinType z:Id="32">
+                        <d4p1:Value z:Id="33" i:type="TypeSpecifier">
+                          <Name z:Id="34">System.String</Name>
+                          <GenericArguments z:Id="35" z:Size="0" />
+                          <IsEnum>false</IsEnum>
+                          <IsInterface>false</IsInterface>
+                        </d4p1:Value>
+                      </d4p1:PinType>
+                      <d4p1:ExplicitDefaultValue i:nil="true" />
+                      <d4p1:IncomingPin i:nil="true" />
+                      <d4p1:UnconnectedValue z:Id="36" xmlns:d12p1="http://www.w3.org/2001/XMLSchema" i:type="d12p1:string">Bonjour</d4p1:UnconnectedValue>
+                      <d4p1:UsesExplicitDefaultValue>false</d4p1:UsesExplicitDefaultValue>
+                    </d4p1:NodeInputDataPin>
+                  </d4p1:InputDataPins>
+                  <d4p1:InputExecPins z:Id="37" z:Size="1">
+                    <d4p1:NodeInputExecPin z:Ref="27" i:nil="true" />
+                  </d4p1:InputExecPins>
+                  <d4p1:InputTypePins z:Id="38" z:Size="0" />
+                  <d4p1:Name z:Id="39">CallMethodNode</d4p1:Name>
+                  <d4p1:OutputDataPins z:Id="40" z:Size="0" />
+                  <d4p1:OutputExecPins z:Id="41" z:Size="2">
+                    <d4p1:NodeOutputExecPin z:Id="42">
+                      <d4p1:Name z:Ref="26" i:nil="true" />
+                      <d4p1:Node z:Ref="28" i:nil="true" />
+                      <d4p1:OutgoingPin z:Id="43">
+                        <d4p1:Name z:Ref="26" i:nil="true" />
+                        <d4p1:Node z:Id="44" i:type="d4p1:ReturnNode">
+                          <d4p1:Graph z:Ref="16" i:nil="true" />
+                          <d4p1:InputDataPins z:Id="45" z:Size="0" />
+                          <d4p1:InputExecPins z:Id="46" z:Size="1">
+                            <d4p1:NodeInputExecPin z:Ref="43" i:nil="true" />
+                          </d4p1:InputExecPins>
+                          <d4p1:InputTypePins z:Id="47" z:Size="0" />
+                          <d4p1:Name z:Id="48">ReturnNode</d4p1:Name>
+                          <d4p1:OutputDataPins z:Id="49" z:Size="0" />
+                          <d4p1:OutputExecPins z:Id="50" z:Size="0" />
+                          <d4p1:OutputTypePins z:Id="51" z:Size="0" />
+                          <d4p1:PositionX>1092</d4p1:PositionX>
+                          <d4p1:PositionY>112</d4p1:PositionY>
+                        </d4p1:Node>
+                        <d4p1:IncomingPins z:Id="52" z:Size="2">
+                          <d4p1:NodeOutputExecPin z:Ref="42" i:nil="true" />
+                          <d4p1:NodeOutputExecPin z:Ref="42" i:nil="true" />
+                        </d4p1:IncomingPins>
+                      </d4p1:OutgoingPin>
+                    </d4p1:NodeOutputExecPin>
+                    <d4p1:NodeOutputExecPin z:Id="53">
+                      <d4p1:Name z:Id="54">Catch</d4p1:Name>
+                      <d4p1:Node z:Ref="28" i:nil="true" />
+                      <d4p1:OutgoingPin i:nil="true" />
+                    </d4p1:NodeOutputExecPin>
+                  </d4p1:OutputExecPins>
+                  <d4p1:OutputTypePins z:Id="55" z:Size="0" />
+                  <d4p1:PositionX>532</d4p1:PositionX>
+                  <d4p1:PositionY>112</d4p1:PositionY>
+                  <d4p1:MethodSpecifier z:Id="56">
+                    <DeclaringType z:Id="57">
+                      <Name z:Id="58">System.Console</Name>
+                      <GenericArguments z:Id="59" z:Size="0" />
+                      <IsEnum>false</IsEnum>
+                      <IsInterface>false</IsInterface>
+                    </DeclaringType>
+                    <GenericArguments z:Id="60" z:Size="0" />
+                    <Modifiers>Static</Modifiers>
+                    <Name z:Id="61">WriteLine</Name>
+                    <Parameters z:Id="62" z:Size="1">
+                      <MethodParameter z:Id="63">
+                        <Name z:Ref="31" i:nil="true" />
+                        <Value z:Ref="33" i:nil="true" />
+                        <ExplicitDefaultValue i:nil="true" />
+                        <HasExplicitDefaultValue>false</HasExplicitDefaultValue>
+                        <PassType>Default</PassType>
+                      </MethodParameter>
+                    </Parameters>
+                    <ReturnTypes z:Id="64" z:Size="0" />
+                    <Visibility>Public</Visibility>
+                  </d4p1:MethodSpecifier>
+                </d4p1:Node>
+                <d4p1:IncomingPins z:Id="65" z:Size="2">
+                  <d4p1:NodeOutputExecPin z:Ref="25" i:nil="true" />
+                  <d4p1:NodeOutputExecPin z:Ref="25" i:nil="true" />
+                </d4p1:IncomingPins>
+              </d4p1:OutgoingPin>
+            </d4p1:NodeOutputExecPin>
+          </d4p1:OutputExecPins>
+          <d4p1:OutputTypePins z:Id="66" z:Size="0" />
+          <d4p1:PositionX>112</d4p1:PositionX>
+          <d4p1:PositionY>112</d4p1:PositionY>
+        </d4p1:Node>
+        <d4p1:Node z:Ref="44" i:nil="true" />
+        <d4p1:Node z:Ref="28" i:nil="true" />
+      </Nodes>
+      <EntryNode xmlns:d4p1="http://schemas.datacontract.org/2004/07/NetPrints.Graph" z:Ref="18" i:nil="true" />
+      <Visibility>Private</Visibility>
+      <Modifiers>None</Modifiers>
+      <Name z:Id="67">Method</Name>
+    </MethodGraph>
+  </Methods>
+  <Modifiers>None</Modifiers>
+  <Name z:Id="68">MyClass</Name>
+  <Namespace z:Id="69">MyNamespace</Namespace>
+  <Variables z:Id="70" z:Size="0" />
+  <Visibility>Internal</Visibility>
+</ClassGraph>

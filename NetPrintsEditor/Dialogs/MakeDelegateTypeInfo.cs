@@ -2,22 +2,16 @@
 
 namespace NetPrintsEditor.Dialogs
 {
-    public class MakeDelegateTypeInfo
+    public class MakeDelegateTypeInfo(TypeSpecifier type, TypeSpecifier fromType)
     {
         public TypeSpecifier Type
         {
             get;
-        }
+        } = type;
 
         public TypeSpecifier FromType
         {
             get;
-        }
-
-        public MakeDelegateTypeInfo(TypeSpecifier type, TypeSpecifier fromType)
-        {
-            Type = type;
-            FromType = fromType;
-        }
+        } = fromType;
     }
 }

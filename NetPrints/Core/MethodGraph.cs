@@ -47,17 +47,17 @@ namespace NetPrints.Core
         /// <summary>
         /// Ordered return types this method returns.
         /// </summary>
-        public IEnumerable<BaseType> ReturnTypes
+        public IEnumerable<BaseType> ReturnTypes()
         {
-            get => MainReturnNode?.InputTypePins?.Select(pin => pin.InferredType?.Value ?? TypeSpecifier.FromType<object>())?.ToList() ?? new List<BaseType>();
+            return MainReturnNode?.InputTypePins?.Select(pin => pin.InferredType?.Value ?? TypeSpecifier.FromType<object>())?.ToList() ?? new List<BaseType>();
         }
 
         /// <summary>
         /// Generic type arguments of the method.
         /// </summary>
-        public IEnumerable<GenericType> GenericArgumentTypes
+        public IEnumerable<GenericType> GenericArgumentTypes()
         {
-            get => EntryNode != null ? EntryNode.OutputTypePins.Select(pin => pin.InferredType.Value).Cast<GenericType>().ToList() : new List<GenericType>();
+            return EntryNode != null ? EntryNode.OutputTypePins.Select(pin => pin.InferredType.Value).Cast<GenericType>().ToList() : new List<GenericType>();
         }
 
         /// <summary>

@@ -144,27 +144,27 @@ namespace NetPrints.Translator
         {
             nodes.Add(node);
 
-            foreach (NodeOutputExecPin pin in node.OutputExecPins)
+            foreach (NodeInputExecPin pin in node.OutputExecPins.Select(pin => pin.OutgoingPin))
             {
-                if (pin.OutgoingPin != null && !nodes.Contains(pin.OutgoingPin.Node))
+                if (pin != null && !nodes.Contains(pin.Node))
                 {
-                    AddAllNodes(pin.OutgoingPin.Node, ref nodes);
+                    AddAllNodes(pin.Node, ref nodes);
                 }
             }
 
-            foreach (NodeInputDataPin pin in node.InputDataPins)
+            foreach (NodeOutputDataPin pin in node.InputDataPins.Select(pin => pin.IncomingPin))
             {
-                if (pin.IncomingPin != null && !nodes.Contains(pin.IncomingPin.Node))
+                if (pin != null && !nodes.Contains(pin.Node))
                 {
-                    AddAllNodes(pin.IncomingPin.Node, ref nodes);
+                    AddAllNodes(pin.Node, ref nodes);
                 }
             }
 
-            foreach (NodeInputTypePin pin in node.InputTypePins)
+            foreach (NodeOutputTypePin pin in node.InputTypePins.Select(pin => pin.IncomingPin))
             {
-                if (pin.IncomingPin != null && !nodes.Contains(pin.IncomingPin.Node))
+                if (pin != null && !nodes.Contains(pin.Node))
                 {
-                    AddAllNodes(pin.IncomingPin.Node, ref nodes);
+                    AddAllNodes(pin.Node, ref nodes);
                 }
             }
         }
@@ -187,11 +187,11 @@ namespace NetPrints.Translator
         {
             nodes.Add(node);
 
-            foreach (NodeOutputExecPin pin in node.OutputExecPins)
+            foreach (NodeInputExecPin pin in node.OutputExecPins.Select(pin => pin.OutgoingPin))
             {
-                if (pin.OutgoingPin != null && !nodes.Contains(pin.OutgoingPin.Node))
+                if (pin != null && !nodes.Contains(pin.Node))
                 {
-                    AddExecNodes(pin.OutgoingPin.Node, ref nodes);
+                    AddExecNodes(pin.Node, ref nodes);
                 }
             }
         }
@@ -218,11 +218,11 @@ namespace NetPrints.Translator
                 nodes.Add(node);
             }
 
-            foreach (NodeInputDataPin pin in node.InputDataPins)
+            foreach (NodeOutputDataPin pin in node.InputDataPins.Select(pin => pin.IncomingPin))
             {
-                if (pin.IncomingPin?.Node.IsPure == true && !nodes.Contains(pin.IncomingPin.Node))
+                if (pin?.Node?.IsPure == true && !nodes.Contains(pin.Node))
                 {
-                    AddDependentPureNodes(pin.IncomingPin.Node, ref nodes);
+                    AddDependentPureNodes(pin.Node, ref nodes);
                 }
             }
         }
@@ -258,13 +258,10 @@ namespace NetPrints.Translator
             {
                 newNodes.Clear();
 
-                foreach (Node evalNode in remainingNodes)
+                foreach (Node evalNode in remainingNodes.Where(evalNode => evalNode.InputDataPins.All(inNode => inNode.IncomingPin?.Node.IsPure != true || sortedNodes.Contains(inNode.IncomingPin.Node))))
                 {
                     // Check whether all of this node's dependencies have been evaluated
-                    if (evalNode.InputDataPins.All(inNode => inNode.IncomingPin?.Node.IsPure != true || sortedNodes.Contains(inNode.IncomingPin.Node)))
-                    {
-                        newNodes.Add(evalNode);
-                    }
+                    newNodes.Add(evalNode);
                 }
 
                 // Add newly found nodes
@@ -290,7 +287,7 @@ namespace NetPrints.Translator
                 SyntaxNode formatted = Formatter.Format(syntaxTree.GetCompilationUnitRoot(), new AdhocWorkspace()).NormalizeWhitespace();
                 return formatted.ToFullString();
             }
-            catch (Exception) { }
+            catch (Exception) { /* Nothing to do */ }
             return "";
         }
     }

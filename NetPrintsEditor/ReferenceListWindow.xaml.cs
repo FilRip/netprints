@@ -55,9 +55,11 @@ namespace NetPrintsEditor
 
         private void OnAddSourceDirectoryReferenceClicked(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFolderDialog = new();
-            openFolderDialog.CheckFileExists = false;
-            openFolderDialog.FileName = "Select a directory...";
+            OpenFileDialog openFolderDialog = new()
+            {
+                CheckFileExists = false,
+                FileName = "Select a directory...",
+            };
 
             if (openFolderDialog.ShowDialog() == true)
             {

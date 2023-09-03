@@ -2,16 +2,10 @@
 
 namespace NetPrintsEditor.Controls
 {
-    public class SuggestionListItemBinding
+    public class SuggestionListItemBinding(string text, string iconPath)
     {
-        public string Text { get; }
-        public string IconPath { get; }
-
-        public SuggestionListItemBinding(string text, string iconPath)
-        {
-            Text = text;
-            IconPath = iconPath;
-        }
+        public string Text { get; } = text;
+        public string IconPath { get; } = iconPath;
     }
 
     /// <summary>

@@ -77,25 +77,25 @@ namespace NetPrints.Graph
         /// <summary>
         /// List of type specifiers the method takes.
         /// </summary>
-        public IReadOnlyList<BaseType> ArgumentTypes
+        public IReadOnlyList<BaseType> ArgumentTypes()
         {
-            get => InputDataPins.Select(p => p.PinType.Value).ToList();
+            return InputDataPins.Select(p => p.PinType.Value).ToList();
         }
 
         /// <summary>
         /// List of named type specifiers the method takes.
         /// </summary>
-        public IReadOnlyList<Named<BaseType>> Arguments
+        public IReadOnlyList<Named<BaseType>> Arguments()
         {
-            get => InputDataPins.Select(p => new Named<BaseType>(p.Name, p.PinType.Value)).ToList();
+            return InputDataPins.Select(p => new Named<BaseType>(p.Name, p.PinType.Value)).ToList();
         }
 
         /// <summary>
         /// List of type specifiers the method returns.
         /// </summary>
-        public IReadOnlyList<BaseType> ReturnTypes
+        public IReadOnlyList<BaseType> ReturnTypes()
         {
-            get => OutputDataPins.Select(p => p.PinType.Value).ToList();
+            return OutputDataPins.Select(p => p.PinType.Value).ToList();
         }
 
         /// <summary>
@@ -133,28 +133,25 @@ namespace NetPrints.Graph
         /// <summary>
         /// List of node pins, one for each argument the method takes.
         /// </summary>
-        public IList<NodeInputDataPin> ArgumentPins
+        public IList<NodeInputDataPin> ArgumentPins()
         {
-            get
+            if (IsStatic)
             {
-                if (IsStatic)
-                {
-                    return InputDataPins;
-                }
-                else
-                {
-                    // First pin is the target object, ignore it
-                    return InputDataPins.Skip(1).ToList();
-                }
+                return InputDataPins;
+            }
+            else
+            {
+                // First pin is the target object, ignore it
+                return InputDataPins.Skip(1).ToList();
             }
         }
 
         /// <summary>
         /// List of node pins, one for each value the node's method returns (ie. no exception).
         /// </summary>
-        public IList<NodeOutputDataPin> ReturnValuePins
+        public IList<NodeOutputDataPin> ReturnValuePins()
         {
-            get => (OutputDataPins.Where(p => p.Name != ExceptionPinName)).ToList();
+            return (OutputDataPins.Where(p => p.Name != ExceptionPinName)).ToList();
         }
 
         public CallMethodNode(NodeGraph graph, MethodSpecifier methodSpecifier,
@@ -183,7 +180,7 @@ namespace NetPrints.Graph
                 // Set default parameter value if set
                 if (argument.HasExplicitDefaultValue)
                 {
-                    NodeInputDataPin newPin = InputDataPins.Last();
+                    NodeInputDataPin newPin = InputDataPins[^1];
                     newPin.UsesExplicitDefaultValue = true;
                     newPin.ExplicitDefaultValue = argument.ExplicitDefaultValue;
                 }
@@ -270,9 +267,9 @@ namespace NetPrints.Graph
                 // Construct type with generic arguments replaced by our input type pins
                 BaseType constructedType = GenericsHelper.ConstructWithTypePins(type, InputTypePins);
 
-                if (ArgumentPins[i].PinType.Value != constructedType)
+                if (ArgumentPins()[i].PinType.Value != constructedType)
                 {
-                    ArgumentPins[i].PinType.Value = constructedType;
+                    ArgumentPins()[i].PinType.Value = constructedType;
                 }
             }
 
@@ -284,9 +281,9 @@ namespace NetPrints.Graph
                 BaseType constructedType = GenericsHelper.ConstructWithTypePins(type, InputTypePins);
 
                 // +1 because the first pin is the exception pin
-                if (ReturnValuePins[i].PinType.Value != constructedType)
+                if (ReturnValuePins()[i].PinType.Value != constructedType)
                 {
-                    ReturnValuePins[i].PinType.Value = constructedType;
+                    ReturnValuePins()[i].PinType.Value = constructedType;
                 }
             }
         }

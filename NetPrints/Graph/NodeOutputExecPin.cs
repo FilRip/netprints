@@ -9,7 +9,7 @@ namespace NetPrints.Graph
     /// Pin which can be connected to an input execution pin to pass along execution.
     /// </summary>
     [DataContract()]
-    public class NodeOutputExecPin : NodeExecPin
+    public class NodeOutputExecPin(Node node, string name) : NodeExecPin(node, name)
     {
         /// <summary>
         /// Called when the connected outgoing pin changed.
@@ -38,10 +38,5 @@ namespace NetPrints.Graph
         }
 
         private NodeInputExecPin outgoingPin;
-
-        public NodeOutputExecPin(Node node, string name)
-            : base(node, name)
-        {
-        }
     }
 }

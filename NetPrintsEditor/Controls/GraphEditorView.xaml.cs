@@ -194,7 +194,7 @@ namespace NetPrintsEditor.Controls
 
             if (Graph != null)
             {
-                if (e.Data.GetDataPresent(typeof(MemberVariableVM)))
+                if (e.Data.GetDataPresent(typeof(MemberVariableVM)) || e.Data.GetDataPresent(typeof(NodeGraphVM)))
                 {
                     e.Effects = DragDropEffects.Copy;
                     e.Handled = true;
@@ -206,11 +206,6 @@ namespace NetPrintsEditor.Controls
                     pin.ConnectingAbsolutePosition = e.GetPosition(drawCanvas);
 
                     e.Effects = DragDropEffects.Link;
-                    e.Handled = true;
-                }
-                else if (e.Data.GetDataPresent(typeof(NodeGraphVM)))
-                {
-                    e.Effects = DragDropEffects.Copy;
                     e.Handled = true;
                 }
             }
@@ -479,7 +474,7 @@ namespace NetPrintsEditor.Controls
             FrameworkElement element = sender as FrameworkElement;
             if (element?.DataContext is not NodePinVM pin)
             {
-                throw new Exception("Could not find cable's pin.");
+                throw new NetPrints.Exceptions.NetPrintsException("Could not find cable's pin.");
             }
 
             if (e.ChangedButton == MouseButton.Left && e.LeftButton == MouseButtonState.Pressed && e.ClickCount == 2)
@@ -497,7 +492,7 @@ namespace NetPrintsEditor.Controls
             FrameworkElement element = sender as FrameworkElement;
             if (element?.DataContext is not NodePinVM pin)
             {
-                throw new Exception("Could not find cable's pin.");
+                throw new NetPrints.Exceptions.NetPrintsException("Could not find cable's pin.");
             }
 
             if (e.ChangedButton == MouseButton.XButton1 && e.RightButton == MouseButtonState.Released)

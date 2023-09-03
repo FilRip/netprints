@@ -14,14 +14,15 @@ namespace NetPrints.Core
     }
 
     [DataContract()]
-    public class MethodParameter : Named<BaseType>
+    public class MethodParameter(string name, BaseType type, MethodParameterPassType passType,
+        bool hasExplicitDefaultValue, object explicitDefaultValue) : Named<BaseType>(name, type)
     {
         [DataMember()]
         public MethodParameterPassType PassType
         {
             get;
             private set;
-        }
+        } = passType;
 
         /// <summary>
         /// Whether the parameter has an explicit default value.
@@ -31,7 +32,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = hasExplicitDefaultValue;
 
         /// <summary>
         /// Explicit default value for the parameter.
@@ -42,16 +43,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
-
-        public MethodParameter(string name, BaseType type, MethodParameterPassType passType,
-            bool hasExplicitDefaultValue, object explicitDefaultValue)
-            : base(name, type)
-        {
-            PassType = passType;
-            HasExplicitDefaultValue = hasExplicitDefaultValue;
-            ExplicitDefaultValue = explicitDefaultValue;
-        }
+        } = explicitDefaultValue;
     }
 
     /// <summary>
@@ -59,7 +51,9 @@ namespace NetPrints.Core
     /// </summary>
     [Serializable()]
     [DataContract()]
-    public partial class MethodSpecifier
+    public partial class MethodSpecifier(string name, IEnumerable<MethodParameter> arguments,
+        IEnumerable<BaseType> returnTypes, MethodModifiers modifiers, MemberVisibility visibility, TypeSpecifier declaringType,
+        IList<BaseType> genericArguments)
     {
         /// <summary>
         /// Name of the method without any prefixes.
@@ -69,7 +63,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = name;
 
         /// <summary>
         /// Specifier for the type this method is contained in.
@@ -79,7 +73,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = declaringType;
 
         /// <summary>
         /// Named specifiers for the types this method takes as arguments.
@@ -89,14 +83,14 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = arguments.ToList();
 
         /// <summary>
         /// Specifiers for the types this method takes as arguments.
         /// </summary>
-        public IReadOnlyList<BaseType> ArgumentTypes
+        public IReadOnlyList<BaseType> ArgumentTypes()
         {
-            get => Parameters.Select(t => (BaseType)t).ToArray();
+            return Parameters.Select(t => (BaseType)t).ToArray();
         }
 
         /// <summary>
@@ -107,7 +101,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = returnTypes.ToList();
 
         /// <summary>
         /// Modifiers this method has.
@@ -117,7 +111,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = modifiers;
 
         /// <summary>
         /// Visibility of this method.
@@ -127,7 +121,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = visibility;
 
         /// <summary>
         /// Generic arguments this method takes.
@@ -137,29 +131,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// Creates a MethodSpecifier.
-        /// </summary>
-        /// <param name="name">Name of the method without any prefixes.</param>
-        /// <param name="arguments">Specifiers for the arguments of the method.</param>
-        /// <param name="returnTypes">Specifiers for the return types of the method.</param>
-        /// <param name="modifiers">Modifiers of the method.</param>
-        /// <param name="declaringType">Specifier for the type this method is contained in.</param>
-        /// <param name="genericArguments">Generic arguments this method takes.</param>
-        public MethodSpecifier(string name, IEnumerable<MethodParameter> arguments,
-            IEnumerable<BaseType> returnTypes, MethodModifiers modifiers, MemberVisibility visibility, TypeSpecifier declaringType,
-            IList<BaseType> genericArguments)
-        {
-            Name = name;
-            DeclaringType = declaringType;
-            Parameters = arguments.ToList();
-            ReturnTypes = returnTypes.ToList();
-            Modifiers = modifiers;
-            Visibility = visibility;
-            GenericArguments = genericArguments.ToList();
-        }
+        } = genericArguments.ToList();
 
         public override string ToString()
         {
@@ -198,7 +170,7 @@ namespace NetPrints.Core
                 return
                     methodSpec.Name == Name
                     && methodSpec.DeclaringType == DeclaringType
-                    && methodSpec.ArgumentTypes.SequenceEqual(ArgumentTypes)
+                    && methodSpec.ArgumentTypes().SequenceEqual(ArgumentTypes())
                     && methodSpec.ReturnTypes.SequenceEqual(ReturnTypes)
                     && methodSpec.Modifiers == Modifiers
                     && methodSpec.GenericArguments.SequenceEqual(GenericArguments);
@@ -228,7 +200,7 @@ namespace NetPrints.Core
         {
             if (a is null)
             {
-                return !(b is null);
+                return b is not null;
             }
 
             return !a.Equals(b);

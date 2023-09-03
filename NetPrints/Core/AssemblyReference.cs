@@ -4,19 +4,14 @@ using System.Runtime.Serialization;
 namespace NetPrints.Core
 {
     [DataContract()]
-    public class AssemblyReference : CompilationReference
+    public class AssemblyReference(string assemblyPath) : CompilationReference
     {
         [DataMember()]
         public string AssemblyPath
         {
             get;
             set;
-        }
-
-        public AssemblyReference(string assemblyPath)
-        {
-            AssemblyPath = assemblyPath;
-        }
+        } = assemblyPath;
 
         public override string ToString() => $"{Path.GetFileNameWithoutExtension(AssemblyPath)} at {AssemblyPath}";
     }

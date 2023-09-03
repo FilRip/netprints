@@ -36,7 +36,7 @@ namespace NetPrints.Graph
                 GraphUtil.DisconnectOutputExecPin(OutputExecPins[0]);
                 OutputExecPins.RemoveAt(0);
             }
-            else if (!pure)
+            else
             {
                 AddExecPins();
             }

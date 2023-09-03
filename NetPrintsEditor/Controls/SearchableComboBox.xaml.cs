@@ -38,12 +38,12 @@ namespace NetPrintsEditor.Controls
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue != null && e.OldValue is SuggestionListVM oldVM)
+            if (e.OldValue is SuggestionListVM oldVM)
             {
                 oldVM.ItemsChanged -= OnItemsChanged;
             }
 
-            if (e.NewValue != null && e.NewValue is SuggestionListVM newVM)
+            if (e.NewValue is SuggestionListVM newVM)
             {
                 UpdateItems();
                 newVM.ItemsChanged += OnItemsChanged;

@@ -136,7 +136,7 @@ namespace NetPrintsEditor
             {
                 try
                 {
-                    ClassGraph existingClass = ViewModel.Project.AddExistingClass(openFileDialog.FileName);
+                    _ = ViewModel.Project.AddExistingClass(openFileDialog.FileName);
                 }
                 catch (Exception ex)
                 {
@@ -161,7 +161,7 @@ namespace NetPrintsEditor
             {
                 await overlay.CloseAsync();
                 Clipboard.SetText(ex.ToString());
-                MessageDialogResult result = await this.ShowMessageAsync("Failed to load project", $"Failed to load project at path {path}. The exception has been copied to your clipboard.\n\n{ex}",
+                _ = await this.ShowMessageAsync("Failed to load project", $"Failed to load project at path {path}. The exception has been copied to your clipboard.\n\n{ex}",
                     MessageDialogStyle.Affirmative, new MetroDialogSettings()).ConfigureAwait(false);
             }
         }

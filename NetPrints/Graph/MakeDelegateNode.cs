@@ -54,11 +54,11 @@ namespace NetPrints.Graph
 
             if (methodSpecifier.ReturnTypes.Count == 0)
             {
-                delegateType = new TypeSpecifier("System.Action", false, false, methodSpecifier.ArgumentTypes);
+                delegateType = new TypeSpecifier("System.Action", false, false, methodSpecifier.ArgumentTypes());
             }
             else if (methodSpecifier.ReturnTypes.Count == 1)
             {
-                delegateType = new TypeSpecifier("System.Func", false, false, methodSpecifier.ArgumentTypes.Concat(methodSpecifier.ReturnTypes).ToList());
+                delegateType = new TypeSpecifier("System.Func", false, false, methodSpecifier.ArgumentTypes().Concat(methodSpecifier.ReturnTypes).ToList());
             }
             else
             {

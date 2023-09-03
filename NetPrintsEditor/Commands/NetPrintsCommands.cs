@@ -56,16 +56,10 @@ namespace NetPrintsEditor.Commands
         /// </summary>
         public static readonly RoutedUICommand RemoveSetter = new(nameof(RemoveSetter), nameof(RemoveSetter), typeof(NetPrintsCommands));
 
-        public class ChangeNodeOverloadParameters
+        public class ChangeNodeOverloadParameters(NodeVM node, object newOverload)
         {
-            public NodeVM Node;
-            public object NewOverload;
-
-            public ChangeNodeOverloadParameters(NodeVM node, object newOverload)
-            {
-                Node = node;
-                NewOverload = newOverload;
-            }
+            public NodeVM Node { get; set; } = node;
+            public object NewOverload { get; set; } = newOverload;
         }
 
         public delegate Tuple<ICommand, object> MakeUndoCommandDelegate(object parameters);

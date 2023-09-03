@@ -7,16 +7,10 @@ using System.Windows.Data;
 namespace NetPrintsEditor.Converters
 {
     // From https://stackoverflow.com/a/5182660/4332314
-    public class BooleanConverter<T> : IValueConverter
+    public class BooleanConverter<T>(T trueValue, T falseValue) : IValueConverter
     {
-        public BooleanConverter(T trueValue, T falseValue)
-        {
-            True = trueValue;
-            False = falseValue;
-        }
-
-        public T True { get; set; }
-        public T False { get; set; }
+        public T True { get; set; } = trueValue;
+        public T False { get; set; } = falseValue;
 
         public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

@@ -3,7 +3,8 @@
 namespace NetPrints.Core
 {
     [DataContract()]
-    public class VariableSpecifier
+    public class VariableSpecifier(string name, TypeSpecifier type, MemberVisibility getterVisibility, MemberVisibility setterVisibility,
+        TypeSpecifier declaringType, VariableModifiers modifiers)
     {
         /// <summary>
         /// Name of the property without any prefixes.
@@ -13,7 +14,7 @@ namespace NetPrints.Core
         {
             get;
             set;
-        }
+        } = name;
 
         /// <summary>
         /// Specifier for the type this property is contained in.
@@ -23,7 +24,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = declaringType;
 
         /// <summary>
         /// Specifier for the type of the property.
@@ -33,7 +34,7 @@ namespace NetPrints.Core
         {
             get;
             set;
-        }
+        } = type;
 
         /// <summary>
         /// Whether this property has a public getter.
@@ -43,7 +44,7 @@ namespace NetPrints.Core
         {
             get;
             set;
-        }
+        } = getterVisibility;
 
         /// <summary>
         /// Whether this property has a public setter.
@@ -53,7 +54,7 @@ namespace NetPrints.Core
         {
             get;
             set;
-        }
+        } = setterVisibility;
 
         /// <summary>
         /// Visibility of this property.
@@ -73,17 +74,6 @@ namespace NetPrints.Core
         {
             get;
             set;
-        }
-
-        public VariableSpecifier(string name, TypeSpecifier type, MemberVisibility getterVisibility, MemberVisibility setterVisibility,
-            TypeSpecifier declaringType, VariableModifiers modifiers)
-        {
-            Name = name;
-            Type = type;
-            GetterVisibility = getterVisibility;
-            SetterVisibility = setterVisibility;
-            DeclaringType = declaringType;
-            Modifiers = modifiers;
-        }
+        } = modifiers;
     }
 }

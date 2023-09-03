@@ -66,7 +66,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             Messenger.Send(message);
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, bool broadcast, [CallerMemberName()] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, bool broadcast, [CallerMemberName()] string? propertyName = null)
         {
             T oldValue = field;
             bool num = SetProperty(ref field, newValue, propertyName);
@@ -77,7 +77,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return num;
         }
 
-        protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, bool broadcast, [CallerMemberName()] string? propertyName = null)
+        protected bool SetProperty<T>([NotNullIfNotNull(nameof(newValue))] ref T field, T newValue, IEqualityComparer<T> comparer, bool broadcast, [CallerMemberName()] string? propertyName = null)
         {
             T oldValue = field;
             bool num = SetProperty(ref field, newValue, comparer, propertyName);

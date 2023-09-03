@@ -10,7 +10,7 @@ namespace NetPrints.Core
     /// </summary>
     [Serializable()]
     [DataContract()]
-    public partial class ConstructorSpecifier
+    public partial class ConstructorSpecifier(IEnumerable<MethodParameter> arguments, TypeSpecifier declaringType)
     {
         /// <summary>
         /// Specifier for the type this constructor is for.
@@ -20,7 +20,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
+        } = declaringType;
 
         /// <summary>
         /// Specifiers for the arguments this constructor takes.
@@ -30,18 +30,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        }
-
-        /// <summary>
-        /// Creates a ConstructorSpecifier given specifiers for the constructor's arguments and the type it is for.
-        /// </summary>
-        /// <param name="arguments">Specifiers for the arguments the constructor takes.</param>
-        /// <param name="declaringType">Specifier for the type the constructor is for.</param>
-        public ConstructorSpecifier(IEnumerable<MethodParameter> arguments, TypeSpecifier declaringType)
-        {
-            DeclaringType = declaringType;
-            Arguments = arguments.ToList();
-        }
+        } = arguments.ToList();
 
         public override string ToString()
         {

@@ -13,10 +13,7 @@ namespace NetPrintsEditor.Reflection
 
             return () =>
             {
-                if (r == null)
-                {
-                    r = f();
-                }
+                r ??= f();
 
                 return r;
             };

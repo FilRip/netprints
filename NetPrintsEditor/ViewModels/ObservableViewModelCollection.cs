@@ -48,10 +48,7 @@ namespace NetPrintsEditor.ViewModels
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    for (int i = 0; i < e.NewItems.Count; i++)
-                    {
-                        Insert(e.NewStartingIndex + i, CreateViewModel((TModel)e.NewItems[i]));
-                    }
+                    AddCase();
                     break;
 
                 case NotifyCollectionChangedAction.Move:
@@ -81,7 +78,8 @@ namespace NetPrintsEditor.ViewModels
                         RemoveAt(e.OldStartingIndex);
 
                     // add
-                    goto case NotifyCollectionChangedAction.Add;
+                    AddCase();
+                    break;
 
                 case NotifyCollectionChangedAction.Reset:
                     Clear();
@@ -89,6 +87,14 @@ namespace NetPrintsEditor.ViewModels
 
                 default:
                     break;
+            }
+
+            void AddCase()
+            {
+                for (int i = 0; i < e.NewItems.Count; i++)
+                {
+                    Insert(e.NewStartingIndex + i, CreateViewModel((TModel)e.NewItems[i]));
+                }
             }
         }
     }

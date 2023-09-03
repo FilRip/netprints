@@ -44,9 +44,9 @@ namespace NetPrints.Core
     {
         private static readonly IEnumerable<FrameworkAssemblyReference> DefaultReferences = new FrameworkAssemblyReference[]
         {
-            new FrameworkAssemblyReference(".NETFramework/v4.5/System.dll"),
-            new FrameworkAssemblyReference(".NETFramework/v4.5/System.Core.dll"),
-            new FrameworkAssemblyReference(".NETFramework/v4.5/mscorlib.dll"),
+            new FrameworkAssemblyReference(".NETFramework/v4.8.1/System.dll"),
+            new FrameworkAssemblyReference(".NETFramework/v4.8.1/System.Core.dll"),
+            new FrameworkAssemblyReference(".NETFramework/v4.8.1/mscorlib.dll"),
         };
 
         private static readonly DataContractSerializer ProjectSerializer = new(typeof(Project));
@@ -410,12 +410,10 @@ namespace NetPrints.Core
 
                 // Delete the output binary if we don't want it.
                 // TODO: Don't generate it in the first place.
-                if (compilationResults.PathToAssembly != null && deleteBinaries)
+                if (compilationResults.PathToAssembly != null && deleteBinaries &&
+                    File.Exists(compilationResults.PathToAssembly))
                 {
-                    if (File.Exists(compilationResults.PathToAssembly))
-                    {
-                        File.Delete(compilationResults.PathToAssembly);
-                    }
+                    File.Delete(compilationResults.PathToAssembly);
                 }
 
                 // Write errors to file
@@ -487,7 +485,7 @@ namespace NetPrints.Core
 
             if (!File.Exists(exePath))
             {
-                throw new Exception($"The executable does not exist at {exePath}");
+                throw new Exceptions.NetPrintsException($"The executable does not exist at {exePath}");
             }
 
             Process.Start(exePath);
@@ -571,7 +569,7 @@ namespace NetPrints.Core
             // TODO: Might break if GetUniqueName adds a dot
             // (which it doesn't at the time of writing, it just adds
             // numbers, but this is not guaranteed forever).
-            string name = storageName.Split('.').Last();
+            string name = storageName.Split('.')[^1];
 
             ClassGraph cls = new()
             {

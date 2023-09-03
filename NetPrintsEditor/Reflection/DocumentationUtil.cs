@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis;
 
 namespace NetPrintsEditor.Reflection
 {
-    public class DocumentationUtil
+    public class DocumentationUtil(Compilation compilation)
     {
         private readonly Dictionary<string, XmlDocument> cachedDocuments =
             new();
@@ -22,12 +22,7 @@ namespace NetPrintsEditor.Reflection
         private readonly Dictionary<string, string> cachedMethodReturnInfo =
             new();
 
-        private readonly Compilation compilation;
-
-        public DocumentationUtil(Compilation compilation)
-        {
-            this.compilation = compilation;
-        }
+        private readonly Compilation compilation = compilation;
 
         private string GetAssemblyPath(IAssemblySymbol assembly)
         {
@@ -111,7 +106,7 @@ namespace NetPrintsEditor.Reflection
                         }
                     }
                 }
-                catch { }
+                catch { /* Nothing to do */ }
             }
 
             return null;

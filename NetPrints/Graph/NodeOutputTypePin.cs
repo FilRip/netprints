@@ -8,7 +8,7 @@ namespace NetPrints.Graph
     /// Pin which outputs a type. Can be connected to input type pins.
     /// </summary>
     [DataContract()]
-    public class NodeOutputTypePin : NodeTypePin
+    public class NodeOutputTypePin(Node node, string name, ObservableValue<BaseType> outputType) : NodeTypePin(node, name)
     {
         /// <summary>
         /// Connected input data pins.
@@ -23,13 +23,7 @@ namespace NetPrints.Graph
         }
 
         [DataMember()]
-        private readonly ObservableValue<BaseType> outputType;
-
-        public NodeOutputTypePin(Node node, string name, ObservableValue<BaseType> outputType)
-            : base(node, name)
-        {
-            this.outputType = outputType;
-        }
+        private readonly ObservableValue<BaseType> outputType = outputType;
 
         public override string ToString()
         {
