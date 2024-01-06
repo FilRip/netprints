@@ -1,8 +1,6 @@
 ![](https://raw.githubusercontent.com/RobinKa/RobinKa.github.io/master/NetPrintsBanner.png)
 
-Version Net Framework 7.0 (except VSIX for the moment). And without use of Goto/Label.
-
-### Master [![Build Status](https://travis-ci.org/RobinKa/netprints.svg?branch=master)](https://travis-ci.org/RobinKa/netprints) Latest [![Build Status](https://travis-ci.org/RobinKa/netprints.svg)](https://travis-ci.org/RobinKa/netprints)
+FilRip : Fork of https://github.com/RobinKa/netprints. Version Net Framework 7.0 (except VSIX for the moment). And without use of Goto/Label.<br><br>
 
 NetPrints is a visual programming language inspired by Unreal Engine 4's Blueprints which compiles into .NET binaries or alternatively C# source code. These can be used from any other .NET language (eg. C#) or used as standalone programs. Furthermore any .NET binaries (both .NET Framework and .NET Core, and ideally .NET Standard) can be referenced and used. Its goal is to support using anything that is made in C#. Furthermore it can be used directly within Visual Studio in any C# projects (experimental).
 [Overview](https://github.com/RobinKa/netprints/wiki/Overview)
