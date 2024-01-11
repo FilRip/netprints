@@ -15,15 +15,15 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
 {
     public abstract class ObservableValidatorSerializable : ObservableObjectSerializable, INotifyDataErrorInfo
     {
-        private static readonly ConditionalWeakTable<Type, Action<object>> EntityValidatorMap = new();
+        private static readonly ConditionalWeakTable<Type, Action<object>> EntityValidatorMap = [];
 
-        private static readonly ConditionalWeakTable<Type, Dictionary<string, string>> DisplayNamesMap = new();
+        private static readonly ConditionalWeakTable<Type, Dictionary<string, string>> DisplayNamesMap = [];
 
         private static readonly PropertyChangedEventArgs HasErrorsChangedEventArgs = new(nameof(HasErrors));
 
         private readonly ValidationContext validationContext;
 
-        private readonly Dictionary<string, List<ValidationResult>> errors = new();
+        private readonly Dictionary<string, List<ValidationResult>> errors = [];
 
         private int totalErrors;
 
@@ -213,7 +213,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
                     Type? type2 = type.Assembly.GetType("Microsoft.Toolkit.Mvvm.ComponentModel.__Internals.__ObservableValidatorExtensions");
                     if (type2 != null)
                     {
-                        MethodInfo? method = type2.GetMethod("CreateAllPropertiesValidator", new Type[1] { type });
+                        MethodInfo? method = type2.GetMethod("CreateAllPropertiesValidator", [type]);
                         if (method != null)
                         {
                             return (Action<object>?)method.Invoke(null, new object[1]);
@@ -240,11 +240,11 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
                 MethodInfo? validateMethod = typeof(ObservableValidatorSerializable).GetMethod("ValidateProperty", BindingFlags.Instance | BindingFlags.NonPublic);
                 if (validateMethod != null)
                 {
-                    return Expression.Lambda<Action<object>>(Expression.Block(array.Select(((string Name, MethodInfo GetMethod) property) => Expression.Call(inst0, validateMethod, new Expression[2]
-                    {
+                    return Expression.Lambda<Action<object>>(Expression.Block(array.Select(((string Name, MethodInfo GetMethod) property) => Expression.Call(inst0, validateMethod,
+                    [
                         Expression.Convert(Expression.Call(inst0, property.GetMethod), typeof(object)),
                         Expression.Constant(property.Name)
-                    }))), new ParameterExpression[1] { parameterExpression }).Compile();
+                    ]))), [parameterExpression]).Compile();
                 }
                 return null;
             }
@@ -259,7 +259,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             }
             if (!errors.TryGetValue(propertyName, out List<ValidationResult>? value2))
             {
-                value2 = new List<ValidationResult>();
+                value2 = [];
                 errors.Add(propertyName, value2);
             }
             bool flag = false;
@@ -306,11 +306,11 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             }
             if (!this.errors.TryGetValue(propertyName, out List<ValidationResult>? value2))
             {
-                value2 = new List<ValidationResult>();
+                value2 = [];
                 this.errors.Add(propertyName, value2);
             }
             bool flag = value2.Count > 0;
-            List<ValidationResult> list = new();
+            List<ValidationResult> list = [];
             validationContext.MemberName = propertyName;
             validationContext.DisplayName = GetDisplayNameForProperty(propertyName);
             bool num = Validator.TryValidateProperty(value, validationContext, list);
@@ -367,7 +367,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
             return value ?? propertyName;
             static Dictionary<string, string> GetDisplayNames(Type type)
             {
-                Dictionary<string, string> dictionary = new();
+                Dictionary<string, string> dictionary = [];
                 PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (PropertyInfo propertyInfo in properties)
                 {

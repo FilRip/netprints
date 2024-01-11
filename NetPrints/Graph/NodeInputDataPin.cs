@@ -69,7 +69,7 @@ namespace NetPrints.Graph
                 if (value != null && (!UsesUnconnectedValue
                     || (PinType.Value is TypeSpecifier t && (
                         (!t.IsEnum && TypeSpecifier.FromType(value.GetType()) != t)
-                        || (t.IsEnum && !(value is string))))))
+                        || (t.IsEnum && value is not string)))))
                 {
                     throw new ArgumentException("Pin unconnected");
                 }

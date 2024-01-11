@@ -15,7 +15,7 @@ namespace NetPrints.Graph
         /// </summary>
         [DataMember()]
         public ObservableRangeCollection<NodeInputTypePin> OutgoingPins { get; private set; }
-            = new ObservableRangeCollection<NodeInputTypePin>();
+            = [];
 
         public override ObservableValue<BaseType> InferredType
         {

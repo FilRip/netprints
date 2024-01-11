@@ -83,7 +83,7 @@ namespace NetPrintsEditor.ViewModels
         public SuggestionListVM()
         {
             SearchText = "";
-            splitSearchText = Array.Empty<string>();
+            splitSearchText = [];
             suggestionConverter = new();
         }
 

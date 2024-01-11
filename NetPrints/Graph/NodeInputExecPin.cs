@@ -15,6 +15,6 @@ namespace NetPrints.Graph
         /// </summary>
         [DataMember()]
         public ObservableRangeCollection<NodeOutputExecPin> IncomingPins { get; private set; } =
-            new ObservableRangeCollection<NodeOutputExecPin>();
+            [];
     }
 }

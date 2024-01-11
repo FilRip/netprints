@@ -34,7 +34,7 @@ namespace NetPrints.Core
         {
             if (constraints == null)
             {
-                Constraints = new ObservableRangeCollection<GenericTypeConstraint>();
+                Constraints = [];
             }
             else
             {

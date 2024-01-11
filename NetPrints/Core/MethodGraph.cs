@@ -41,7 +41,7 @@ namespace NetPrints.Core
         /// </summary>
         public ReturnNode MainReturnNode
         {
-            get => Nodes?.OfType<ReturnNode>()?.FirstOrDefault();
+            get => Nodes?.OfType<ReturnNode>().FirstOrDefault();
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace NetPrints.Core
         /// </summary>
         public IEnumerable<BaseType> ReturnTypes()
         {
-            return MainReturnNode?.InputTypePins?.Select(pin => pin.InferredType?.Value ?? TypeSpecifier.FromType<object>())?.ToList() ?? new List<BaseType>();
+            return MainReturnNode?.InputTypePins?.Select(pin => pin.InferredType?.Value ?? TypeSpecifier.FromType<object>()).ToList() ?? [];
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace NetPrints.Core
         /// </summary>
         public IEnumerable<GenericType> GenericArgumentTypes()
         {
-            return EntryNode != null ? EntryNode.OutputTypePins.Select(pin => pin.InferredType.Value).Cast<GenericType>().ToList() : new List<GenericType>();
+            return EntryNode != null ? EntryNode.OutputTypePins.Select(pin => pin.InferredType.Value).Cast<GenericType>().ToList() : [];
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace NetPrints.Core
 
             int iterations = 0;
             bool anyTypeChanged = true;
-            Dictionary<NodeTypePin, BaseType> pinTypes = new();
+            Dictionary<NodeTypePin, BaseType> pinTypes = [];
 
             while (anyTypeChanged && iterations < 20)
             {

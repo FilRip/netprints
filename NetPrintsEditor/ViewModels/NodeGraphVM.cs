@@ -44,8 +44,8 @@ namespace NetPrintsEditor.ViewModels
 
         private readonly Dictionary<Type, List<object>> builtInNodes = new()
         {
-            [typeof(MethodGraph)] = new List<object>()
-            {
+            [typeof(MethodGraph)] =
+            [
                 TypeSpecifier.FromType<ForLoopNode>(),
                 TypeSpecifier.FromType<IfElseNode>(),
                 TypeSpecifier.FromType<ConstructorNode>(),
@@ -60,9 +60,9 @@ namespace NetPrintsEditor.ViewModels
                 TypeSpecifier.FromType<AwaitNode>(),
                 TypeSpecifier.FromType<TernaryNode>(),
                 TypeSpecifier.FromType<DefaultNode>(),
-            },
-            [typeof(ConstructorGraph)] = new List<object>()
-            {
+            ],
+            [typeof(ConstructorGraph)] =
+            [
                 TypeSpecifier.FromType<ForLoopNode>(),
                 TypeSpecifier.FromType<IfElseNode>(),
                 TypeSpecifier.FromType<ConstructorNode>(),
@@ -75,12 +75,12 @@ namespace NetPrintsEditor.ViewModels
                 TypeSpecifier.FromType<ThrowNode>(),
                 TypeSpecifier.FromType<TernaryNode>(),
                 TypeSpecifier.FromType<DefaultNode>(),
-            },
-            [typeof(ClassGraph)] = new List<object>()
-            {
+            ],
+            [typeof(ClassGraph)] =
+            [
                 TypeSpecifier.FromType<TypeNode>(),
                 TypeSpecifier.FromType<MakeArrayTypeNode>(),
-            },
+            ],
         };
 
         public SuggestionListVM SuggestionViewModel { get; } = new SuggestionListVM();
@@ -94,7 +94,7 @@ namespace NetPrintsEditor.ViewModels
                 return nodes;
             }
 
-            return new List<object>();
+            return [];
         }
 
         public void UpdateSuggestions(double mouseX, double mouseY)
@@ -474,7 +474,7 @@ namespace NetPrintsEditor.ViewModels
         private double nodeDragAccumX;
         private double nodeDragAccumY;
 
-        private readonly Dictionary<NodeVM, (double X, double Y)> nodeStartPositions = new();
+        private readonly Dictionary<NodeVM, (double X, double Y)> nodeStartPositions = [];
 
         /// <summary>
         /// Called when a node starts dragging.
@@ -765,7 +765,7 @@ namespace NetPrintsEditor.ViewModels
         {
             get
             {
-                List<NodePinVM> pins = new();
+                List<NodePinVM> pins = [];
 
                 if (Graph != null)
                 {

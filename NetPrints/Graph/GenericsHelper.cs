@@ -29,7 +29,7 @@ namespace NetPrints.Graph
             if (type is TypeSpecifier typeSpecifier)
             {
                 // Find types to replace and build dictionary
-                Dictionary<GenericType, BaseType> replacementTypes = new();
+                Dictionary<GenericType, BaseType> replacementTypes = [];
 
                 foreach (NodeInputTypePin inputTypePin in inputTypePins)
                 {

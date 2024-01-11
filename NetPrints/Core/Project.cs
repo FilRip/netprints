@@ -44,9 +44,9 @@ namespace NetPrints.Core
     {
         private static readonly IEnumerable<FrameworkAssemblyReference> DefaultReferences = new FrameworkAssemblyReference[]
         {
-            new FrameworkAssemblyReference(".NETFramework/v4.8.1/System.dll"),
-            new FrameworkAssemblyReference(".NETFramework/v4.8.1/System.Core.dll"),
-            new FrameworkAssemblyReference(".NETFramework/v4.8.1/mscorlib.dll"),
+            new(".NETFramework/v4.8.1/System.dll"),
+            new(".NETFramework/v4.8.1/System.Core.dll"),
+            new(".NETFramework/v4.8.1/mscorlib.dll"),
         };
 
         private static readonly DataContractSerializer ProjectSerializer = new(typeof(Project));
@@ -58,7 +58,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        } = new ObservableRangeCollection<ClassGraph>();
+        } = [];
 
         /// <summary>
         /// Name of the project.
@@ -117,7 +117,7 @@ namespace NetPrints.Core
         {
             get;
             set;
-        } = new ObservableRangeCollection<string>();
+        } = [];
 
         /// <summary>
         /// References of this project.
@@ -127,7 +127,7 @@ namespace NetPrints.Core
         {
             get;
             set;
-        } = new ObservableRangeCollection<CompilationReference>();
+        } = [];
 
         /// <summary>
         /// Determines what gets output during compilation.
@@ -224,7 +224,7 @@ namespace NetPrints.Core
                 project.Path = path;
 
                 // Load classes
-                ConcurrentBag<ClassGraph> classes = new();
+                ConcurrentBag<ClassGraph> classes = [];
 
                 Parallel.ForEach(project.ClassPaths, classPath =>
                 {
@@ -308,7 +308,7 @@ namespace NetPrints.Core
 
         private ObservableRangeCollection<string> lastCompileErrors;
 
-        public async void CompileProject()
+        public async Task CompileProject()
         {
             // Check if we are already compiling
             if (!CanCompile || CompilationOutput == ProjectCompilationOutput.Nothing)
@@ -346,7 +346,7 @@ namespace NetPrints.Core
                     Directory.CreateDirectory(compiledDir);
                 }
 
-                ConcurrentBag<string> classSources = new();
+                ConcurrentBag<string> classSources = [];
 
                 // Translate classes in parallel
                 Parallel.ForEach(Classes, cls =>
@@ -449,7 +449,7 @@ namespace NetPrints.Core
                 return Array.Empty<string>();
             }
 
-            ConcurrentBag<string> classSources = new();
+            ConcurrentBag<string> classSources = [];
 
             // Translate classes in parallel
             Parallel.ForEach(Classes, cls =>
@@ -630,7 +630,7 @@ namespace NetPrints.Core
         [OnDeserialized()]
         private void FixDefaults(StreamingContext context)
         {
-            Classes = new ObservableRangeCollection<ClassGraph>();
+            Classes = [];
         }
     }
 }

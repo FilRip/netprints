@@ -87,11 +87,11 @@ namespace NetPrints.Graph
 
             if (pure)
             {
-                NodeOutputExecPin[] outExecPins = new NodeOutputExecPin[]
-                {
+                NodeOutputExecPin[] outExecPins =
+                [
                     OutputExecPins.Single(p => p.Name == "Success"),
                     OutputExecPins.Single(p => p.Name == "Failure"),
-                };
+                ];
 
                 foreach (NodeOutputExecPin execPin in outExecPins)
                 {

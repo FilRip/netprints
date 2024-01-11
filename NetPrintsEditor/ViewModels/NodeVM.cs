@@ -442,7 +442,7 @@ namespace NetPrintsEditor.ViewModels
             }
         }
 
-        private ObservableRangeCollection<object> overloads = new();
+        private ObservableRangeCollection<object> overloads = [];
 
         /// <summary>
         /// Whether to show the overloads element.

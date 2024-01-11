@@ -27,7 +27,7 @@ namespace NetPrintsEditor
         public static ObservableRangeCollection<TypeSpecifier> NonStaticTypes
         {
             get;
-        } = new ObservableRangeCollection<TypeSpecifier>();
+        } = [];
 
         public static void ReloadReflectionProvider(IEnumerable<string> assemblyPaths, IEnumerable<string> sourcePaths, IEnumerable<string> sources)
         {

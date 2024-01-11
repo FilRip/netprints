@@ -16,7 +16,7 @@ namespace NetPrintsEditor.Reflection
                     TypeSpecifier boolType = TypeSpecifier.FromType<bool>();
                     TypeSpecifier intType = TypeSpecifier.FromType<int>();
 
-                    all = new List<MethodSpecifier>();
+                    all = [];
 
                     // Numerical
                     foreach (TypeSpecifier defaultNumericType in defaultNumericTypes)
@@ -76,8 +76,8 @@ namespace NetPrintsEditor.Reflection
             all.Add(new MethodSpecifier(opName, parameters, new[] { returnType }, MethodModifiers.Static, MemberVisibility.Public, returnType, System.Array.Empty<BaseType>()));
         }
 
-        private static readonly List<TypeSpecifier> defaultNumericTypes = new()
-        {
+        private static readonly List<TypeSpecifier> defaultNumericTypes =
+        [
             TypeSpecifier.FromType<byte>(),
             TypeSpecifier.FromType<short>(),
             TypeSpecifier.FromType<ushort>(),
@@ -86,7 +86,7 @@ namespace NetPrintsEditor.Reflection
             TypeSpecifier.FromType<float>(),
             TypeSpecifier.FromType<double>(),
             TypeSpecifier.FromType<decimal>(),
-        };
+        ];
 
         private static readonly IEnumerable<string> defaultNumericBinaryOperatorNames = new[]
         {

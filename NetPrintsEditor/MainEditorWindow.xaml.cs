@@ -22,7 +22,7 @@ namespace NetPrintsEditor
     /// </summary>
     public partial class MainEditorWindow : MetroWindow
     {
-        private readonly Dictionary<ClassEditorVM, ClassEditorWindow> classEditorWindows = new();
+        private readonly Dictionary<ClassEditorVM, ClassEditorWindow> classEditorWindows = [];
 
         private MainEditorVM ViewModel
         {
@@ -44,11 +44,11 @@ namespace NetPrintsEditor
 
         private void OpenOrCreateClassEditorWindow(ClassEditorVM cls)
         {
-            if (classEditorWindows.ContainsKey(cls))
+            if (classEditorWindows.TryGetValue(cls, out ClassEditorWindow value))
             {
                 // Bring existing window to front
 
-                ClassEditorWindow wnd = classEditorWindows[cls];
+                ClassEditorWindow wnd = value;
 
                 if (!wnd.IsVisible)
                 {
@@ -103,9 +103,9 @@ namespace NetPrintsEditor
         {
             if (sender is Button button && button.DataContext is ClassEditorVM cls)
             {
-                if (classEditorWindows.ContainsKey(cls))
+                if (classEditorWindows.TryGetValue(cls, out ClassEditorWindow value))
                 {
-                    classEditorWindows[cls].Close();
+                    value.Close();
                     classEditorWindows.Remove(cls);
                 }
 

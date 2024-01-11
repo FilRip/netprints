@@ -42,7 +42,7 @@ namespace NetPrints.Graph
             // Get new return types
             NodeInputDataPin[] mainInputPins = MethodGraph.MainReturnNode.InputDataPins.ToArray();
 
-            Dictionary<int, NodeOutputDataPin> oldConnections = new();
+            Dictionary<int, NodeOutputDataPin> oldConnections = [];
 
             // Remember pins with same type as before
             foreach (NodeInputDataPin pin in InputDataPins)

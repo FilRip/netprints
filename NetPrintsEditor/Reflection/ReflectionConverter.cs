@@ -165,8 +165,8 @@ namespace NetPrintsEditor.Reflection
             }
 
             BaseType[] returnTypes = method.ReturnsVoid ?
-                Array.Empty<BaseType>() :
-                new BaseType[] { BaseTypeSpecifierFromSymbol(method.ReturnType) };
+                [] :
+                [BaseTypeSpecifierFromSymbol(method.ReturnType)];
 
             MethodParameter[] parameters = method.Parameters.Select(
                 p => MethodParameterFromSymbol(p)).ToArray();

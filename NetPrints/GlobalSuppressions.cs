@@ -9,3 +9,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Critical Code Smell", "S2346:Flags enumerations zero-value members should be named \"None\"")]
 [assembly: SuppressMessage("Major Code Smell", "S125:Sections of code should not be commented out")]
 [assembly: SuppressMessage("Major Code Smell", "S3011:Reflection should not be used to increase accessibility of classes, methods, or fields")]
+[assembly: SuppressMessage("Style", "IDE0305:Simplifier l'initialisation des collections")]

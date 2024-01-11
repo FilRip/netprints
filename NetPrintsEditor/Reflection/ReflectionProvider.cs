@@ -14,9 +14,7 @@ namespace NetPrintsEditor.Reflection
 {
     public static class ISymbolExtensions
     {
-#pragma warning disable RS1024
-        private static readonly Dictionary<ITypeSymbol, List<ISymbol>> allMembersCache = new();
-#pragma warning restore RS1024
+        private static readonly Dictionary<ITypeSymbol, List<ISymbol>> allMembersCache = [];
 
         /// <summary>
         /// Gets all members of a symbol including inherited ones, but not overriden ones.
@@ -28,10 +26,8 @@ namespace NetPrintsEditor.Reflection
                 return allMembers;
             }
 
-            List<ISymbol> members = new();
-#pragma warning disable RS1024
-            HashSet<IMethodSymbol> overridenMethods = new();
-#pragma warning restore RS1024
+            List<ISymbol> members = [];
+            HashSet<IMethodSymbol> overridenMethods = [];
 
             ITypeSymbol startSymbol = symbol;
 
@@ -139,7 +135,7 @@ namespace NetPrintsEditor.Reflection
 
         private static (EmitResult, Stream) CompileInMemory(CSharpCompilation compilation)
         {
-            Stream stream = new MemoryStream();
+            MemoryStream stream = new();
             EmitResult compilationResults = compilation.Emit(stream);
             stream.Seek(0, SeekOrigin.Begin);
             return (compilationResults, stream);
@@ -229,13 +225,13 @@ namespace NetPrintsEditor.Reflection
             }
         }
 
-        private IEnumerable<INamedTypeSymbol> GetTypeNestedTypes(INamedTypeSymbol typeSymbol)
+        private static IEnumerable<INamedTypeSymbol> GetTypeNestedTypes(INamedTypeSymbol typeSymbol)
         {
             System.Collections.Immutable.ImmutableArray<INamedTypeSymbol> typeMembers = typeSymbol.GetTypeMembers();
             return typeMembers.Concat(typeMembers.SelectMany(t => GetTypeNestedTypes(t)));
         }
 
-        private IEnumerable<INamedTypeSymbol> GetNamespaceTypes(INamespaceSymbol namespaceSymbol)
+        private static IEnumerable<INamedTypeSymbol> GetNamespaceTypes(INamespaceSymbol namespaceSymbol)
         {
             IEnumerable<INamedTypeSymbol> types = namespaceSymbol.GetTypeMembers();
             types = types.Concat(types.SelectMany(t => GetTypeNestedTypes(t)));
@@ -354,7 +350,7 @@ namespace NetPrintsEditor.Reflection
             return typeA != null && typeB != null && typeA.IsSubclassOf(typeB);
         }
 
-        private readonly Dictionary<TypeSpecifier, ITypeSymbol> cachedTypeSpecifierSymbols = new();
+        private readonly Dictionary<TypeSpecifier, ITypeSymbol> cachedTypeSpecifierSymbols = [];
 
         private T GetTypeFromSpecifier<T>(TypeSpecifier specifier)
         {

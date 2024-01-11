@@ -129,7 +129,7 @@ namespace NetPrintsEditor.Controls
 
         protected override List<AutomationPeer> GetChildrenCore()
         {
-            return new List<AutomationPeer>();
+            return [];
         }
     }
 

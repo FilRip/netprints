@@ -132,7 +132,7 @@ namespace NetPrints.Core
 
             if (genericArguments == null)
             {
-                GenericArguments = new ObservableRangeCollection<BaseType>();
+                GenericArguments = [];
             }
             else
             {

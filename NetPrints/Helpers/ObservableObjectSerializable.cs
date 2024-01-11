@@ -200,8 +200,7 @@ namespace Microsoft.Toolkit.Mvvm.ComponentModel
 
         private bool SetPropertyAndNotifyOnCompletion<TTask>(ITaskNotifier<TTask> taskNotifier, TTask newValue, Action<TTask?> callback, [CallerMemberName()] string? propertyName = null) where TTask : Task
         {
-            if (propertyName == null)
-                throw new ArgumentNullException(nameof(propertyName));
+            ArgumentNullException.ThrowIfNull(propertyName);
 
             TTask newValue2 = newValue;
             ITaskNotifier<TTask> taskNotifier2 = taskNotifier;

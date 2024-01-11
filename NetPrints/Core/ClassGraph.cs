@@ -55,19 +55,19 @@ namespace NetPrints.Core
         /// Properties of this class.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<Variable> Variables { get; set; } = new ObservableRangeCollection<Variable>();
+        public ObservableRangeCollection<Variable> Variables { get; set; } = [];
 
         /// <summary>
         /// Methods of this class.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<MethodGraph> Methods { get; set; } = new ObservableRangeCollection<MethodGraph>();
+        public ObservableRangeCollection<MethodGraph> Methods { get; set; } = [];
 
         /// <summary>
         /// Constructors of this class.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<ConstructorGraph> Constructors { get; set; } = new ObservableRangeCollection<ConstructorGraph>();
+        public ObservableRangeCollection<ConstructorGraph> Constructors { get; set; } = [];
 
         /// <summary>
         /// Base / super type of this class. The ultimate base type of all classes is System.Object.
@@ -121,7 +121,7 @@ namespace NetPrints.Core
         /// Generic arguments this class takes.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<GenericType> DeclaredGenericArguments { get; set; } = new ObservableRangeCollection<GenericType>();
+        public ObservableRangeCollection<GenericType> DeclaredGenericArguments { get; set; } = [];
 
         /// <summary>
         /// TypeSpecifier describing this class.

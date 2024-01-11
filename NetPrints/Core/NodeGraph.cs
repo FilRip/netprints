@@ -19,7 +19,7 @@ namespace NetPrints.Core
         {
             get;
             private set;
-        } = new ObservableRangeCollection<Node>();
+        } = [];
 
         /// <summary>
         /// Class this graph is contained in.

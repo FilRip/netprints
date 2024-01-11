@@ -255,7 +255,7 @@ namespace NetPrintsEditor.Controls
         {
             if (Graph != null)
             {
-                List<NodeVM> selectedNodes = new();
+                List<NodeVM> selectedNodes = [];
 
                 for (int i = 0; i < nodeList.Items.Count; i++)
                 {

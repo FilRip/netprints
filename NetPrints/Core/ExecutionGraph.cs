@@ -24,7 +24,7 @@ namespace NetPrints.Core
         /// </summary>
         public IEnumerable<BaseType> ArgumentTypes()
         {
-            return EntryNode != null ? EntryNode.InputTypePins.Select(pin => pin.InferredType?.Value ?? TypeSpecifier.FromType<object>()).ToList() : new List<BaseType>();
+            return EntryNode != null ? EntryNode.InputTypePins.Select(pin => pin.InferredType?.Value ?? TypeSpecifier.FromType<object>()).ToList() : [];
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace NetPrints.Core
         public IEnumerable<Named<BaseType>> NamedArgumentTypes()
         {
             return EntryNode != null ? EntryNode.InputTypePins.Zip(EntryNode.OutputDataPins, (type, data) => (type, data))
-                .Select(pair => new Named<BaseType>(pair.data.Name, pair.type.InferredType?.Value ?? TypeSpecifier.FromType<object>())).ToList() : new List<Named<BaseType>>();
+                .Select(pair => new Named<BaseType>(pair.data.Name, pair.type.InferredType?.Value ?? TypeSpecifier.FromType<object>())).ToList() : [];
         }
 
         /// <summary>

@@ -11,16 +11,16 @@ namespace NetPrintsEditor.Reflection
     public class DocumentationUtil(Compilation compilation)
     {
         private readonly Dictionary<string, XmlDocument> cachedDocuments =
-            new();
+            [];
 
         private readonly Dictionary<string, string> cachedMethodSummaries =
-            new();
+            [];
 
         private readonly Dictionary<Tuple<string, string>, string> cachedMethodParameterInfos =
-            new();
+            [];
 
         private readonly Dictionary<string, string> cachedMethodReturnInfo =
-            new();
+            [];
 
         private readonly Compilation compilation = compilation;
 
@@ -85,9 +85,9 @@ namespace NetPrintsEditor.Reflection
             {
                 string key = Path.GetFileNameWithoutExtension(assemblyPath);
 
-                if (cachedDocuments.ContainsKey(key))
+                if (cachedDocuments.TryGetValue(key, out XmlDocument value))
                 {
-                    return cachedDocuments[key];
+                    return value;
                 }
 
                 try
@@ -121,9 +121,9 @@ namespace NetPrintsEditor.Reflection
         {
             string methodKey = GetMethodInfoKey(methodInfo);
 
-            if (cachedMethodSummaries.ContainsKey(methodKey))
+            if (cachedMethodSummaries.TryGetValue(methodKey, out string value))
             {
-                return cachedMethodSummaries[methodKey];
+                return value;
             }
 
             string documentation = null;
@@ -154,9 +154,9 @@ namespace NetPrintsEditor.Reflection
             IMethodSymbol methodSymbol = (IMethodSymbol)parameterSymbol.ContainingSymbol;
             string methodKey = GetMethodInfoKey(methodSymbol);
             Tuple<string, string> cacheKey = new(methodKey, parameterSymbol.Name);
-            if (cachedMethodParameterInfos.ContainsKey(cacheKey))
+            if (cachedMethodParameterInfos.TryGetValue(cacheKey, out string value))
             {
-                return cachedMethodParameterInfos[cacheKey];
+                return value;
             }
 
             string documentation = null;
@@ -194,9 +194,9 @@ namespace NetPrintsEditor.Reflection
         {
             string methodKey = GetMethodInfoKey(methodSymbol);
 
-            if (cachedMethodReturnInfo.ContainsKey(methodKey))
+            if (cachedMethodReturnInfo.TryGetValue(methodKey, out string value))
             {
-                return cachedMethodReturnInfo[methodKey];
+                return value;
             }
 
             string documentation = null;

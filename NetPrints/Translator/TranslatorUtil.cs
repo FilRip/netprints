@@ -176,7 +176,7 @@ namespace NetPrints.Translator
         /// <returns>Nodes contained in the graph.</returns>
         public static IEnumerable<Node> GetAllNodesInExecGraph(ExecutionGraph graph)
         {
-            HashSet<Node> nodes = new();
+            HashSet<Node> nodes = [];
 
             AddAllNodes(graph.EntryNode, ref nodes);
 
@@ -203,7 +203,7 @@ namespace NetPrints.Translator
         /// <returns>Execution nodes contained in the graph.</returns>
         public static IEnumerable<Node> GetExecNodesInExecGraph(ExecutionGraph graph)
         {
-            HashSet<Node> nodes = new();
+            HashSet<Node> nodes = [];
 
             AddExecNodes(graph.EntryNode, ref nodes);
 
@@ -234,7 +234,7 @@ namespace NetPrints.Translator
         /// <returns>Pure nodes the node depends on.</returns>
         public static IEnumerable<Node> GetDependentPureNodes(Node node)
         {
-            HashSet<Node> nodes = new();
+            HashSet<Node> nodes = [];
 
             AddDependentPureNodes(node, ref nodes);
 
@@ -250,9 +250,9 @@ namespace NetPrints.Translator
         {
             List<Node> dependentNodes = GetDependentPureNodes(node).ToList();
             List<Node> remainingNodes = new(dependentNodes);
-            List<Node> sortedNodes = new();
+            List<Node> sortedNodes = [];
 
-            List<Node> newNodes = new();
+            List<Node> newNodes = [];
 
             do
             {

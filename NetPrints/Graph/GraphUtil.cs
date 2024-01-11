@@ -293,7 +293,7 @@ namespace NetPrints.Graph
 
             RerouteNode rerouteNode = RerouteNode.MakeData(pin.Node.Graph, new Tuple<BaseType, BaseType>[]
             {
-                new Tuple<BaseType, BaseType>(pin.PinType, pin.IncomingPin.PinType)
+                new(pin.PinType, pin.IncomingPin.PinType)
             });
 
             GraphUtil.ConnectDataPins(pin.IncomingPin, rerouteNode.InputDataPins[0]);

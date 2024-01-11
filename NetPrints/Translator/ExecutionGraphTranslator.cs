@@ -16,12 +16,12 @@ namespace NetPrints.Translator
     /// </summary>
     public class ExecutionGraphTranslator
     {
-        private readonly Dictionary<NodeOutputDataPin, string> variableNames = new();
-        private readonly Dictionary<Node, List<int>> nodeStateIds = new();
+        private readonly Dictionary<NodeOutputDataPin, string> variableNames = [];
+        private readonly Dictionary<Node, List<int>> nodeStateIds = [];
         private int nextStateId = 0;
         private IEnumerable<Node> execNodes = new List<Node>();
         private IEnumerable<Node> nodes = new List<Node>();
-        private readonly HashSet<NodeInputExecPin> pinsJumpedTo = new();
+        private readonly HashSet<NodeInputExecPin> pinsJumpedTo = [];
 
         private int jumpStackStateId;
 
@@ -81,9 +81,9 @@ namespace NetPrints.Translator
                 return "null";
             }
 
-            if (variableNames.ContainsKey(pin))
+            if (variableNames.TryGetValue(pin, out string value))
             {
-                return variableNames[pin];
+                return value;
             }
 
             string pinName;
@@ -130,12 +130,12 @@ namespace NetPrints.Translator
 
         private IEnumerable<string> GetOrCreatePinNames(IEnumerable<NodeOutputDataPin> pins)
         {
-            return pins.Select(pin => GetOrCreatePinName(pin)).ToList();
+            return pins.Select(pin => GetOrCreatePinName(pin));
         }
 
         private IEnumerable<string> GetPinIncomingValues(IEnumerable<NodeInputDataPin> pins)
         {
-            return pins.Select(pin => GetPinIncomingValue(pin)).ToList();
+            return pins.Select(pin => GetPinIncomingValue(pin));
         }
 
         private string GetOrCreateTypedPinName(NodeOutputDataPin pin)
@@ -146,14 +146,14 @@ namespace NetPrints.Translator
 
         private IEnumerable<string> GetOrCreateTypedPinNames(IEnumerable<NodeOutputDataPin> pins)
         {
-            return pins.Select(pin => GetOrCreateTypedPinName(pin)).ToList();
+            return pins.Select(pin => GetOrCreateTypedPinName(pin));
         }
 
         private void CreateStates()
         {
             foreach (Node node in execNodes.Where(node => node is not MethodEntryNode))
             {
-                nodeStateIds.Add(node, new List<int>());
+                nodeStateIds.Add(node, []);
 
                 foreach (NodeInputExecPin _ in node.InputExecPins)
                 {
@@ -309,8 +309,8 @@ namespace NetPrints.Translator
             }
 
             List<Node> listAllNodes = execNodes.ToList();
-            List<int> listCloseBracket = new();
-            List<Node> nodeAlreadyTreated = new();
+            List<int> listCloseBracket = [];
+            List<Node> nodeAlreadyTreated = [];
 
             bool move = true;
             // Move else block just after the if block and so, before next code after the end if/else
@@ -603,7 +603,7 @@ namespace NetPrints.Translator
 
                 bool prependArgumentName = Array.Exists(argNameArray, a => a is null);
 
-                List<string> arguments = new();
+                List<string> arguments = [];
 
                 foreach ((string argName, MethodParameter methodParameter) in argNameArray.Zip(node.MethodSpecifier.Parameters, Tuple.Create))
                 {
@@ -712,7 +712,7 @@ namespace NetPrints.Translator
 
             bool prependArgumentName = Array.Exists(argNameArray, a => a is null);
 
-            List<string> arguments = new();
+            List<string> arguments = [];
 
             foreach ((string argName, MethodParameter constructorParameter) in argNameArray.Zip(node.ConstructorSpecifier.Arguments, Tuple.Create))
             {

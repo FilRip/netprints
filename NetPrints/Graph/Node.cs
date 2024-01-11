@@ -41,37 +41,37 @@ namespace NetPrints.Graph
         /// Input data pins of this node.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<NodeInputDataPin> InputDataPins { get; private set; } = new ObservableRangeCollection<NodeInputDataPin>();
+        public ObservableRangeCollection<NodeInputDataPin> InputDataPins { get; private set; } = [];
 
         /// <summary>
         /// Output data pins of this node.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<NodeOutputDataPin> OutputDataPins { get; private set; } = new ObservableRangeCollection<NodeOutputDataPin>();
+        public ObservableRangeCollection<NodeOutputDataPin> OutputDataPins { get; private set; } = [];
 
         /// <summary>
         /// Input execution pins of this node.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<NodeInputExecPin> InputExecPins { get; private set; } = new ObservableRangeCollection<NodeInputExecPin>();
+        public ObservableRangeCollection<NodeInputExecPin> InputExecPins { get; private set; } = [];
 
         /// <summary>
         /// Output execution pins of this node.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<NodeOutputExecPin> OutputExecPins { get; private set; } = new ObservableRangeCollection<NodeOutputExecPin>();
+        public ObservableRangeCollection<NodeOutputExecPin> OutputExecPins { get; private set; } = [];
 
         /// <summary>
         /// Input type pins of this node.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<NodeInputTypePin> InputTypePins { get; private set; } = new ObservableRangeCollection<NodeInputTypePin>();
+        public ObservableRangeCollection<NodeInputTypePin> InputTypePins { get; private set; } = [];
 
         /// <summary>
         /// Output type pins of this node.
         /// </summary>
         [DataMember()]
-        public ObservableRangeCollection<NodeOutputTypePin> OutputTypePins { get; private set; } = new ObservableRangeCollection<NodeOutputTypePin>();
+        public ObservableRangeCollection<NodeOutputTypePin> OutputTypePins { get; private set; } = [];
 
         /// <summary>
         /// Delegate for the event of a position change of a node.
